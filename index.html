@@ -131,18 +131,18 @@
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-microchip text-indigo-400"></i> Studio d'Exécution IA
             </h2>
-            <p class="text-xs text-slate-400">Moteur connecté en mode serveur sécurisé</p>
+            <p class="text-xs text-slate-400">Mode autonome avec repli simulation si clé absente</p>
           </div>
           <button onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
             <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé secours
           </button>
         </div>
 
-        <!-- Option clé de secours si la variable Vercel n'est pas encore active -->
+        <!-- Option clé de secours -->
         <div id="fallback-key-box" class="hidden bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
-          <label class="block text-xs font-semibold text-slate-300">Clé API Gemini personnelle (optionnelle si configurée sur Vercel)</label>
+          <label class="block text-xs font-semibold text-slate-300">Clé API Gemini personnelle (optionnelle — mode simulation actif sans clé)</label>
           <div class="flex gap-2">
-            <input type="password" id="local-api-key" placeholder="AIzaSy..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <input type="password" id="local-api-key" placeholder="AIzaSy... (laisser vide pour simulation)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
             <button onclick="saveLocalKey()" class="px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Sauver</button>
           </div>
         </div>
@@ -373,7 +373,22 @@
       const val = document.getElementById('local-api-key').value.trim();
       if (val) localStorage.setItem('gemini_fallback_key', val);
       else localStorage.removeItem('gemini_fallback_key');
-      alert('Clé de secours enregistrée sur cet appareil.');
+      alert('Paramètre de clé enregistré sur cet appareil.');
+    }
+
+    function buildSimulatedOutput(flow, input) {
+      const excerpt = input.length > 180 ? input.slice(0, 180) + '...' : input;
+      return `[MODE SIMULATION AUTONOME — Aucune clé API requise]\n\n` +
+        `Flux exécuté : ${flow.title}\n` +
+        `Pôle : ${flow.badge}\n` +
+        `Données analysées : "${excerpt}"\n\n` +
+        `1. Diagnostic & Priorisation\n` +
+        `- Intention principale détectée et classée en priorité haute.\n` +
+        `- Contexte métier : ${flow.action}\n\n` +
+        `2. Livrable proposé\n` +
+        `- Synthèse structurée prête pour validation opérationnelle.\n` +
+        `- Prochaine étape recommandée : transmettre ou archiver ce résultat depuis l'onglet Historique.\n\n` +
+        `(Astuce : dès qu'une clé API Gemini valide est ajoutée dans "Clé secours" ou sur le serveur Vercel, ce flux s'exécutera en direct avec Gemini.)`;
     }
 
     async function executeWorkflow() {
@@ -388,23 +403,25 @@
 
       try {
         let outputText = '';
-        // 1. Appel prioritaire au serveur backend sécurisé /api/generate
-        const serverRes = await fetch('/api/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: input, systemInstruction: flow.systemPrompt })
-        });
+        const localKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
 
-        if (serverRes.ok) {
-          const data = await serverRes.json();
-          outputText = data.result;
-        } else {
-          // 2. Repli sur clé locale si le serveur Vercel n'a pas encore GEMINI_API_KEY
-          const localKey = localStorage.getItem('gemini_fallback_key');
-          if (!localKey) {
-            const errData = await serverRes.json().catch(() => ({}));
-            throw new Error(errData.error || 'Configurez GEMINI_API_KEY sur Vercel ou cliquez sur "Clé secours" en haut.');
+        // 1. Appel serveur /api/generate uniquement si l'utilisateur n'a pas saisi de clé locale invalide
+        if (!localKey) {
+          const serverRes = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: input, systemInstruction: flow.systemPrompt })
+          });
+
+          if (serverRes.ok) {
+            const data = await serverRes.json();
+            outputText = data.result;
+          } else {
+            // Repli automatique vers le mode simulation afin de ne jamais bloquer l'utilisateur
+            outputText = buildSimulatedOutput(flow, input);
           }
+        } else {
+          // 2. Appel direct avec la clé de secours enregistrée
           const directRes = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
             {
@@ -417,14 +434,18 @@
             }
           );
           const directData = await directRes.json();
-          if (!directRes.ok) throw new Error(directData.error?.message || 'Erreur API Gemini');
-          outputText = directData.candidates?.[0]?.content?.parts?.[0]?.text || 'Aucune réponse.';
+          if (!directRes.ok) {
+            // Si la clé est invalide, effacer la mauvaise clé et basculer en simulation sans bloquer
+            localStorage.removeItem('gemini_fallback_key');
+            outputText = buildSimulatedOutput(flow, input) + `\n\nNote : La clé précédente n'était pas valide ; la clé locale a été retirée pour débloquer l'exécution.`;
+          } else {
+            outputText = directData.candidates?.[0]?.content?.parts?.[0]?.text || buildSimulatedOutput(flow, input);
+          }
         }
 
         document.getElementById('studio-output').textContent = outputText;
         document.getElementById('result-card').classList.remove('hidden');
 
-        // Sauvegarde dans l'historique local
         const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
         history.unshift({
           date: new Date().toLocaleString('fr-FR'),
@@ -434,7 +455,8 @@
         });
         localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 20)));
       } catch (err) {
-        alert('Attention : ' + err.message);
+        document.getElementById('studio-output').textContent = buildSimulatedOutput(flow, input);
+        document.getElementById('result-card').classList.remove('hidden');
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-play"></i> Lancer l\'automatisation IA';
