@@ -1,78 +1,1132 @@
-<!doctype html>
-<html lang="fr">
+<!DOCTYPE html>
+<html lang="fr" class="dark">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1020">
-<title>AUTOPILOT AI</title>
-<style>
-:root{--bg:#0b1020;--panel:#121a2d;--panel2:#18233a;--line:#263550;--text:#edf3ff;--muted:#9aabc5;--blue:#58a6ff;--cyan:#45e0d0;--green:#45d49a;--orange:#ffbd69}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 0%,#172d4b 0,transparent 30%),var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
-button,input,textarea,select{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:auto;padding:18px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;color:#071321;font-weight:900;font-size:23px;box-shadow:0 8px 30px #45e0d044}.brand strong{display:block;font-size:18px;letter-spacing:1px}.brand small{color:var(--muted)}.top-actions{display:flex;gap:8px;align-items:center}.select,.btn,.field{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:11px;padding:10px 13px}.btn.primary{background:linear-gradient(120deg,#2779d7,#22b8b0);border:0;color:white;font-weight:700}.btn.ghost{background:transparent}.layout{display:grid;grid-template-columns:225px 1fr;gap:18px}.side,.card{background:#111a2cdd;border:1px solid var(--line);border-radius:17px}.side{padding:12px;height:max-content;position:sticky;top:12px}.nav{width:100%;display:flex;align-items:center;gap:11px;padding:12px;border:0;border-radius:10px;background:transparent;color:var(--muted);text-align:left;margin:3px 0}.nav.active,.nav:hover{background:#1c2b45;color:white}.nav span{width:20px;text-align:center}.side-note{margin:20px 8px 8px;padding:12px;border-radius:12px;background:#17253b;color:var(--muted);font-size:12px}.main{min-width:0}.welcome{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:4px 0 18px}.welcome h1{margin:0;font-size:clamp(23px,4vw,32px)}.welcome p{margin:4px 0 0;color:var(--muted)}.pill{font-size:12px;border:1px solid #285b66;background:#12353a;color:var(--cyan);padding:5px 9px;border-radius:30px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:15px}.stat{padding:15px}.stat label{color:var(--muted);font-size:12px}.stat b{display:block;font-size:27px;margin-top:5px}.stat em{font-style:normal;color:var(--green);font-size:12px}.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.card{padding:17px;margin-bottom:14px}.card h2{font-size:16px;margin:0 0 13px}.muted{color:var(--muted)}.quick{display:flex;flex-wrap:wrap;gap:8px}.quick button{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:10px 12px}.activity{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid #243149}.activity:last-child{border:0}.dot{width:9px;height:9px;background:var(--cyan);border-radius:50%;margin-top:7px;flex:none}.section{display:none}.section.active{display:block}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.field{width:100%;outline:none}.field:focus{border-color:var(--blue)}input.field,select.field{min-height:42px}textarea.field{min-height:100px;resize:vertical}.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:440px}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line)}th{font-size:12px;color:var(--muted);font-weight:600}.tag{display:inline-block;padding:4px 8px;border-radius:30px;background:#20334b;color:#a9c9f3;font-size:11px}.item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.item small{display:block;color:var(--muted)}.chat{height:300px;overflow:auto;background:#0d1526;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}.bubble{max-width:88%;padding:10px 12px;border-radius:12px;margin:8px 0;background:#1b2b45}.bubble.me{margin-left:auto;background:#174a58}.chatline{display:flex;gap:8px}.chatline input{flex:1}.empty{color:var(--muted);padding:16px;text-align:center}.footer{text-align:center;color:#73839d;font-size:11px;padding:20px}
-@media(max-width:760px){.app{padding:12px}.layout{grid-template-columns:1fr}.side{position:static;display:flex;overflow:auto;gap:4px;padding:7px}.nav{white-space:nowrap;width:auto;padding:9px 11px}.nav span{display:none}.side-note{display:none}.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.welcome{align-items:start;flex-direction:column}.formrow{grid-template-columns:1fr}.top{align-items:flex-start}.brand small{font-size:11px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autopilot-IA | Application intelligente d’automatisation des entreprises</title>
+    <!-- Chargement de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chargement de FontAwesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Police Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#151e32',
+                            900: '#0f172a',
+                            950: '#090d16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Styles complémentaires légers pour le défilement et animations */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        .animate-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+    </style>
 </head>
-<body>
-<div class="app">
-<header class="top"><div class="brand"><div class="logo">A</div><div><strong>AUTOPILOT AI</strong><small>Business automation workspace</small></div></div><div class="top-actions"><select class="select" id="lang" aria-label="Language"><option value="fr">Français</option><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select><span class="pill">V1.0 · Démo</span></div></header>
-<div class="layout">
-<aside class="side">
-<button class="nav active" data-page="dashboard"><span>◫</span><b data-i="dashboard">Tableau de bord</b></button>
-<button class="nav" data-page="assistant"><span>✧</span><b data-i="assistant">Assistant IA</b></button>
-<button class="nav" data-page="clients"><span>♙</span><b data-i="clients">Clients</b></button>
-<button class="nav" data-page="quotes"><span>▤</span><b data-i="quotes">Devis</b></button>
-<button class="nav" data-page="tasks"><span>✓</span><b data-i="tasks">Tâches</b></button>
-<button class="nav" data-page="approvals"><span>◷</span><b data-i="approvals">Validations</b></button>
-<div class="side-note">🔒 Les actions sensibles nécessitent une validation humaine.</div>
-</aside>
-<main class="main">
-<section class="section active" id="dashboard">
-<div class="welcome"><div><h1 data-i="hello">Bonjour 👋</h1><p data-i="overview">Voici le résumé de votre activité.</p></div><span class="pill">● <span data-i="system">Système prêt</span></span></div>
-<div class="stats">
-<div class="card stat"><label data-i="customers">Clients</label><b id="clientCount">0</b><em data-i="tracked">Enregistrés</em></div>
-<div class="card stat"><label data-i="quotes">Devis</label><b id="quoteCount">0</b><em data-i="prepared">Préparés</em></div>
-<div class="card stat"><label data-i="tasks">Tâches</label><b id="taskCount">0</b><em data-i="todo">À suivre</em></div>
-<div class="card stat"><label data-i="approval">Validations</label><b id="approvalCount">0</b><em data-i="review">À examiner</em></div>
-</div>
-<div class="grid2"><div class="card"><h2 data-i="shortcuts">Raccourcis</h2><div class="quick"><button onclick="go('assistant')" data-i="ask">✧ Parler à l'assistant</button><button onclick="go('clients')" data-i="addclient">＋ Ajouter un client</button><button onclick="go('quotes')" data-i="newquote">▤ Préparer un devis</button><button onclick="go('tasks')" data-i="newtask">✓ Créer une tâche</button></div></div><div class="card"><h2 data-i="recent">Activité récente</h2><div id="recent"><p class="empty" data-i="nothing">Aucune activité pour le moment.</p></div></div></div>
-<div class="card"><h2 data-i="autonomy">Autonomie maîtrisée</h2><p class="muted" data-i="autonomytext">AUTOPILOT AI prépare et organise le travail. Les actions importantes restent soumises à votre approbation.</p></div>
-</section>
-<section class="section" id="assistant"><div class="welcome"><div><h1 data-i="assistant">Assistant IA</h1><p data-i="assistantdesc">Décrivez une tâche à préparer.</p></div></div><div class="card"><div class="chat" id="chat"><div class="bubble" data-i="greeting">Bonjour ! Je suis votre assistant AUTOPILOT AI. Que souhaitez-vous préparer ?</div></div><div class="chatline"><input id="prompt" class="field" placeholder="Ex. : Prépare un devis pour deux agents à 200 000 FCFA..."><button class="btn primary" onclick="sendPrompt()" data-i="send">Envoyer</button></div><p class="muted" style="font-size:12px" data-i="simnote">Mode démonstration : les réponses sont simulées et aucune action externe n'est envoyée.</p></div></section>
-<section class="section" id="clients"><div class="welcome"><div><h1 data-i="clients">Clients</h1><p data-i="clientdesc">Votre carnet de clients et prospects.</p></div></div><div class="card"><div class="formrow"><input id="cname" class="field" placeholder="Nom du client"><input id="ccontact" class="field" placeholder="Téléphone ou e-mail"></div><button class="btn primary" onclick="addClient()" data-i="saveclient">＋ Enregistrer le client</button></div><div class="card tablewrap"><table><thead><tr><th data-i="name">Nom</th><th data-i="contact">Contact</th><th data-i="date">Ajouté le</th></tr></thead><tbody id="clientRows"></tbody></table></div></section>
-<section class="section" id="quotes"><div class="welcome"><div><h1 data-i="quotes">Devis</h1><p data-i="quotedesc">Préparez des devis en francs CFA.</p></div></div><div class="card"><div class="formrow"><input id="qclient" class="field" placeholder="Nom du client"><input id="qservice" class="field" placeholder="Description de la prestation"></div><div class="formrow"><input id="qamount" class="field" type="number" min="0" placeholder="Montant en FCFA"><input id="qperiod" class="field" placeholder="Période (ex. mensuel)"></div><button class="btn primary" onclick="addQuote()" data-i="prepare">Préparer le devis</button></div><div class="card" id="quoteRows"><p class="empty">Aucun devis pour le moment.</p></div></section>
-<section class="section" id="tasks"><div class="welcome"><div><h1 data-i="tasks">Tâches</h1><p data-i="taskdesc">Organisez le travail à effectuer.</p></div></div><div class="card"><div class="formrow"><input id="tname" class="field" placeholder="Description de la tâche"><input id="tdue" class="field" type="date"></div><button class="btn primary" onclick="addTask()" data-i="createtask">＋ Créer la tâche</button></div><div class="card" id="taskRows"><p class="empty">Aucune tâche pour le moment.</p></div></section>
-<section class="section" id="approvals"><div class="welcome"><div><h1 data-i="approvals">Validations</h1><p data-i="approvaldesc">Examinez les actions avant leur exécution.</p></div></div><div class="card" id="approvalRows"><p class="empty" data-i="noapproval">Aucune action en attente.</p></div></section>
-</main></div><div class="footer">AUTOPILOT AI · Prototype V1.0 · Vos données de démonstration restent dans ce navigateur.</div>
-</div>
-<script>
-const $=id=>document.getElementById(id);
-const store={clients:[],quotes:[],tasks:[],approvals:[],activity:[]};
-function load(){try{Object.keys(store).forEach(k=>store[k]=JSON.parse(localStorage.getItem('autopilot_'+k)||'[]'))}catch(e){}}
-function save(){Object.keys(store).forEach(k=>localStorage.setItem('autopilot_'+k,JSON.stringify(store[k])));render()}
-function log(s){store.activity.unshift({s,at:new Date().toLocaleString()});store.activity=store.activity.slice(0,5)}
-function go(p){document.querySelectorAll('.section').forEach(x=>x.classList.toggle('active',x.id===p));document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.page===p));window.scrollTo(0,0)}
-document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
-function addClient(){let n=$('cname').value.trim(),c=$('ccontact').value.trim();if(!n){alert('Ajoutez le nom du client.');return}store.clients.push({n,c,date:new Date().toLocaleDateString()});log('Client ajouté : '+n);$('cname').value='';$('ccontact').value='';save()}
-function addQuote(){let n=$('qclient').value.trim(),s=$('qservice').value.trim(),a=Number($('qamount').value),p=$('qperiod').value.trim();if(!n||!s||!a||a<0){alert('Renseignez le client, la prestation et le montant.');return}store.quotes.unshift({n,s,a,p,status:'Brouillon'});store.approvals.unshift({title:'Valider le devis de '+n,detail:s+' — '+a.toLocaleString('fr-FR')+' FCFA',status:'En attente'});log('Brouillon de devis préparé pour '+n);['qclient','qservice','qamount','qperiod'].forEach(x=>$(x).value='');save();go('approvals')}
-function addTask(){let n=$('tname').value.trim(),d=$('tdue').value;if(!n){alert('Décrivez la tâche.');return}store.tasks.unshift({n,d,done:false});log('Tâche créée : '+n);$('tname').value='';$('tdue').value='';save()}
-function approve(i){store.approvals[i].status='Approuvé';log('Action approuvée : '+store.approvals[i].title);save()}
-function finishTask(i){store.tasks[i].done=!store.tasks[i].done;save()}
-function render(){
-$('clientCount').textContent=store.clients.length;$('quoteCount').textContent=store.quotes.length;$('taskCount').textContent=store.tasks.filter(t=>!t.done).length;$('approvalCount').textContent=store.approvals.filter(a=>a.status==='En attente').length;
-$('clientRows').innerHTML=store.clients.map(x=>`<tr><td>${esc(x.n)}</td><td>${esc(x.c||'—')}</td><td>${x.date}</td></tr>`).join('')||'<tr><td colspan="3" class="empty">Aucun client.</td></tr>';
-$('quoteRows').innerHTML=store.quotes.map(x=>`<div class="item"><div><b>${esc(x.n)}</b><small>${esc(x.s)} · ${esc(x.p||'')}</small></div><div><b>${x.a.toLocaleString('fr-FR')} FCFA</b><small>${x.status}</small></div></div>`).join('')||'<p class="empty">Aucun devis pour le moment.</p>';
-$('taskRows').innerHTML=store.tasks.map((x,i)=>`<div class="item"><div><b style="${x.done?'text-decoration:line-through;opacity:.6':''}">${esc(x.n)}</b><small>${x.d||'Sans échéance'}</small></div><button class="btn" onclick="finishTask(${i})">${x.done?'Réouvrir':'Terminer'}</button></div>`).join('')||'<p class="empty">Aucune tâche pour le moment.</p>';
-$('approvalRows').innerHTML=store.approvals.map((x,i)=>`<div class="item"><div><b>${esc(x.title)}</b><small>${esc(x.detail)} · ${x.status}</small></div>${x.status==='En attente'?`<button class="btn primary" onclick="approve(${i})">Approuver</button>`:'<span class="tag">Traité</span>'}</div>`).join('')||'<p class="empty">Aucune action en attente.</p>';
-$('recent').innerHTML=store.activity.map(x=>`<div class="activity"><i class="dot"></i><div>${esc(x.s)}<small class="muted" style="display:block">${x.at}</small></div></div>`).join('')||'<p class="empty">Aucune activité pour le moment.</p>';
-}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function sendPrompt(){let v=$('prompt').value.trim();if(!v)return;let chat=$('chat');chat.insertAdjacentHTML('beforeend',`<div class="bubble me">${esc(v)}</div>`);$('prompt').value='';let response='Je peux vous aider à préparer un devis, organiser une tâche ou structurer une demande. Pour cette démonstration, utilisez les rubriques Clients, Devis et Tâches. Les actions externes ne sont pas encore connectées.';if(/devis|quote|presupuesto|orçamento/i.test(v))response='Je peux préparer un brouillon de devis. Ouvrez la rubrique « Devis », renseignez le client, la prestation et le montant. Le brouillon sera soumis à validation.';else if(/client|prospect/i.test(v))response='Pour enregistrer un client, ouvrez « Clients » et renseignez son nom et son contact.';else if(/tâche|tache|task|recordatorio/i.test(v))response='Pour créer un rappel, ouvrez « Tâches », indiquez la description et la date souhaitée.';chat.insertAdjacentHTML('beforeend',`<div class="bubble">${response}</div>`);chat.scrollTop=chat.scrollHeight}
-const translations={
-fr:{dashboard:'Tableau de bord',assistant:'Assistant IA',clients:'Clients',quotes:'Devis',tasks:'Tâches',approvals:'Validations',hello:'Bonjour 👋',overview:'Voici le résumé de votre activité.',system:'Système prêt',customers:'Clients',tracked:'Enregistrés',prepared:'Préparés',todo:'À suivre',approval:'Validations',review:'À examiner',shortcuts:'Raccourcis',ask:"✧ Parler à l'assistant",addclient:'＋ Ajouter un client',newquote:'▤ Préparer un devis',newtask:'✓ Créer une tâche',recent:'Activité récente',nothing:'Aucune activité pour le moment.',autonomy:'Autonomie maîtrisée',autonomytext:'AUTOPILOT AI prépare et organise le travail. Les actions importantes restent soumises à votre approbation.',assistantdesc:'Décrivez une tâche à préparer.',greeting:'Bonjour ! Je suis votre assistant AUTOPILOT AI. Que souhaitez-vous préparer ?',send:'Envoyer',simnote:'Mode démonstration : les réponses sont simulées et aucune action externe n’est envoyée.',clientdesc:'Votre carnet de clients et prospects.',saveclient:'＋ Enregistrer le client',name:'Nom',contact:'Contact',date:'Ajouté le',quotedesc:'Préparez des devis en francs CFA.',prepare:'Préparer le devis',taskdesc:'Organisez le travail à effectuer.',createtask:'＋ Créer la tâche',approvaldesc:'Examinez les actions avant leur exécution.',noapproval:'Aucune action en attente.'},
-en:{dashboard:'Dashboard',assistant:'AI Assistant',clients:'Clients',quotes:'Quotes',tasks:'Tasks',approvals:'Approvals',hello:'Hello 👋',overview:'Here is your activity summary.',system:'System ready',customers:'Clients',tracked:'Registered',prepared:'Prepared',todo:'To follow up',approval:'Approvals',review:'To review',shortcuts:'Shortcuts',ask:'✧ Talk to assistant',addclient:'＋ Add a client',newquote:'▤ Prepare a quote',newtask:'✓ Create a task',recent:'Recent activity',nothing:'No activity yet.',autonomy:'Controlled autonomy',autonomytext:'AUTOPILOT AI prepares and organizes work. Important actions require your approval.',assistantdesc:'Describe a task to prepare.',greeting:'Hello! I am your AUTOPILOT AI assistant. What would you like to prepare?',send:'Send',simnote:'Demo mode: replies are simulated and no external action is sent.',clientdesc:'Your client and prospect list.',saveclient:'＋ Save client',name:'Name',contact:'Contact',date:'Added on',quotedesc:'Prepare quotes in CFA francs.',prepare:'Prepare quote',taskdesc:'Organize the work to be done.',createtask:'＋ Create task',approvaldesc:'Review actions before execution.',noapproval:'No pending actions.'},
-es:{dashboard:'Panel',assistant:'Asistente IA',clients:'Clientes',quotes:'Presupuestos',tasks:'Tareas',approvals:'Aprobaciones',hello:'Hola 👋',overview:'Resumen de tu actividad.',system:'Sistema listo',customers:'Clientes',tracked:'Registrados',prepared:'Preparados',todo:'Pendientes',approval:'Aprobaciones',review:'Por revisar',shortcuts:'Accesos rápidos',ask:'✧ Hablar con el asistente',addclient:'＋ Añadir cliente',newquote:'▤ Preparar presupuesto',newtask:'✓ Crear tarea',recent:'Actividad reciente',nothing:'Todavía no hay actividad.',autonomy:'Autonomía controlada',autonomytext:'AUTOPILOT AI prepara y organiza el trabajo. Las acciones importantes requieren tu aprobación.',assistantdesc:'Describe una tarea.',greeting:'¡Hola! Soy tu asistente AUTOPILOT AI. ¿Qué deseas preparar?',send:'Enviar',simnote:'Modo de demostración: respuestas simuladas; no se envían acciones externas.',clientdesc:'Lista de clientes y prospectos.',saveclient:'＋ Guardar cliente',name:'Nombre',contact:'Contacto',date:'Añadido el',quotedesc:'Prepara presupuestos en francos CFA.',prepare:'Preparar presupuesto',taskdesc:'Organiza el trabajo pendiente.',createtask:'＋ Crear tarea',approvaldesc:'Revisa las acciones antes de ejecutarlas.',noapproval:'No hay acciones pendientes.'},
-pt:{dashboard:'Painel',assistant:'Assistente IA',clients:'Clientes',quotes:'Orçamentos',tasks:'Tarefas',approvals:'Aprovações',hello:'Olá 👋',overview:'Resumo da sua atividade.',system:'Sistema pronto',customers:'Clientes',tracked:'Registados',prepared:'Preparados',todo:'A acompanhar',approval:'Aprovações',review:'Para rever',shortcuts:'Atalhos',ask:'✧ Falar com o assistente',addclient:'＋ Adicionar cliente',newquote:'▤ Preparar orçamento',newtask:'✓ Criar tarefa',recent:'Atividade recente',nothing:'Ainda não há atividade.',autonomy:'Autonomia controlada',autonomytext:'AUTOPILOT AI prepara e organiza o trabalho. Ações importantes exigem a sua aprovação.',assistantdesc:'Descreva uma tarefa.',greeting:'Olá! Sou o seu assistente AUTOPILOT AI. O que deseja preparar?',send:'Enviar',simnote:'Modo de demonstração: respostas simuladas; nenhuma ação externa é enviada.',clientdesc:'Lista de clientes e potenciais clientes.',saveclient:'＋ Guardar cliente',name:'Nome',contact:'Contacto',date:'Adicionado em',quotedesc:'Prepare orçamentos em francos CFA.',prepare:'Preparar orçamento',taskdesc:'Organize o trabalho a realizar.',createtask:'＋ Criar tarefa',approvaldesc:'Revise as ações antes da execução.',noapproval:'Não há ações pendentes.'}};
-$('lang').addEventListener('change',e=>{let t=translations[e.target.value];document.querySelectorAll('[data-i]').forEach(el=>{let k=el.dataset.i;if(t[k])el.textContent=t[k]});document.documentElement.lang=e.target.value});
-load();render();
-</script>
-</body></html>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Notification Toast / Message Box (Remplace alert()) -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Barre de Navigation Supérieure -->
+    <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo & Nom -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+                    <i class="fa-solid fa-robot text-white text-lg"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-lg tracking-tight text-white">Autopilot-IA</span>
+                        <span class="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 rounded-full">v2.0 Live</span>
+                    </div>
+                    <p class="text-xs text-slate-400 hidden sm:block">Application intelligente d’automatisation des entreprises</p>
+                </div>
+            </div>
+
+            <!-- Navigation Onglets (Desktop & Mobile) -->
+            <nav class="flex items-center gap-1 sm:gap-2 bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+                <button onclick="switchTab('catalog')" id="nav-catalog" class="tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-sm">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Cas d'Usage</span>
+                </button>
+                <button onclick="switchTab('studio')" id="nav-studio" class="tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Studio IA</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                </button>
+            </nav>
+
+            <!-- Indicateur Statut Moteur IA -->
+            <div class="hidden md:flex items-center gap-3">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>Moteur Gemini Actif</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenu Principal -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+        <!-- ========================================================= -->
+        <!-- SECTION 1 : CATALOGUE DES CAS D'USAGE AUTOMATISÉS         -->
+        <!-- ========================================================= -->
+        <section id="view-catalog" class="space-y-8">
+            <!-- Bannière Hero Synthétique -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/50 border border-slate-800 p-6 sm:p-8">
+                <div class="absolute -top-24 -right-24 w-72 h-72 bg-indigo-600/20 rounded-full blur-3xl animate-glow pointer-events-none"></div>
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div class="max-w-2xl space-y-3">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>Architecture d'Automatisation Opérationnelle</span>
+                        </div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                            Cartographie des processus métiers automatisés par IA
+                        </h1>
+                        <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
+                            Sélectionnez un cas d'usage stratégique ci-dessous pour inspecter son déclencheur, ses actions IA et le lancer directement en conditions réelles dans le <strong class="text-indigo-400">Studio d'Exécution IA</strong>.
+                        </p>
+                    </div>
+                    
+                    <!-- KPIs d'impact -->
+                    <div class="grid grid-cols-3 gap-3 sm:gap-4 shrink-0">
+                        <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3 sm:p-4 text-center">
+                            <div class="text-xl sm:text-2xl font-bold text-emerald-400">-72%</div>
+                            <div class="text-[11px] text-slate-400 mt-1">Temps administratif</div>
+                        </div>
+                        <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3 sm:p-4 text-center">
+                            <div class="text-xl sm:text-2xl font-bold text-indigo-400">24/7</div>
+                            <div class="text-[11px] text-slate-400 mt-1">Exécution continue</div>
+                        </div>
+                        <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3 sm:p-4 text-center">
+                            <div class="text-xl sm:text-2xl font-bold text-cyan-400">6 Flux</div>
+                            <div class="text-[11px] text-slate-400 mt-1">Prêts à l'emploi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtres par Département -->
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center gap-2" id="categoryFilters">
+                    <button onclick="filterUseCases('all')" data-cat="all" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-medium bg-indigo-600 text-white transition">
+                        Tous les pôles (6)
+                    </button>
+                    <button onclick="filterUseCases('commercial')" data-cat="commercial" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">
+                        Commercial & Support
+                    </button>
+                    <button onclick="filterUseCases('operations')" data-cat="operations" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">
+                        Opérations & Direction
+                    </button>
+                    <button onclick="filterUseCases('admin')" data-cat="admin" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition">
+                        Finance, RH & Juridique
+                    </button>
+                </div>
+
+                <button onclick="openCustomWorkflow()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-indigo-500/40 text-indigo-300 text-xs font-medium flex items-center gap-2 transition">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Créer un flux personnalisé</span>
+                </button>
+            </div>
+
+            <!-- Grille des Cas d'Usage -->
+            <div id="useCasesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Injecté dynamiquement par JavaScript -->
+            </div>
+        </section>
+
+
+        <!-- ========================================================= -->
+        <!-- SECTION 2 : STUDIO D'EXÉCUTION IA FONCTIONNEL             -->
+        <!-- ========================================================= -->
+        <section id="view-studio" class="hidden space-y-6">
+            <!-- En-tête du Studio -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5">
+                <div class="flex items-center gap-3">
+                    <div id="studioHeaderIcon" class="w-11 h-11 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h2 id="studioTitle" class="text-lg font-bold text-white">Service Client & Qualification de Leads</h2>
+                            <span id="studioBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Gain : ~4h / sem</span>
+                        </div>
+                        <p id="studioSubtitle" class="text-xs text-slate-400 mt-0.5">Analyse automatique des demandes entrantes, scoring d'urgence et rédaction de réponse.</p>
+                    </div>
+                </div>
+
+                <!-- Sélecteur rapide de workflow -->
+                <div class="flex items-center gap-2">
+                    <label for="workflowSelector" class="text-xs text-slate-400 hidden lg:inline">Flux actif :</label>
+                    <select id="workflowSelector" onchange="selectWorkflowById(this.value)" class="w-full sm:w-auto bg-slate-950 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-indigo-500">
+                        <!-- Options générées dynamiquement -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Visualisation du Pipeline (Trigger -> IA -> Sorties) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="bg-slate-900/50 border border-slate-800/80 rounded-xl p-3.5 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0 text-xs font-bold">1</div>
+                    <div class="min-w-0">
+                        <div class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Déclencheur (Trigger)</div>
+                        <div id="pipeTrigger" class="text-xs text-slate-200 truncate font-medium mt-0.5">Nouvel email / Formulaire web</div>
+                    </div>
+                </div>
+                <div class="bg-slate-900/50 border border-indigo-500/30 rounded-xl p-3.5 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 text-xs font-bold">2</div>
+                    <div class="min-w-0">
+                        <div class="text-[11px] uppercase tracking-wider text-indigo-400 font-semibold">Traitement IA Gemini</div>
+                        <div id="pipeAction" class="text-xs text-slate-200 truncate font-medium mt-0.5">Extraction, Scoring & Rédaction</div>
+                    </div>
+                </div>
+                <div class="bg-slate-900/50 border border-slate-800/80 rounded-xl p-3.5 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0 text-xs font-bold">3</div>
+                    <div class="min-w-0">
+                        <div class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Livrable Automatisé</div>
+                        <div id="pipeOutput" class="text-xs text-slate-200 truncate font-medium mt-0.5">Réponse prête + Fiche CRM JSON</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Espace de Travail Principal (Entrée à gauche / Sortie IA à droite) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Colonne Gauche : Données d'entrée & Paramètres (5 colonnes) -->
+                <div class="lg:col-span-5 flex flex-col gap-4">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-semibold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-inbox text-indigo-400"></i>
+                                    Données brutes entrantes
+                                </span>
+                                <button onclick="loadSampleData()" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 transition">
+                                    <i class="fa-solid fa-rotate"></i>
+                                    <span>Charger un exemple</span>
+                                </button>
+                            </div>
+
+                            <!-- Champ instruction personnalisée (visible uniquement si flux personnalisé) -->
+                            <div id="customGoalWrapper" class="hidden space-y-1.5">
+                                <label class="text-xs font-medium text-slate-300">Objectif de l'automatisation personnalisée</label>
+                                <input id="customGoalInput" type="text" placeholder="Ex: Extraire les risques clés et rédiger une synthèse pour le comité..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500">
+                            </div>
+
+                            <!-- Zone de texte principale -->
+                            <div class="space-y-1.5">
+                                <label id="inputLabel" for="rawInputData" class="text-xs text-slate-400 block">
+                                    Collez un message client, une demande de devis ou un ticket :
+                                </label>
+                                <textarea id="rawInputData" rows="9" class="w-full bg-slate-950 border border-slate-700/90 rounded-xl p-3.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 leading-relaxed resize-y" placeholder="Saisissez vos données d'entreprise ici..."></textarea>
+                            </div>
+
+                            <!-- Options d'exécution -->
+                            <div class="grid grid-cols-2 gap-3 pt-1">
+                                <div>
+                                    <label class="text-[11px] text-slate-400 block mb-1">Ton & Posture</label>
+                                    <select id="toneSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                                        <option value="Professionnel et orienté action">Professionnel & Direct</option>
+                                        <option value="Chaleureux, empathique et commercial">Commercial & Empathique</option>
+                                        <option value="Formel, juridique et rigoureux">Formel & Juridique</option>
+                                        <option value="Synthétique niveau Direction (Comex)">Synthèse Direction (Comex)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-[11px] text-slate-400 block mb-1">Format de sortie</label>
+                                    <select id="langOutputSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                                        <option value="Français (Standard Entreprise)">Français (Standard)</option>
+                                        <option value="Français + Résumé exécutif en Anglais">Bilingue FR / EN</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bouton d'Exécution -->
+                        <div class="pt-2">
+                            <button id="runAutomationBtn" onclick="executeAutomation()" class="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2.5 transition-all active:scale-[0.99]">
+                                <i class="fa-solid fa-play"></i>
+                                <span>Exécuter le flux Autopilot-IA</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Journal d'Exécution (Logs Webhook/Pipeline) -->
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4">
+                        <div class="flex items-center justify-between mb-2.5">
+                            <span class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                                <i class="fa-solid fa-terminal text-emerald-400"></i>
+                                Journal d'exécution du pipeline
+                            </span>
+                            <button onclick="clearLogs()" class="text-[11px] text-slate-500 hover:text-slate-300">Effacer</button>
+                        </div>
+                        <div id="executionLogs" class="bg-slate-950 border border-slate-800/90 rounded-xl p-3 h-32 overflow-y-auto font-mono text-[11px] space-y-1.5 text-slate-400">
+                            <div class="text-slate-500">[Système] Autopilot-IA initialisé. En attente d'un déclenchement...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colonne Droite : Résultats Structurés Générés par l'IA (7 colonnes) -->
+                <div class="lg:col-span-7 flex flex-col">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex-1 flex flex-col">
+                        
+                        <!-- Barre d'outils de sortie -->
+                        <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-semibold text-white">Livrables Générés</span>
+                                <span id="outputStatusBadge" class="px-2.5 py-0.5 rounded-full text-[11px] bg-slate-800 text-slate-400">En attente</span>
+                            </div>
+
+                            <!-- Onglets de vue du résultat -->
+                            <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                                <button onclick="switchOutputView('formatted')" id="out-tab-formatted" class="out-tab px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-white transition">
+                                    Vue Métier
+                                </button>
+                                <button onclick="switchOutputView('json')" id="out-tab-json" class="out-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">
+                                    Données JSON / API
+                                </button>
+                            </div>
+
+                            <!-- Actions Copier / Télécharger -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="copyResultToClipboard()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition" title="Copier le livrable">
+                                    <i class="fa-regular fa-copy"></i>
+                                    <span>Copier</span>
+                                </button>
+                                <button onclick="downloadReport()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition" title="Exporter en fichier">
+                                    <i class="fa-solid fa-download"></i>
+                                    <span>Exporter</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- État Vide Initial -->
+                        <div id="emptyOutputState" class="flex-1 flex flex-col items-center justify-center text-center py-12 px-4">
+                            <div class="w-16 h-16 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-600 text-2xl mb-4">
+                                <i class="fa-solid fa-microchip"></i>
+                            </div>
+                            <h3 class="text-base font-semibold text-slate-300">Aucun flux exécuté pour le moment</h3>
+                            <p class="text-xs text-slate-500 max-w-md mt-1.5 leading-relaxed">
+                                Vérifiez les données brutes à gauche ou cliquez sur « Charger un exemple », puis lancez l'automatisation pour obtenir une analyse structurée, un message prêt à envoyer et les tâches associées.
+                            </p>
+                        </div>
+
+                        <!-- État Chargement IA -->
+                        <div id="loadingOutputState" class="hidden flex-1 flex flex-col items-center justify-center text-center py-12 px-4 space-y-4">
+                            <div class="relative w-14 h-14">
+                                <div class="absolute inset-0 rounded-full border-2 border-indigo-500/20"></div>
+                                <div class="absolute inset-0 rounded-full border-2 border-t-indigo-500 animate-spin"></div>
+                                <div class="absolute inset-0 flex items-center justify-center text-indigo-400">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-semibold text-white">Orchestration IA en cours...</h3>
+                                <p id="loadingStepText" class="text-xs text-slate-400 mt-1">Analyse sémantique et structuration des données métiers</p>
+                            </div>
+                        </div>
+
+                        <!-- Vue Résultat Formaté (Métiers) -->
+                        <div id="formattedOutputView" class="hidden flex-1 pt-4 space-y-4 overflow-y-auto">
+                            <!-- Carte Métadonnées & Priorité -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3">
+                                    <div class="text-[11px] text-slate-500">Priorité détectée</div>
+                                    <div id="resPriority" class="text-sm font-bold text-amber-400 mt-0.5">—</div>
+                                </div>
+                                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3">
+                                    <div class="text-[11px] text-slate-500">Catégorie / Routage</div>
+                                    <div id="resCategory" class="text-sm font-bold text-cyan-400 mt-0.5">—</div>
+                                </div>
+                                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3">
+                                    <div class="text-[11px] text-slate-500">Temps économisé estimé</div>
+                                    <div id="resTimeSaved" class="text-sm font-bold text-emerald-400 mt-0.5">—</div>
+                                </div>
+                            </div>
+
+                            <!-- Synthèse Exécutive -->
+                            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-1.5">
+                                <div class="text-xs font-semibold text-indigo-400 uppercase tracking-wider flex items-center gap-2">
+                                    <i class="fa-solid fa-align-left"></i>
+                                    Synthèse & Diagnostic IA
+                                </div>
+                                <p id="resSummary" class="text-sm text-slate-200 leading-relaxed"></p>
+                            </div>
+
+                            <!-- Livrable Principal Prêt à l'Emploi (Email / Rapport / Clause) -->
+                            <div class="bg-slate-950 border border-indigo-500/30 rounded-xl p-4 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span id="resDeliverableTitle" class="text-xs font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                        Livrable Automatisé Prêt à l'Envoi
+                                    </span>
+                                    <button onclick="copyDeliverableOnly()" class="text-[11px] text-indigo-400 hover:text-indigo-300 underline">
+                                        Copier ce texte
+                                    </button>
+                                </div>
+                                <div id="resDeliverableContent" class="text-sm text-slate-100 whitespace-pre-wrap leading-relaxed bg-slate-900/70 p-3.5 rounded-lg border border-slate-800/80"></div>
+                            </div>
+
+                            <!-- Plan d'Actions Automatisées (Checklist) -->
+                            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-2.5">
+                                <div class="text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                                    <i class="fa-solid fa-list-check"></i>
+                                    Prochaines Actions Recommandées (CRM / ERP)
+                                </div>
+                                <ul id="resActionItems" class="space-y-2 text-xs sm:text-sm text-slate-300">
+                                    <!-- Liste dynamique -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Vue Résultat JSON (Pour intégration Webhook / Make / n8n / Zapier) -->
+                        <div id="jsonOutputView" class="hidden flex-1 pt-4 flex flex-col">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs text-slate-400">Payload structuré prêt pour connexion API, n8n, Make ou CRM :</span>
+                            </div>
+                            <pre id="resJsonRaw" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-emerald-400 overflow-x-auto leading-relaxed"></pre>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-5 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+            <div class="flex items-center gap-2">
+                <span class="font-semibold text-slate-300">Autopilot-IA</span>
+                <span>•</span>
+                <span>Application intelligente d’automatisation des entreprises</span>
+            </div>
+            <div>
+                Déploiement prêt pour GitHub & Vercel • Propulsé par Gemini IA
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================================= -->
+    <!-- LOGIQUE JAVASCRIPT & INTÉGRATION GEMINI API               -->
+    <!-- ========================================================= -->
+    <script>
+        // Clé API fournie dynamiquement par l'environnement d'exécution
+        const apiKey = ""; 
+
+        // Définition complète des 6 cas d'usage métiers automatisés
+        const USE_CASES = [
+            {
+                id: "lead-support",
+                category: "commercial",
+                categoryLabel: "Commercial & Support",
+                title: "Service Client & Qualification de Leads",
+                icon: "fa-headset",
+                color: "indigo",
+                timeSaved: "~5h / semaine",
+                roiBadge: "+40% réactivité",
+                trigger: "Réception d'un email entrant, formulaire de contact ou ticket support",
+                aiAction: "Analyse d'intention, scoring d'urgence, extraction des besoins et rédaction d'une réponse personnalisée",
+                outputDesc: "Email de réponse prêt à envoyer + Fiche prospect qualifiée (JSON)",
+                deliverableLabel: "Réponse Client Rédigée",
+                inputLabel: "Collez un email prospect, une demande de devis ou une réclamation client :",
+                sampleData: `Objet : Demande de devis urgent - Refonte logistique et suivi de flotte
+
+Bonjour,
+Je suis Marc Kouassi, Directeur des Opérations chez TransLogis Afrique (45 collaborateurs). Nous cherchons actuellement une solution pour automatiser le suivi de nos bons de livraison et la facturation client qui nous prend 2 jours par semaine.
+Nous aimerions déployer un outil d'ici le mois prochain avec un budget prévisionnel autour de 800€/mois. Pouvez-vous nous faire une démonstration cette semaine ?
+Cordialement,
+Marc Kouassi - 07 08 45 12 90`
+            },
+            {
+                id: "contract-audit",
+                category: "admin",
+                categoryLabel: "Finance, RH & Juridique",
+                title: "Audit & Synthèse de Contrats / Documents",
+                icon: "fa-file-signature",
+                color: "cyan",
+                timeSaved: "~6h / semaine",
+                roiBadge: "Zéro oubli critique",
+                trigger: "Dépôt d'un contrat fournisseur, NDA ou cahier des charges",
+                aiAction: "Détection des clauses à risque, dates d'échéance, pénalités et rédaction d'un contre-argumentaire",
+                outputDesc: "Note de synthèse juridique + Proposition de clause révisée",
+                deliverableLabel: "Contre-proposition & Note Juridique",
+                inputLabel: "Collez l'extrait d'un contrat, CGV ou appel d'offres à analyser :",
+                sampleData: `ARTICLE 8 - RÉSILIATION ET RECONDUCTION
+Le présent contrat de prestation informatique est conclu pour une durée initiale de 24 mois à compter de sa signature. Il sera renouvelé par tacite reconduction pour des périodes successives de 12 mois, sauf dénonciation par lettre recommandée avec accusé de réception envoyée au moins 6 mois avant la date d'échéance. En cas de résiliation anticipée par le Client, l'intégralité des sommes restant dues jusqu'au terme de la période en cours sera immédiatement exigible à titre d'indemnité forfaitaire. Le Prestataire se réserve le droit de réviser ses tarifs annuellement sans plafond.`
+            },
+            {
+                id: "ops-reporting",
+                category: "operations",
+                categoryLabel: "Opérations & Direction",
+                title: "Reporting Opérationnel & Analyse KPI",
+                icon: "fa-chart-line",
+                color: "emerald",
+                timeSaved: "~4h / semaine",
+                roiBadge: "Décision immédiate",
+                trigger: "Clôture hebdomadaire d'activité ou remontée brute des équipes terrain",
+                aiAction: "Consolidation des chiffres clés, détection des anomalies et génération d'un rapport de direction",
+                outputDesc: "Compte-rendu exécutif structuré + Alertes correctives",
+                deliverableLabel: "Rapport Exécutif Hebdomadaire",
+                inputLabel: "Collez vos notes brutes d'activité, chiffres de ventes ou comptes-rendus d'équipe :",
+                sampleData: `Notes semaine 46 - Agence Centrale :
+- Chiffre d'affaires réalisé : 42 500 € (objectif était 40 000 €).
+- Taux de conversion devis : passé de 28% à 21% à cause d'un délai de réponse trop long sur les demandes web (moyenne 48h).
+- Stock : rupture temporaire sur la référence PRO-X2 pendant 3 jours, 4 commandes retardées.
+- Satisfaction client : 4.7/5 sur 18 avis récoltés.
+- Équipe : 1 commercial en arrêt maladie toute la semaine, surcharge sur l'équipe support.`
+            },
+            {
+                id: "invoice-recovery",
+                category: "admin",
+                categoryLabel: "Finance, RH & Juridique",
+                title: "Relances & Facturation Automatisée",
+                icon: "fa-file-invoice-dollar",
+                color: "amber",
+                timeSaved: "~3.5h / semaine",
+                roiBadge: "-35% délais paiement",
+                trigger: "Dépassement d'échéance de facture (J+7, J+15, J+30) dans la comptabilité",
+                aiAction: "Évaluation du niveau de retard, adaptation du ton diplomatique/ferme et génération de l'avis de relance",
+                outputDesc: "Email de relance gradué + Plan de recouvrement",
+                deliverableLabel: "Courrier / Email de Relance Client",
+                inputLabel: "Saisissez les informations de la facture impayée et l'historique client :",
+                sampleData: `Client : Société BatiPlus SARL (Client fidèle depuis 3 ans, généralement bon payeur)
+Facture n° FAC-2026-0894
+Montant TTC : 6 450,00 €
+Date d'émission : 02 octobre 2026
+Date d'échéance : 02 novembre 2026 (Retard actuel : 21 jours)
+Historique : Une première relance automatique simple a été envoyée le 10 novembre sans réponse. Le chef de projet a confirmé que la prestation a bien été livrée et validée sans réserve.`
+            },
+            {
+                id: "hr-scheduling",
+                category: "operations",
+                categoryLabel: "Opérations & Direction",
+                title: "Planification RH & Gestion des Plannings",
+                icon: "fa-calendar-check",
+                color: "violet",
+                timeSaved: "~4.5h / semaine",
+                roiBadge: "Zéro conflit horaire",
+                trigger: "Demandes de congés, contraintes d'équipe ou pics de charge prévus",
+                aiAction: "Arbitrage des disponibilités, détection des sous-effectifs et proposition d'organisation optimisée",
+                outputDesc: "Note de planning optimisée + Message de coordination équipe",
+                deliverableLabel: "Plan d'Organisation & Note d'Équipe",
+                inputLabel: "Indiquez les contraintes d'effectifs, absences et besoins opérationnels :",
+                sampleData: `Besoin semaine prochaine (Lundi au Vendredi) : minimum 3 agents au support client de 8h à 18h.
+Équipe disponible (5 personnes) :
+- Sarah : en congés jeudi et vendredi.
+- Karim : indisponible le matin avant 10h (formation).
+- Nadia : disponible temps plein, préfère éviter les fermetures à 18h.
+- Lucas : disponible temps plein, polyvalent.
+- Amina : temps partiel, travaille uniquement lundi, mardi et mercredi.
+Pic d'appels attendu lundi matin et vendredi après-midi.`
+            },
+            {
+                id: "meeting-minutes",
+                category: "commercial",
+                categoryLabel: "Commercial & Support",
+                title: "Compte-Rendu de Réunion & Suivi Tâches",
+                icon: "fa-comments",
+                color: "rose",
+                timeSaved: "~3h / semaine",
+                roiBadge: "100% actions tracées",
+                trigger: "Fin d'une réunion client ou comité projet (notes en vrac ou transcription)",
+                aiAction: "Structuration des décisions actées, attribution des responsables et rédaction du mail récapitulatif",
+                outputDesc: "Compte-rendu structuré + Liste des tâches avec échéances",
+                deliverableLabel: "Email Récapitulatif de Réunion",
+                inputLabel: "Collez vos notes prises à la volée pendant la réunion :",
+                sampleData: `Réunion lancement projet ERP avec client Horizon Distribution - 23 nov
+Présents : Paul (nous), Claire (cheffe projet nous), M. Diallo (DG Horizon), Mme Koné (DAF Horizon).
+Points discutés :
+- Validation du périmètre phase 1 (gestion stocks + ventes).
+- M. Diallo veut que la reprise des données historiques soit faite avant le 15 décembre.
+- Claire doit envoyer le modèle de fichier Excel d'import d'ici mercredi soir.
+- Mme Koné demande l'ajout de 3 licences utilisateurs supplémentaires, Paul doit chiffrer l'avenant pour vendredi.
+- Prochain point de suivi fixé mardi prochain à 10h en visio.`
+            }
+        ];
+
+        // Cas d'usage personnalisé
+        const CUSTOM_WORKFLOW = {
+            id: "custom-flow",
+            category: "custom",
+            categoryLabel: "Flux Sur-Mesure",
+            title: "Flux d'Automatisation Personnalisé",
+            icon: "fa-sliders",
+            color: "indigo",
+            timeSaved: "Variable selon flux",
+            roiBadge: "100% adaptable",
+            trigger: "Déclenchement manuel ou API sur mesure",
+            aiAction: "Exécution de votre consigne métier spécifique sur vos données brutes",
+            outputDesc: "Livrable sur mesure + Extraction structurée JSON",
+            deliverableLabel: "Résultat de l'Automatisation Sur-Mesure",
+            inputLabel: "Collez les données brutes à traiter par votre flux personnalisé :",
+            sampleData: "Collez ici n'importe quel texte, email, tableau de données ou note interne que vous souhaitez transformer automatiquement..."
+        };
+
+        // État global de l'application
+        let currentWorkflow = USE_CASES[0];
+        let lastStructuredResult = null;
+        let currentOutputTab = 'formatted';
+
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderUseCasesGrid('all');
+            populateWorkflowSelector();
+            loadWorkflowIntoStudio(USE_CASES[0], false);
+        });
+
+        // Gestion de la navigation principale (Catalogue vs Studio)
+        function switchTab(tabName) {
+            const catalogView = document.getElementById('view-catalog');
+            const studioView = document.getElementById('view-studio');
+            const navCatalog = document.getElementById('nav-catalog');
+            const navStudio = document.getElementById('nav-studio');
+
+            if (tabName === 'catalog') {
+                catalogView.classList.remove('hidden');
+                studioView.classList.add('hidden');
+                navCatalog.className = "tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-sm";
+                navStudio.className = "tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60";
+            } else {
+                catalogView.classList.add('hidden');
+                studioView.classList.remove('hidden');
+                navStudio.className = "tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-sm";
+                navCatalog.className = "tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60";
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Filtrage des cartes du catalogue
+        function filterUseCases(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.cat === category) {
+                    btn.className = "filter-btn px-3.5 py-2 rounded-xl text-xs font-medium bg-indigo-600 text-white transition";
+                } else {
+                    btn.className = "filter-btn px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition";
+                }
+            });
+            renderUseCasesGrid(category);
+        }
+
+        // Rendu des cartes de cas d'usage
+        function renderUseCasesGrid(filterCat) {
+            const grid = document.getElementById('useCasesGrid');
+            const filtered = filterCat === 'all' 
+                ? USE_CASES 
+                : USE_CASES.filter(uc => uc.category === filterCat);
+
+            const colorMap = {
+                indigo: "bg-indigo-500/15 text-indigo-400 border-indigo-500/30",
+                cyan: "bg-cyan-500/15 text-cyan-400 border-cyan-500/30",
+                emerald: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+                amber: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+                violet: "bg-violet-500/15 text-violet-400 border-violet-500/30",
+                rose: "bg-rose-500/15 text-rose-400 border-rose-500/30"
+            };
+
+            grid.innerHTML = filtered.map(uc => `
+                <div class="group bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-indigo-500/50 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 shadow-sm hover:shadow-xl hover:shadow-indigo-950/30">
+                    <div class="space-y-4">
+                        <!-- En-tête carte -->
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="w-11 h-11 rounded-xl border ${colorMap[uc.color]} flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-solid ${uc.icon}"></i>
+                            </div>
+                            <div class="flex flex-col items-end gap-1">
+                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                    <i class="fa-regular fa-clock mr-1"></i>${uc.timeSaved}
+                                </span>
+                                <span class="text-[11px] text-slate-500">${uc.categoryLabel}</span>
+                            </div>
+                        </div>
+
+                        <!-- Titre -->
+                        <div>
+                            <h3 class="text-base font-bold text-white group-hover:text-indigo-300 transition-colors">${uc.title}</h3>
+                        </div>
+
+                        <!-- Détails du Workflow -->
+                        <div class="space-y-2.5 pt-2 border-t border-slate-800/80 text-xs">
+                            <div class="flex items-start gap-2.5">
+                                <span class="text-amber-400 mt-0.5 shrink-0"><i class="fa-solid fa-bolt"></i></span>
+                                <div>
+                                    <span class="text-slate-500 font-medium">Déclencheur : </span>
+                                    <span class="text-slate-300">${uc.trigger}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <span class="text-indigo-400 mt-0.5 shrink-0"><i class="fa-solid fa-brain"></i></span>
+                                <div>
+                                    <span class="text-slate-500 font-medium">Action IA : </span>
+                                    <span class="text-slate-300">${uc.aiAction}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <span class="text-emerald-400 mt-0.5 shrink-0"><i class="fa-solid fa-check-double"></i></span>
+                                <div>
+                                    <span class="text-slate-500 font-medium">Livrable : </span>
+                                    <span class="text-slate-300">${uc.outputDesc}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bouton d'action -->
+                    <div class="pt-5 mt-4 border-t border-slate-800/60">
+                        <button onclick="launchUseCaseInStudio('${uc.id}')" class="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-800 hover:border-indigo-500 text-xs font-semibold flex items-center justify-center gap-2 transition-all">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Tester ce flux dans le Studio</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Remplissage du sélecteur dans le Studio
+        function populateWorkflowSelector() {
+            const selector = document.getElementById('workflowSelector');
+            const options = [...USE_CASES, CUSTOM_WORKFLOW].map(uc => 
+                `<option value="${uc.id}">${uc.title}</option>`
+            ).join('');
+            selector.innerHTML = options;
+        }
+
+        // Ouvrir un cas d'usage spécifique dans le Studio
+        function launchUseCaseInStudio(id) {
+            const found = USE_CASES.find(uc => uc.id === id) || CUSTOM_WORKFLOW;
+            loadWorkflowIntoStudio(found, true);
+            switchTab('studio');
+        }
+
+        // Ouvrir le mode flux personnalisé
+        function openCustomWorkflow() {
+            loadWorkflowIntoStudio(CUSTOM_WORKFLOW, true);
+            switchTab('studio');
+        }
+
+        // Sélection via le menu déroulant du Studio
+        function selectWorkflowById(id) {
+            const found = [...USE_CASES, CUSTOM_WORKFLOW].find(uc => uc.id === id);
+            if (found) {
+                loadWorkflowIntoStudio(found, true);
+            }
+        }
+
+        // Chargement d'un workflow dans l'interface du Studio
+        function loadWorkflowIntoStudio(wf, resetOutput = true) {
+            currentWorkflow = wf;
+            document.getElementById('workflowSelector').value = wf.id;
+            document.getElementById('studioTitle').textContent = wf.title;
+            document.getElementById('studioBadge').textContent = `Gain : ${wf.timeSaved}`;
+            document.getElementById('studioSubtitle').textContent = wf.aiAction;
+            document.getElementById('studioHeaderIcon').innerHTML = `<i class="fa-solid ${wf.icon}"></i>`;
+
+            document.getElementById('pipeTrigger').textContent = wf.trigger;
+            document.getElementById('pipeAction').textContent = wf.aiAction;
+            document.getElementById('pipeOutput').textContent = wf.outputDesc;
+
+            document.getElementById('inputLabel').textContent = wf.inputLabel;
+            document.getElementById('rawInputData').value = wf.sampleData;
+
+            const customWrapper = document.getElementById('customGoalWrapper');
+            if (wf.id === 'custom-flow') {
+                customWrapper.classList.remove('hidden');
+            } else {
+                customWrapper.classList.add('hidden');
+            }
+
+            if (resetOutput) {
+                document.getElementById('emptyOutputState').classList.remove('hidden');
+                document.getElementById('formattedOutputView').classList.add('hidden');
+                document.getElementById('jsonOutputView').classList.add('hidden');
+                document.getElementById('outputStatusBadge').textContent = 'En attente';
+                document.getElementById('outputStatusBadge').className = 'px-2.5 py-0.5 rounded-full text-[11px] bg-slate-800 text-slate-400';
+                lastStructuredResult = null;
+            }
+
+            addLog(`Flux chargé : "${wf.title}"`);
+        }
+
+        // Charger les données d'exemple
+        function loadSampleData() {
+            document.getElementById('rawInputData').value = currentWorkflow.sampleData;
+            showToast("Exemple de données métier chargé.", "info");
+            addLog("Données d'exemple injectées dans le tampon d'entrée.");
+        }
+
+        // Basculer entre la vue Métier et la vue JSON
+        function switchOutputView(view) {
+            currentOutputTab = view;
+            const tabFormatted = document.getElementById('out-tab-formatted');
+            const tabJson = document.getElementById('out-tab-json');
+            const viewFormatted = document.getElementById('formattedOutputView');
+            const viewJson = document.getElementById('jsonOutputView');
+
+            if (view === 'formatted') {
+                tabFormatted.className = "out-tab px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-white transition";
+                tabJson.className = "out-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition";
+                if (lastStructuredResult) {
+                    viewFormatted.classList.remove('hidden');
+                    viewJson.classList.add('hidden');
+                }
+            } else {
+                tabJson.className = "out-tab px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-white transition";
+                tabFormatted.className = "out-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition";
+                if (lastStructuredResult) {
+                    viewJson.classList.remove('hidden');
+                    viewFormatted.classList.add('hidden');
+                }
+            }
+        }
+
+        // Ajout d'une ligne dans le journal d'exécution
+        function addLog(message, type = "info") {
+            const logsContainer = document.getElementById('executionLogs');
+            const now = new Date().toLocaleTimeString('fr-FR', { hour12: false });
+            let colorClass = "text-slate-400";
+            if (type === "success") colorClass = "text-emerald-400";
+            if (type === "warn") colorClass = "text-amber-400";
+            if (type === "error") colorClass = "text-rose-400";
+            if (type === "ai") colorClass = "text-indigo-400";
+
+            const entry = document.createElement('div');
+            entry.className = colorClass;
+            entry.textContent = `[${now}] ${message}`;
+            logsContainer.appendChild(entry);
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('executionLogs').innerHTML = `<div class="text-slate-500">[Système] Journal réinitialisé.</div>`;
+        }
+
+        // Appel à l'API Gemini avec gestion du backoff exponentiel et réponse JSON structurée
+        async function callGeminiAutomationAPI(promptText, systemInstructionText) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: promptText }] }],
+                systemInstruction: {
+                    parts: [{ text: systemInstructionText }]
+                },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            priorite: { type: "STRING", description: "Niveau d'urgence : Critique, Haute, Normale ou Basse" },
+                            categorie_routage: { type: "STRING", description: "Service destinataire ou catégorie métier détectée" },
+                            synthese_diagnostic: { type: "STRING", description: "Analyse concise et professionnelle de la situation (2 à 4 phrases)" },
+                            titre_livrable: { type: "STRING", description: "Titre explicite du document ou message généré" },
+                            contenu_livrable: { type: "STRING", description: "Le texte complet, prêt à l'emploi (email, clause révisée, rapport, note de planning)" },
+                            actions_recommandees: {
+                                type: "ARRAY",
+                                items: { type: "STRING" },
+                                description: "Liste de 3 à 5 actions concrètes à déclencher dans le CRM/ERP"
+                            },
+                            donnees_extraites: {
+                                type: "OBJECT",
+                                properties: {
+                                    entite_principale: { type: "STRING" },
+                                    montant_ou_valeur: { type: "STRING" },
+                                    echeance_detectee: { type: "STRING" },
+                                    sentiment_client: { type: "STRING" }
+                                }
+                            }
+                        },
+                        required: [
+                            "priorite",
+                            "categorie_routage",
+                            "synthese_diagnostic",
+                            "titre_livrable",
+                            "contenu_livrable",
+                            "actions_recommandees",
+                            "donnees_extraites"
+                        ]
+                    }
+                }
+            };
+
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let attempt = 0; attempt <= delays.length; attempt++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!rawText) {
+                        throw new Error("Réponse vide du modèle IA");
+                    }
+
+                    return JSON.parse(rawText);
+                } catch (err) {
+                    if (attempt === delays.length) {
+                        throw err;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delays[attempt]));
+                }
+            }
+        }
+
+        // Exécution principale du pipeline d'automatisation
+        async function executeAutomation() {
+            const rawInput = document.getElementById('rawInputData').value.trim();
+            if (!rawInput) {
+                showToast("Veuillez saisir des données brutes avant de lancer l'automatisation.", "error");
+                return;
+            }
+
+            const customGoal = document.getElementById('customGoalInput').value.trim();
+            if (currentWorkflow.id === 'custom-flow' && !customGoal) {
+                showToast("Veuillez préciser l'objectif de votre flux personnalisé.", "error");
+                return;
+            }
+
+            const tone = document.getElementById('toneSelect').value;
+            const outputLang = document.getElementById('langOutputSelect').value;
+            const runBtn = document.getElementById('runAutomationBtn');
+
+            // Mise à jour UI en mode chargement
+            runBtn.disabled = true;
+            runBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            document.getElementById('emptyOutputState').classList.add('hidden');
+            document.getElementById('formattedOutputView').classList.add('hidden');
+            document.getElementById('jsonOutputView').classList.add('hidden');
+            document.getElementById('loadingOutputState').classList.remove('hidden');
+            document.getElementById('outputStatusBadge').textContent = 'Exécution...';
+            document.getElementById('outputStatusBadge').className = 'px-2.5 py-0.5 rounded-full text-[11px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+
+            addLog(`Déclenchement du workflow [${currentWorkflow.title}]...`, "ai");
+            addLog("Extraction des entités et contextualisation métier...");
+
+            const workflowObjective = currentWorkflow.id === 'custom-flow' 
+                ? customGoal 
+                : `${currentWorkflow.title} : ${currentWorkflow.aiAction}`;
+
+            const systemPrompt = `Tu es Autopilot-IA, un moteur expert d'automatisation des processus d'entreprise (BPA).
+Ta mission est de transformer des données brutes d'entreprise en livrables opérationnels immédiatement exploitables, sans aucun blabla inutile.
+Flux actif : ${workflowObjective}
+Ton exigé : ${tone}
+Langue de sortie : ${outputLang}
+Sois précis, pragmatique, orienté ROI et actionnable.`;
+
+            const userPrompt = `Voici les données entrantes à automatiser :\n\n"""\n${rawInput}\n"""\n\nGénère l'analyse complète, le livrable prêt à l'emploi et le plan d'actions.`;
+
+            try {
+                const startTime = performance.now();
+                const result = await callGeminiAutomationAPI(userPrompt, systemPrompt);
+                const duration = ((performance.now() - startTime) / 1000).toFixed(2);
+
+                lastStructuredResult = {
+                    workflow_id: currentWorkflow.id,
+                    workflow_name: currentWorkflow.title,
+                    timestamp: new Date().toISOString(),
+                    execution_time_sec: Number(duration),
+                    ...result
+                };
+
+                renderAutomationResult(lastStructuredResult);
+                addLog(`Pipeline exécuté avec succès en ${duration}s.`, "success");
+                showToast("Automatisation terminée avec succès !", "success");
+
+            } catch (error) {
+                addLog(`Erreur lors de l'exécution du moteur IA : ${error.message}`, "error");
+                showToast("Une erreur est survenue lors de l'appel à l'IA. Veuillez réessayer.", "error");
+                document.getElementById('loadingOutputState').classList.add('hidden');
+                document.getElementById('emptyOutputState').classList.remove('hidden');
+                document.getElementById('outputStatusBadge').textContent = 'Échec';
+                document.getElementById('outputStatusBadge').className = 'px-2.5 py-0.5 rounded-full text-[11px] bg-rose-500/20 text-rose-400';
+            } finally {
+                runBtn.disabled = false;
+                runBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            }
+        }
+
+        // Affichage des résultats structurés dans l'interface
+        function renderAutomationResult(data) {
+            document.getElementById('loadingOutputState').classList.add('hidden');
+            
+            const statusBadge = document.getElementById('outputStatusBadge');
+            statusBadge.textContent = `Complété (${data.execution_time_sec}s)`;
+            statusBadge.className = 'px-2.5 py-0.5 rounded-full text-[11px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+
+            // Remplissage des métadonnées
+            document.getElementById('resPriority').textContent = data.priorite || "Normale";
+            document.getElementById('resCategory').textContent = data.categorie_routage || currentWorkflow.categoryLabel;
+            document.getElementById('resTimeSaved').textContent = currentWorkflow.timeSaved;
+
+            // Remplissage synthèse et livrable
+            document.getElementById('resSummary').textContent = data.synthese_diagnostic;
+            document.getElementById('resDeliverableTitle').innerHTML = `<i class="fa-solid fa-paper-plane"></i> ${data.titre_livrable || currentWorkflow.deliverableLabel}`;
+            document.getElementById('resDeliverableContent').textContent = data.contenu_livrable;
+
+            // Remplissage des actions recommandées
+            const actionsList = document.getElementById('resActionItems');
+            actionsList.innerHTML = (data.actions_recommandees || []).map(action => `
+                <li class="flex items-start gap-2.5 bg-slate-900/90 border border-slate-800/80 rounded-lg p-2.5">
+                    <i class="fa-solid fa-square-check text-emerald-400 mt-0.5"></i>
+                    <span>${escapeHtml(action)}</span>
+                </li>
+            `).join('');
+
+            // Remplissage vue JSON
+            document.getElementById('resJsonRaw').textContent = JSON.stringify(data, null, 2);
+
+            // Afficher l'onglet actif
+            switchOutputView(currentOutputTab);
+        }
+
+        // Copie sécurisée via textarea temporaire (compatible iframe)
+        function fallbackCopyText(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Contenu copié dans le presse-papiers !", "success");
+            } catch (err) {
+                showToast("Impossible de copier automatiquement.", "error");
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function copyResultToClipboard() {
+            if (!lastStructuredResult) {
+                showToast("Aucun résultat à copier pour le moment.", "warn");
+                return;
+            }
+            if (currentOutputTab === 'json') {
+                fallbackCopyText(JSON.stringify(lastStructuredResult, null, 2));
+            } else {
+                const formattedText = `=== ${lastStructuredResult.workflow_name.toUpperCase()} ===
+Priorité : ${lastStructuredResult.priorite} | Routage : ${lastStructuredResult.categorie_routage}
+
+SYNTHÈSE :
+${lastStructuredResult.synthese_diagnostic}
+
+${lastStructuredResult.titre_livrable.toUpperCase()} :
+${lastStructuredResult.contenu_livrable}
+
+ACTIONS RECOMMANDÉES :
+${lastStructuredResult.actions_recommandees.map(a => `- ${a}`).join('\n')}`;
+                fallbackCopyText(formattedText);
+            }
+        }
+
+        function copyDeliverableOnly() {
+            if (!lastStructuredResult) return;
+            fallbackCopyText(lastStructuredResult.contenu_livrable);
+        }
+
+        // Exportation du livrable en fichier texte ou JSON
+        function downloadReport() {
+            if (!lastStructuredResult) {
+                showToast("Exécutez d'abord un flux avant d'exporter.", "warn");
+                return;
+            }
+            const isJson = currentOutputTab === 'json';
+            const content = isJson 
+                ? JSON.stringify(lastStructuredResult, null, 2)
+                : `AUTOPILOT-IA - RAPPORT D'AUTOMATISATION\nFlux : ${lastStructuredResult.workflow_name}\nDate : ${new Date().toLocaleString('fr-FR')}\nPriorité : ${lastStructuredResult.priorite}\n\n--- SYNTHÈSE ---\n${lastStructuredResult.synthese_diagnostic}\n\n--- ${lastStructuredResult.titre_livrable.toUpperCase()} ---\n${lastStructuredResult.contenu_livrable}\n\n--- PROCHAINES ACTIONS ---\n${lastStructuredResult.actions_recommandees.map(a => `[ ] ${a}`).join('\n')}`;
+
+            const blob = new Blob([content], { type: isJson ? 'application/json;charset=utf-8' : 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `autopilot-ia-${lastStructuredResult.workflow_id}.${isJson ? 'json' : 'txt'}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            addLog(`Exportation du fichier généré (.${isJson ? 'json' : 'txt'}).`, "info");
+        }
+
+        // Système de notifications Toast (remplace alert())
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const styles = {
+                success: "bg-slate-900 border-emerald-500/50 text-emerald-300",
+                error: "bg-slate-900 border-rose-500/50 text-rose-300",
+                warn: "bg-slate-900 border-amber-500/50 text-amber-300",
+                info: "bg-slate-900 border-indigo-500/50 text-indigo-300"
+            };
+            const icons = {
+                success: "fa-circle-check text-emerald-400",
+                error: "fa-circle-exclamation text-rose-400",
+                warn: "fa-triangle-exclamation text-amber-400",
+                info: "fa-circle-info text-indigo-400"
+            };
+
+            toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl border shadow-xl text-xs font-medium transition-all duration-300 ${styles[type] || styles.info}`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.info}"></i><span>${escapeHtml(message)}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(8px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        // Utilitaire de sécurisation HTML
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
