@@ -1,45 +1,525 @@
-async function executeWorkflow() {
-  const flowId = document.getElementById('studio-flow-select').value;
-  const flow = flows.find(f => f.id === flowId);
-  const input = document.getElementById('studio-input').value.trim();
-  if (!input) return alert('Veuillez saisir des données à traiter.');
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Autopilot-IA | Automatisation Métier</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Autopilot-IA">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712035.png">
 
-  const btn = document.getElementById('run-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Génération IA en cours...';
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  try {
-    const res = await fetch('https://text.pollinations.ai/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages: [
-          { role: 'system', content: flow.systemPrompt },
-          { role: 'user', content: input }
-        ],
-        model: 'openai'
-      })
-    });
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            slate: {
+              850: '#151e32',
+              900: '#0f172a',
+              950: '#090d16'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #090d16; color: #f8fafc; -webkit-tap-highlight-color: transparent; }
+    .glass { background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(12px); border: 1px solid rgba(99, 102, 241, 0.18); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
-    if (!res.ok) throw new Error('Serveur IA momentanément saturé.');
-    const outputText = await res.text();
+  <!-- Barre de navigation supérieure -->
+  <header class="sticky top-0 z-40 glass border-b border-slate-800/80 px-4 py-3">
+    <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+          <i class="fa-solid fa-robot text-white text-base"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-base tracking-tight text-white">Autopilot-IA</h1>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V2.1 PRO</span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Moteur d'automatisation opérationnelle</p>
+        </div>
+      </div>
 
-    document.getElementById('studio-output').textContent = outputText;
-    document.getElementById('result-card').classList.remove('hidden');
+      <!-- Navigation principale -->
+      <nav class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+        <button onclick="switchTab('catalog')" id="tab-catalog" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow">
+          <i class="fa-solid fa-layer-group mr-1"></i> Flux
+        </button>
+        <button onclick="switchTab('studio')" id="tab-studio" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
+          <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Studio IA
+        </button>
+        <button onclick="switchTab('history')" id="tab-history" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
+          <i class="fa-solid fa-clock-rotate-left mr-1"></i> Historique
+        </button>
+      </nav>
+    </div>
+  </header>
 
-    const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
-    history.unshift({
-      date: new Date().toLocaleString('fr-FR'),
-      title: flow.title,
-      input,
-      output: outputText
-    });
-    localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 20)));
-  } catch (err) {
-    alert('Erreur réseau : ' + err.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fa-solid fa-play"></i> Lancer l\'automatisation IA';
-  }
-}
->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
+
+    <!-- ONGLET 1 : CATALOGUE DES FLUX -->
+    <section id="view-catalog" class="space-y-6">
+      <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/50 border border-indigo-500/20 p-5 sm:p-7">
+        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/25 px-3 py-1 rounded-full mb-3">
+          <i class="fa-solid fa-bolt text-amber-400"></i> Architecture Autonome
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
+          Cartographie des processus métiers automatisés par IA
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed mb-5">
+          Sélectionnez un flux métier ci-dessous pour inspecter son déclencheur et l'exécuter directement dans le <strong class="text-indigo-300">Studio IA</strong>.
+        </p>
+
+        <div class="grid grid-cols-3 gap-2.5 text-center">
+          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
+            <div class="text-lg sm:text-xl font-extrabold text-emerald-400">-72%</div>
+            <div class="text-[11px] text-slate-400">Temps admin</div>
+          </div>
+          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
+            <div class="text-lg sm:text-xl font-extrabold text-indigo-400">24/7</div>
+            <div class="text-[11px] text-slate-400">Disponibilité</div>
+          </div>
+          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
+            <div id="flow-count-badge" class="text-lg sm:text-xl font-extrabold text-violet-400">6 Flux</div>
+            <div class="text-[11px] text-slate-400">Prêts à l'emploi</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtres & bouton création -->
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="category-filters">
+          <button onclick="filterFlows('all')" data-cat="all" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap">Tous les pôles</button>
+          <button onclick="filterFlows('commercial')" data-cat="commercial" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Commercial & Support</button>
+          <button onclick="filterFlows('operations')" data-cat="operations" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Opérations & Direction</button>
+          <button onclick="filterFlows('finance')" data-cat="finance" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Finance, RH & Juridique</button>
+        </div>
+
+        <button onclick="openModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition">
+          <i class="fa-solid fa-plus mr-1"></i> Créer un flux
+        </button>
+      </div>
+
+      <!-- Grille des cartes -->
+      <div id="flows-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ONGLET 2 : STUDIO D'EXÉCUTION IA -->
+    <section id="view-studio" class="hidden space-y-5">
+      <div class="glass rounded-2xl p-5 space-y-4">
+        <div class="flex items-center justify-between gap-2 flex-wrap">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-microchip text-indigo-400"></i> Studio d'Exécution IA
+            </h2>
+            <p class="text-xs text-slate-400">Mode autonome avec repli simulation si clé absente</p>
+          </div>
+          <button onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
+            <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé secours
+          </button>
+        </div>
+
+        <!-- Option clé de secours -->
+        <div id="fallback-key-box" class="hidden bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
+          <label class="block text-xs font-semibold text-slate-300">Clé API Gemini personnelle (optionnelle — mode simulation actif sans clé)</label>
+          <div class="flex gap-2">
+            <input type="password" id="local-api-key" placeholder="AIzaSy... (laisser vide pour simulation)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <button onclick="saveLocalKey()" class="px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Sauver</button>
+          </div>
+        </div>
+
+        <!-- Sélecteur de flux -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">1. Choisir le processus métier</label>
+          <select id="studio-flow-select" onchange="loadFlowTemplate()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"></select>
+        </div>
+
+        <!-- Données d'entrée -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-semibold text-slate-300">2. Données entrantes (email, facture, demande, texte brut)</label>
+            <button onclick="fillSampleData()" class="text-[11px] text-indigo-400 hover:underline">Remplir un exemple</button>
+          </div>
+          <textarea id="studio-input" rows="5" placeholder="Collez ici les données à traiter par l'automatisation..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
+        </div>
+
+        <button id="run-btn" onclick="executeWorkflow()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-play"></i> Lancer l'automatisation IA
+        </button>
+      </div>
+
+      <!-- Résultat généré -->
+      <div id="result-card" class="hidden glass rounded-2xl p-5 space-y-3 border-emerald-500/30">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-check"></i> Livrable généré
+          </span>
+          <button onclick="copyOutput()" class="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200">
+            <i class="fa-regular fa-copy mr-1"></i> Copier
+          </button>
+        </div>
+        <div id="studio-output" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 whitespace-pre-wrap leading-relaxed font-sans"></div>
+      </div>
+    </section>
+
+    <!-- ONGLET 3 : HISTORIQUE -->
+    <section id="view-history" class="hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-bold text-white">Exécutions sauvegardées</h2>
+        <button onclick="clearHistory()" class="text-xs text-rose-400 hover:underline">Tout effacer</button>
+      </div>
+      <div id="history-list" class="space-y-3"></div>
+    </section>
+
+  </main>
+
+  <!-- MODAL CRÉATION DE FLUX -->
+  <div id="create-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-white">Nouveau flux personnalisé</h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <input id="new-title" type="text" placeholder="Titre du flux (ex: Analyse de contrat)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
+      <select id="new-cat" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
+        <option value="commercial">Commercial & Support</option>
+        <option value="operations">Opérations & Direction</option>
+        <option value="finance">Finance, RH & Juridique</option>
+      </select>
+      <textarea id="new-prompt" rows="3" placeholder="Instruction système pour l'IA (ex: Tu es un juriste expert...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white"></textarea>
+      <button onclick="addCustomFlow()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm">Enregistrer le flux</button>
+    </div>
+  </div>
+
+  <script>
+    const defaultFlows = [
+      {
+        id: 'support-leads',
+        title: 'Service Client & Qualification de Leads',
+        category: 'commercial',
+        badge: 'Commercial & Support',
+        saving: '~5h / semaine',
+        icon: 'fa-headset',
+        trigger: 'Réception d\'un email entrant, formulaire de contact ou message client.',
+        action: 'Analyse d\'intention, scoring d\'urgence, extraction des besoins et rédaction d\'une réponse prête à envoyer.',
+        systemPrompt: 'Tu es un responsable commercial et support senior. Analyse le message client fourni. Produis un rapport structuré avec : 1) Score d\'urgence (1 à 5) et intention, 2) Besoins clés détectés, 3) Une réponse professionnelle, chaleureuse et orientée conversion prête à être envoyée.',
+        sample: 'Bonjour, nous sommes une PME de 35 salariés et cherchons une solution pour automatiser nos devis et relances clients avant la fin du mois. Pouvez-vous nous faire une proposition rapide ?'
+      },
+      {
+        id: 'invoices-ocr',
+        title: 'Extraction & Contrôle de Factures',
+        category: 'finance',
+        badge: 'Finance, RH & Juridique',
+        saving: '~4h / semaine',
+        icon: 'fa-file-invoice-dollar',
+        trigger: 'Réception d\'une facture fournisseur ou d\'un devis.',
+        action: 'Extraction structurée des montants HT/TVA/TTC, échéance, détection d\'anomalies et écriture comptable.',
+        systemPrompt: 'Tu es un contrôleur financier expert. Extrais toutes les données clés du texte de facture/devis fourni (Fournisseur, Date, Montant HT, TVA, TTC, Échéance), signale toute incohérence éventuelle et propose l\'imputation comptable.',
+        sample: 'Facture N°2026-884 - Fournisseur : TechCloud Services - Date : 15/11/2026 - Prestation hébergement serveur : 450 000 FCFA HT - TVA 18% : 81 000 FCFA - Total TTC : 531 000 FCFA - Règlement sous 30 jours.'
+      },
+      {
+        id: 'ops-briefing',
+        title: 'Synthèse Opérationnelle & Compte-Rendu',
+        category: 'operations',
+        badge: 'Opérations & Direction',
+        saving: '~6h / semaine',
+        icon: 'fa-diagram-project',
+        trigger: 'Notes brutes de réunion, rapport de terrain ou point d\'équipe.',
+        action: 'Structuration en décisions actées, plan d\'action par responsable et alertes de blocage.',
+        systemPrompt: 'Tu es un directeur des opérations (COO). Transforme les notes brutes en un compte-rendu exécutif clair avec : 1) Résumé exécutif, 2) Décisions validées, 3) Tableau des actions (Qui / Quoi / Échéance), 4) Points de vigilance.',
+        sample: 'Réunion lundi matin : retard livraison fournisseur sur le chantier Nord, Karim doit relancer avant mercredi. Validation du budget recrutement 2 agents. Prochain audit qualité fixé au 10 décembre.'
+      },
+      {
+        id: 'hr-screening',
+        title: 'Présélection & Analyse de Candidatures',
+        category: 'finance',
+        badge: 'Finance, RH & Juridique',
+        saving: '~3h / semaine',
+        icon: 'fa-user-check',
+        trigger: 'Réception d\'un CV ou profil candidat pour un poste ouvert.',
+        action: 'Évaluation de l\'adéquation au poste, points forts, zones d\'ombre et grille de questions d\'entretien.',
+        systemPrompt: 'Tu es un recruteur senior. Évalue le profil candidat fourni : donne un score d\'adéquation sur 100, liste 3 points forts, 2 points à vérifier et 4 questions ciblées pour l\'entretien.',
+        sample: 'Profil : 4 ans d\'expérience en gestion administrative et juridique, maîtrise des contrats commerciaux et de la facturation, recherche un poste de responsable administratif.'
+      },
+      {
+        id: 'sales-followup',
+        title: 'Séquence de Relance Commerciale B2B',
+        category: 'commercial',
+        badge: 'Commercial & Support',
+        saving: '~4h / semaine',
+        icon: 'fa-paper-plane',
+        trigger: 'Devis envoyé sans réponse depuis plus de 48 heures.',
+        action: 'Génération d\'une séquence de 3 relances progressives (douce, valeur ajoutée, clôture).',
+        systemPrompt: 'Tu es un expert en négociation B2B. Rédige une séquence de 3 messages de relance courts, percutants et non agressifs (J+2, J+5, J+10) adaptés au contexte fourni.',
+        sample: 'Devis envoyé il y a 4 jours à la société Ivoire Logistique pour un pack d\'automatisation du service client à 1 200 000 FCFA. Aucun retour pour l\'instant.'
+      },
+      {
+        id: 'legal-audit',
+        title: 'Revue Préliminaire de Clauses Contractuelles',
+        category: 'finance',
+        badge: 'Finance, RH & Juridique',
+        saving: '~5h / semaine',
+        icon: 'fa-scale-balanced',
+        trigger: 'Réception d\'un projet de contrat, bail ou partenariat.',
+        action: 'Identification des clauses à risque, obligations critiques et suggestions de reformulation protectrice.',
+        systemPrompt: 'Tu es un juriste d\'affaires rigoureux. Analyse la clause ou le contrat soumis : identifie les risques juridiques ou financiers, les obligations clés et propose une reformulation équilibrée.',
+        sample: 'Clause de résiliation : Le Prestataire peut résilier le présent contrat à tout moment sans préavis ni indemnité, tandis que le Client reste engagé pour une durée ferme de 24 mois.'
+      }
+    ];
+
+    let flows = JSON.parse(localStorage.getItem('autopilot_flows')) || defaultFlows;
+    let currentFilter = 'all';
+    let selectedFlowId = flows[0].id;
+
+    function renderCatalog() {
+      const grid = document.getElementById('flows-grid');
+      const filtered = currentFilter === 'all' ? flows : flows.filter(f => f.category === currentFilter);
+      document.getElementById('flow-count-badge').textContent = `${flows.length} Flux`;
+
+      grid.innerHTML = filtered.map(f => `
+        <div class="glass rounded-2xl p-5 flex flex-col justify-between gap-4 hover:border-indigo-500/50 transition">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                <i class="fa-solid ${f.icon || 'fa-bolt'}"></i>
+              </div>
+              <div class="text-right">
+                <span class="inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <i class="fa-regular fa-clock mr-1"></i>${f.saving || '~3h / sem'}
+                </span>
+                <div class="text-[11px] text-slate-400 mt-1">${f.badge}</div>
+              </div>
+            </div>
+            <h3 class="font-bold text-base text-white">${f.title}</h3>
+            <p class="text-xs text-slate-300 leading-relaxed"><strong class="text-amber-400">Déclencheur :</strong> ${f.trigger}</p>
+            <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-indigo-300">Action IA :</strong> ${f.action}</p>
+          </div>
+          <button onclick="launchInStudio('${f.id}')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-bold transition flex items-center justify-center gap-2">
+            Exécuter dans le Studio <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      `).join('');
+
+      const select = document.getElementById('studio-flow-select');
+      select.innerHTML = flows.map(f => `<option value="${f.id}">${f.title}</option>`).join('');
+      select.value = selectedFlowId;
+    }
+
+    function filterFlows(cat) {
+      currentFilter = cat;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        const active = btn.dataset.cat === cat;
+        btn.className = active
+          ? 'filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap'
+          : 'filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap';
+      });
+      renderCatalog();
+    }
+
+    function switchTab(tab) {
+      ['catalog', 'studio', 'history'].forEach(t => {
+        document.getElementById(`view-${t}`).classList.toggle('hidden', t !== tab);
+        const btn = document.getElementById(`tab-${t}`);
+        btn.className = t === tab
+          ? 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow'
+          : 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white';
+      });
+      if (tab === 'history') renderHistory();
+    }
+
+    function launchInStudio(id) {
+      selectedFlowId = id;
+      document.getElementById('studio-flow-select').value = id;
+      fillSampleData();
+      switchTab('studio');
+    }
+
+    function loadFlowTemplate() {
+      selectedFlowId = document.getElementById('studio-flow-select').value;
+    }
+
+    function fillSampleData() {
+      const flow = flows.find(f => f.id === document.getElementById('studio-flow-select').value);
+      if (flow && flow.sample) {
+        document.getElementById('studio-input').value = flow.sample;
+      }
+    }
+
+    function toggleKeyBox() {
+      document.getElementById('fallback-key-box').classList.toggle('hidden');
+      document.getElementById('local-api-key').value = localStorage.getItem('gemini_fallback_key') || '';
+    }
+
+    function saveLocalKey() {
+      const val = document.getElementById('local-api-key').value.trim();
+      if (val) localStorage.setItem('gemini_fallback_key', val);
+      else localStorage.removeItem('gemini_fallback_key');
+      alert('Paramètre de clé enregistré sur cet appareil.');
+    }
+
+    function buildSimulatedOutput(flow, input) {
+      const excerpt = input.length > 180 ? input.slice(0, 180) + '...' : input;
+      return `[MODE SIMULATION AUTONOME — Aucune clé API requise]\n\n` +
+        `Flux exécuté : ${flow.title}\n` +
+        `Pôle : ${flow.badge}\n` +
+        `Données analysées : "${excerpt}"\n\n` +
+        `1. Diagnostic & Priorisation\n` +
+        `- Intention principale détectée et classée en priorité haute.\n` +
+        `- Contexte métier : ${flow.action}\n\n` +
+        `2. Livrable proposé\n` +
+        `- Synthèse structurée prête pour validation opérationnelle.\n` +
+        `- Prochaine étape recommandée : transmettre ou archiver ce résultat depuis l'onglet Historique.\n\n` +
+        `(Astuce : dès qu'une clé API Gemini valide est ajoutée dans "Clé secours" ou sur le serveur Vercel, ce flux s'exécutera en direct avec Gemini.)`;
+    }
+
+    async function executeWorkflow() {
+      const flowId = document.getElementById('studio-flow-select').value;
+      const flow = flows.find(f => f.id === flowId);
+      const input = document.getElementById('studio-input').value.trim();
+      if (!input) return alert('Veuillez saisir des données à traiter.');
+
+      const btn = document.getElementById('run-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement IA en cours...';
+
+      try {
+        let outputText = '';
+        const localKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
+
+        // 1. Appel serveur /api/generate uniquement si l'utilisateur n'a pas saisi de clé locale invalide
+        if (!localKey) {
+          const serverRes = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: input, systemInstruction: flow.systemPrompt })
+          });
+
+          if (serverRes.ok) {
+            const data = await serverRes.json();
+            outputText = data.result;
+          } else {
+            // Repli automatique vers le mode simulation afin de ne jamais bloquer l'utilisateur
+            outputText = buildSimulatedOutput(flow, input);
+          }
+        } else {
+          // 2. Appel direct avec la clé de secours enregistrée
+          const directRes = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                systemInstruction: { parts: [{ text: flow.systemPrompt }] },
+                contents: [{ parts: [{ text: input }] }]
+              })
+            }
+          );
+          const directData = await directRes.json();
+          if (!directRes.ok) {
+            // Si la clé est invalide, effacer la mauvaise clé et basculer en simulation sans bloquer
+            localStorage.removeItem('gemini_fallback_key');
+            outputText = buildSimulatedOutput(flow, input) + `\n\nNote : La clé précédente n'était pas valide ; la clé locale a été retirée pour débloquer l'exécution.`;
+          } else {
+            outputText = directData.candidates?.[0]?.content?.parts?.[0]?.text || buildSimulatedOutput(flow, input);
+          }
+        }
+
+        document.getElementById('studio-output').textContent = outputText;
+        document.getElementById('result-card').classList.remove('hidden');
+
+        const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
+        history.unshift({
+          date: new Date().toLocaleString('fr-FR'),
+          title: flow.title,
+          input,
+          output: outputText
+        });
+        localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 20)));
+      } catch (err) {
+        document.getElementById('studio-output').textContent = buildSimulatedOutput(flow, input);
+        document.getElementById('result-card').classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> Lancer l\'automatisation IA';
+      }
+    }
+
+    function copyOutput() {
+      navigator.clipboard.writeText(document.getElementById('studio-output').textContent);
+      alert('Résultat copié !');
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('history-list');
+      const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
+      if (!history.length) {
+        list.innerHTML = '<div class="glass rounded-2xl p-6 text-center text-xs text-slate-400">Aucune exécution enregistrée pour le moment.</div>';
+        return;
+      }
+      list.innerHTML = history.map(item => `
+        <div class="glass rounded-2xl p-4 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-indigo-400">${item.title}</span>
+            <span class="text-slate-500">${item.date}</span>
+          </div>
+          <p class="text-xs text-slate-400 line-clamp-2">Entrée : ${item.input}</p>
+          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 whitespace-pre-wrap max-h-48 overflow-y-auto">${item.output}</div>
+        </div>
+      `).join('');
+    }
+
+    function clearHistory() {
+      localStorage.removeItem('autopilot_history');
+      renderHistory();
+    }
+
+    function openModal() { document.getElementById('create-modal').classList.remove('hidden'); }
+    function closeModal() { document.getElementById('create-modal').classList.add('hidden'); }
+
+    function addCustomFlow() {
+      const title = document.getElementById('new-title').value.trim();
+      const category = document.getElementById('new-cat').value;
+      const systemPrompt = document.getElementById('new-prompt').value.trim();
+      if (!title || !systemPrompt) return alert('Remplissez le titre et l\'instruction.');
+
+      const badges = { commercial: 'Commercial & Support', operations: 'Opérations & Direction', finance: 'Finance, RH & Juridique' };
+      flows.unshift({
+        id: 'custom-' + Date.now(),
+        title,
+        category,
+        badge: badges[category],
+        saving: 'Personnalisé',
+        icon: 'fa-wand-magic-sparkles',
+        trigger: 'Déclenchement manuel dans le Studio IA.',
+        action: 'Traitement sur-mesure selon vos instructions.',
+        systemPrompt,
+        sample: ''
+      });
+      localStorage.setItem('autopilot_flows', JSON.stringify(flows));
+      closeModal();
+      renderCatalog();
+    }
+
+    renderCatalog();
+  </script>
+</body>
+</html>
