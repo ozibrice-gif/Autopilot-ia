@@ -131,18 +131,18 @@
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-microchip text-indigo-400"></i> Studio d'Exécution IA
             </h2>
-            <p class="text-xs text-slate-400">Mode autonome avec repli simulation si clé absente</p>
+            <p class="text-xs text-slate-400">Moteur IA autonome connecté (sans clé requise)</p>
           </div>
           <button onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
-            <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé secours
+            <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé Gemini
           </button>
         </div>
 
-        <!-- Option clé de secours -->
+        <!-- Option clé Gemini facultative -->
         <div id="fallback-key-box" class="hidden bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
-          <label class="block text-xs font-semibold text-slate-300">Clé API Gemini personnelle (optionnelle — mode simulation actif sans clé)</label>
+          <label class="block text-xs font-semibold text-slate-300">Clé API Gemini facultative (si vous souhaitez forcer Gemini)</label>
           <div class="flex gap-2">
-            <input type="password" id="local-api-key" placeholder="AIzaSy... (laisser vide pour simulation)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <input type="password" id="local-api-key" placeholder="AIzaSy... (facultatif)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
             <button onclick="saveLocalKey()" class="px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Sauver</button>
           </div>
         </div>
@@ -221,7 +221,7 @@
         icon: 'fa-headset',
         trigger: 'Réception d\'un email entrant, formulaire de contact ou message client.',
         action: 'Analyse d\'intention, scoring d\'urgence, extraction des besoins et rédaction d\'une réponse prête à envoyer.',
-        systemPrompt: 'Tu es un responsable commercial et support senior. Analyse le message client fourni. Produis un rapport structuré avec : 1) Score d\'urgence (1 à 5) et intention, 2) Besoins clés détectés, 3) Une réponse professionnelle, chaleureuse et orientée conversion prête à être envoyée.',
+        systemPrompt: 'Tu es un responsable commercial et support senior. Réponds en français clair et structuré. Analyse le message client fourni et produis : 1) Score d\'urgence (1 à 5) et intention, 2) Besoins clés détectés, 3) Une réponse professionnelle, chaleureuse et orientée conversion prête à être envoyée.',
         sample: 'Bonjour, nous sommes une PME de 35 salariés et cherchons une solution pour automatiser nos devis et relances clients avant la fin du mois. Pouvez-vous nous faire une proposition rapide ?'
       },
       {
@@ -233,7 +233,7 @@
         icon: 'fa-file-invoice-dollar',
         trigger: 'Réception d\'une facture fournisseur ou d\'un devis.',
         action: 'Extraction structurée des montants HT/TVA/TTC, échéance, détection d\'anomalies et écriture comptable.',
-        systemPrompt: 'Tu es un contrôleur financier expert. Extrais toutes les données clés du texte de facture/devis fourni (Fournisseur, Date, Montant HT, TVA, TTC, Échéance), signale toute incohérence éventuelle et propose l\'imputation comptable.',
+        systemPrompt: 'Tu es un contrôleur financier expert. Réponds en français. Extrais toutes les données clés du texte de facture/devis fourni (Fournisseur, Date, Montant HT, TVA, TTC, Échéance), vérifie la cohérence des calculs et propose l\'imputation comptable.',
         sample: 'Facture N°2026-884 - Fournisseur : TechCloud Services - Date : 15/11/2026 - Prestation hébergement serveur : 450 000 FCFA HT - TVA 18% : 81 000 FCFA - Total TTC : 531 000 FCFA - Règlement sous 30 jours.'
       },
       {
@@ -245,7 +245,7 @@
         icon: 'fa-diagram-project',
         trigger: 'Notes brutes de réunion, rapport de terrain ou point d\'équipe.',
         action: 'Structuration en décisions actées, plan d\'action par responsable et alertes de blocage.',
-        systemPrompt: 'Tu es un directeur des opérations (COO). Transforme les notes brutes en un compte-rendu exécutif clair avec : 1) Résumé exécutif, 2) Décisions validées, 3) Tableau des actions (Qui / Quoi / Échéance), 4) Points de vigilance.',
+        systemPrompt: 'Tu es un directeur des opérations (COO). Réponds en français. Transforme les notes brutes en un compte-rendu exécutif clair avec : 1) Résumé exécutif, 2) Décisions validées, 3) Plan d\'action (Qui / Quoi / Échéance), 4) Points de vigilance.',
         sample: 'Réunion lundi matin : retard livraison fournisseur sur le chantier Nord, Karim doit relancer avant mercredi. Validation du budget recrutement 2 agents. Prochain audit qualité fixé au 10 décembre.'
       },
       {
@@ -257,7 +257,7 @@
         icon: 'fa-user-check',
         trigger: 'Réception d\'un CV ou profil candidat pour un poste ouvert.',
         action: 'Évaluation de l\'adéquation au poste, points forts, zones d\'ombre et grille de questions d\'entretien.',
-        systemPrompt: 'Tu es un recruteur senior. Évalue le profil candidat fourni : donne un score d\'adéquation sur 100, liste 3 points forts, 2 points à vérifier et 4 questions ciblées pour l\'entretien.',
+        systemPrompt: 'Tu es un recruteur senior. Réponds en français. Évalue le profil candidat fourni : donne un score d\'adéquation sur 100, liste 3 points forts, 2 points à vérifier et 4 questions ciblées pour l\'entretien.',
         sample: 'Profil : 4 ans d\'expérience en gestion administrative et juridique, maîtrise des contrats commerciaux et de la facturation, recherche un poste de responsable administratif.'
       },
       {
@@ -269,7 +269,7 @@
         icon: 'fa-paper-plane',
         trigger: 'Devis envoyé sans réponse depuis plus de 48 heures.',
         action: 'Génération d\'une séquence de 3 relances progressives (douce, valeur ajoutée, clôture).',
-        systemPrompt: 'Tu es un expert en négociation B2B. Rédige une séquence de 3 messages de relance courts, percutants et non agressifs (J+2, J+5, J+10) adaptés au contexte fourni.',
+        systemPrompt: 'Tu es un expert en négociation B2B. Réponds en français. Rédige une séquence de 3 messages de relance courts, percutants et non agressifs (J+2, J+5, J+10) adaptés au contexte fourni.',
         sample: 'Devis envoyé il y a 4 jours à la société Ivoire Logistique pour un pack d\'automatisation du service client à 1 200 000 FCFA. Aucun retour pour l\'instant.'
       },
       {
@@ -281,7 +281,7 @@
         icon: 'fa-scale-balanced',
         trigger: 'Réception d\'un projet de contrat, bail ou partenariat.',
         action: 'Identification des clauses à risque, obligations critiques et suggestions de reformulation protectrice.',
-        systemPrompt: 'Tu es un juriste d\'affaires rigoureux. Analyse la clause ou le contrat soumis : identifie les risques juridiques ou financiers, les obligations clés et propose une reformulation équilibrée.',
+        systemPrompt: 'Tu es un juriste d\'affaires rigoureux. Réponds en français. Analyse la clause ou le contrat soumis : identifie les risques juridiques ou financiers, les obligations clés et propose une reformulation équilibrée.',
         sample: 'Clause de résiliation : Le Prestataire peut résilier le présent contrat à tout moment sans préavis ni indemnité, tandis que le Client reste engagé pour une durée ferme de 24 mois.'
       }
     ];
@@ -373,22 +373,16 @@
       const val = document.getElementById('local-api-key').value.trim();
       if (val) localStorage.setItem('gemini_fallback_key', val);
       else localStorage.removeItem('gemini_fallback_key');
-      alert('Paramètre de clé enregistré sur cet appareil.');
+      alert('Clé Gemini enregistrée sur cet appareil.');
     }
 
     function buildSimulatedOutput(flow, input) {
       const excerpt = input.length > 180 ? input.slice(0, 180) + '...' : input;
-      return `[MODE SIMULATION AUTONOME — Aucune clé API requise]\n\n` +
-        `Flux exécuté : ${flow.title}\n` +
-        `Pôle : ${flow.badge}\n` +
-        `Données analysées : "${excerpt}"\n\n` +
-        `1. Diagnostic & Priorisation\n` +
-        `- Intention principale détectée et classée en priorité haute.\n` +
-        `- Contexte métier : ${flow.action}\n\n` +
-        `2. Livrable proposé\n` +
-        `- Synthèse structurée prête pour validation opérationnelle.\n` +
-        `- Prochaine étape recommandée : transmettre ou archiver ce résultat depuis l'onglet Historique.\n\n` +
-        `(Astuce : dès qu'une clé API Gemini valide est ajoutée dans "Clé secours" ou sur le serveur Vercel, ce flux s'exécutera en direct avec Gemini.)`;
+      return `[REPLI LOCAL — Moteur externe indisponible]\n\n` +
+        `Flux : ${flow.title} (${flow.badge})\n` +
+        `Entrée : "${excerpt}"\n\n` +
+        `1. Synthèse : ${flow.action}\n` +
+        `2. Action suivante : réessayez dans quelques instants pour obtenir la génération IA complète.`;
     }
 
     async function executeWorkflow() {
@@ -399,30 +393,14 @@
 
       const btn = document.getElementById('run-btn');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement IA en cours...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Génération IA en cours...';
 
       try {
         let outputText = '';
         const localKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
 
-        // 1. Appel serveur /api/generate uniquement si l'utilisateur n'a pas saisi de clé locale invalide
-        if (!localKey) {
-          const serverRes = await fetch('/api/generate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: input, systemInstruction: flow.systemPrompt })
-          });
-
-          if (serverRes.ok) {
-            const data = await serverRes.json();
-            outputText = data.result;
-          } else {
-            // Repli automatique vers le mode simulation afin de ne jamais bloquer l'utilisateur
-            outputText = buildSimulatedOutput(flow, input);
-          }
-        } else {
-          // 2. Appel direct avec la clé de secours enregistrée
-          const directRes = await fetch(
+        if (localKey) {
+          const geminiRes = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
             {
               method: 'POST',
@@ -433,14 +411,26 @@
               })
             }
           );
-          const directData = await directRes.json();
-          if (!directRes.ok) {
-            // Si la clé est invalide, effacer la mauvaise clé et basculer en simulation sans bloquer
-            localStorage.removeItem('gemini_fallback_key');
-            outputText = buildSimulatedOutput(flow, input) + `\n\nNote : La clé précédente n'était pas valide ; la clé locale a été retirée pour débloquer l'exécution.`;
-          } else {
-            outputText = directData.candidates?.[0]?.content?.parts?.[0]?.text || buildSimulatedOutput(flow, input);
+          const geminiData = await geminiRes.json();
+          if (geminiRes.ok && geminiData.candidates?.[0]?.content?.parts?.[0]?.text) {
+            outputText = geminiData.candidates[0].content.parts[0].text;
           }
+        }
+
+        if (!outputText) {
+          const res = await fetch('https://text.pollinations.ai/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              messages: [
+                { role: 'system', content: flow.systemPrompt },
+                { role: 'user', content: input }
+              ],
+              model: 'openai'
+            })
+          });
+          if (!res.ok) throw new Error('Service IA indisponible');
+          outputText = (await res.text()).trim() || buildSimulatedOutput(flow, input);
         }
 
         document.getElementById('studio-output').textContent = outputText;
@@ -455,7 +445,8 @@
         });
         localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 20)));
       } catch (err) {
-        document.getElementById('studio-output').textContent = buildSimulatedOutput(flow, input);
+        const fallbackText = buildSimulatedOutput(flow, input);
+        document.getElementById('studio-output').textContent = fallbackText;
         document.getElementById('result-card').classList.remove('hidden');
       } finally {
         btn.disabled = false;
