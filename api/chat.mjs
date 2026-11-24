@@ -11,19 +11,15 @@ export default async function handler(req, res) {
 
     if (!apiKey) {
       return res.status(500).json({
-        error: "Clé API non configurée sur Vercel"
+        error: "OPENAI_API_KEY absente dans Vercel"
       });
     }
 
     const message = req.body?.message;
 
-    if (
-      typeof message !== "string" ||
-      !message.trim() ||
-      message.length > 8000
-    ) {
+    if (typeof message !== "string" || !message.trim()) {
       return res.status(400).json({
-        error: "Message invalide ou trop long"
+        error: "Message manquant"
       });
     }
 
@@ -36,9 +32,7 @@ export default async function handler(req, res) {
           "Authorization": `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: "gpt-6.2-astra",
-          instructions:
-            "Tu es AUTOPILOT AI, un assistant intelligent, professionnel, prudent et rigoureux. Tu réponds en français par défaut. Tu ne fabriques jamais de faits. Si tu ignores une information, tu le dis clairement.",
+          model: "gpt-6",
           input: message
         })
       }
@@ -47,9 +41,9 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("OpenAI API error:", data);
-      return res.status(502).json({
-        error: "Le moteur IA n'a pas pu répondre. Vérifie la configuration API."
+      return res.status(response.status).json({
+        error: data.error?.message || "Erreur OpenAI",
+        status: response.status
       });
     }
 
@@ -58,22 +52,14 @@ export default async function handler(req, res) {
       .find(item => item.type === "output_text")
       ?.text;
 
-    if (!answer) {
-      return res.status(502).json({
-        error: "Aucune réponse textuelle reçue."
-      });
-    }
-
     return res.status(200).json({
       success: true,
-      answer
+      answer: answer || "Aucune réponse reçue."
     });
 
   } catch (error) {
-    console.error(error);
-
     return res.status(500).json({
-      error: "Erreur interne du serveur."
+      error: error.message || "Erreur serveur"
     });
   }
 }
