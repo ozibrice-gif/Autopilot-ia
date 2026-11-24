@@ -556,31 +556,62 @@ document.getElementById("agentList").innerHTML=agents.map((a,i)=>
 
 }
 
-function askAI(){
 
-let input=document.getElementById("question");
+async function askAI() {
+  const input = document.getElementById("question");
+  const chat = document.getElementById("chat");
 
-let q=input.value.trim();
+  const q = input.value.trim();
 
-if(!q)return;
+  if (!q) return;
 
-let chat=document.getElementById("chat");
+  // Afficher le message de l'utilisateur
+  chat.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message user">${escapeHTML(q)}</div>`
+  );
 
-let answer="J'ai reçu votre demande. Je suis actuellement en mode démonstration. Je peux vous orienter vers les modules Clients, Tâches et Devis. Un moteur IA réel sera nécessaire pour le raisonnement avancé.";
+  input.value = "";
 
-if(/client/i.test(q))answer="Vous avez actuellement "+clients.length+" client(s) enregistré(s).";
+  // Afficher un indicateur d'attente
+  const loading = document.createElement("div");
+  loading.className = "message";
+  loading.textContent = "AUTOPILOT AI réfléchit...";
+  chat.appendChild(loading);
 
-else if(/tâche|travail|projet/i.test(q))answer="Vous avez "+tasks.filter(t=>t.status!=="Terminée").length+" tâche(s) non terminée(s).";
+  chat.scrollTop = chat.scrollHeight;
 
-else if(/devis|finance|argent/i.test(q))answer="La valeur de vos devis est de "+quotes.reduce((s,q)=>s+q.amount,0).toLocaleString("fr-FR")+" FCFA.";
+  try {
+    // Envoyer la demande au serveur sécurisé
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: q
+      })
+    });
 
-chat.innerHTML+=`<div class="message user">${escapeHTML(q)}</div><div class="message">${escapeHTML(answer)}</div>`;
+    const data = await response.json();
 
-input.value="";
+    if (!response.ok) {
+      throw new Error(data.error || "Erreur de connexion");
+    }
 
-chat.scrollTop=chat.scrollHeight;
+    // Afficher la véritable réponse de l'IA
+    loading.textContent = data.answer || "Aucune réponse reçue.";
 
+  } catch (error) {
+    console.error("AUTOPILOT AI :", error);
+
+    loading.textContent =
+      "Je rencontre un problème de connexion. Vérifie le serveur et réessaie.";
+  }
+
+  chat.scrollTop = chat.scrollHeight;
 }
+
 
 function saveSettings(){
 
