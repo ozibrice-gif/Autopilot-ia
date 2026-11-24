@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Autopilot-IA | 10 Agents & Coordinateur</title>
+  <title>Autopilot-IA | Assistant & 10 Agents</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#090d16">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -52,9 +52,9 @@
         <div>
           <div class="flex items-center gap-1.5">
             <h1 class="font-extrabold text-sm sm:text-base tracking-tight text-white">Autopilot-IA</h1>
-            <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V3.0</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V3.1</span>
           </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block">Coordinateur + 10 Agents Spécialisés</p>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Assistant + Coordinateur + 10 Agents</p>
         </div>
       </div>
 
@@ -65,6 +65,9 @@
         </button>
 
         <nav class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 overflow-x-auto no-scrollbar">
+          <button type="button" onclick="switchTab('assistant')" id="tab-assistant" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
+            <i class="fa-solid fa-comment-dots mr-1"></i> Assistant
+          </button>
           <button type="button" onclick="switchTab('catalog')" id="tab-catalog" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow whitespace-nowrap">
             <i class="fa-solid fa-layer-group mr-1"></i> Agents
           </button>
@@ -83,6 +86,68 @@
   </header>
 
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
+
+    <!-- ONGLET ASSISTANT : IDENTITÉ, CAPACITÉS & ORIENTATION -->
+    <section id="view-assistant" class="hidden space-y-5">
+      <div class="glass rounded-2xl p-5 sm:p-6 space-y-4">
+        <div>
+          <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 mb-2">
+            <i class="fa-solid fa-sparkles text-amber-400"></i> Assistant IA Autopilot
+          </span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-white">Qui suis-je et que puis-je faire pour vous ?</h2>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+            Je suis l'Assistant d'<strong>Autopilot-IA</strong>, un studio web multi-agents autonome conçu pour analyser vos besoins, produire des livrables structurés (tableaux comptables, plans, contrats, stratégies, rapports), vous permettre de les modifier et de les archiver dans votre <strong>Classeur</strong> local.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-1.5">
+            <div class="font-bold text-indigo-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-id-badge"></i> Qui je suis
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              Une application autonome articulée autour de <strong>01 AUTOPILOT — Coordinateur</strong> et de 9 agents spécialisés : Business, Finance, Marketing, RH, Juridique (OHADA), Développement, Projets, Service client et Analyste, avec continuité à 3 niveaux (clé Gemini facultative, IA distante ou moteur autonome).
+            </p>
+          </div>
+          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-1.5">
+            <div class="font-bold text-emerald-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Ce que je sais faire
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              Générer des tableaux comptables et budgets, structurer une offre B2B ou une campagne, rédiger des trames contractuelles OHADA, planifier des projets, répondre aux clients, modifier les résultats en direct (<strong>Modifier</strong>), les enregistrer dans le <strong>Classeur</strong> et afficher les dates en <strong>FR</strong> ou <strong>EN</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-200">Essayer directement dans le Studio :</div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="sendDemoToStudio('03-finance', 'Établir un tableau d\'écriture comptable HT / TVA 18% / TTC pour une prestation de 300 000 FCFA HT payée par virement.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
+              Tableau comptable (Finance)
+            </button>
+            <button type="button" onclick="sendDemoToStudio('01-coordinateur', 'Je veux lancer un service d\'abonnement B2B à 45 000 FCFA/mois et planifier son lancement sur 30 jours.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
+              Routage Coordinateur (01)
+            </button>
+            <button type="button" onclick="sendDemoToStudio('06-juridique', 'Rédiger les principales clauses d\'un contrat de prestation de services selon le droit OHADA.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
+              Contrat & cadre OHADA (Juridique)
+            </button>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-800/80 pt-4 space-y-3">
+          <label for="assistant-question-input" class="block text-xs font-semibold text-slate-300">Poser une question à l'Assistant</label>
+          <div class="flex gap-2">
+            <input id="assistant-question-input" type="text" placeholder="Ex : Qui es-tu ? Que peux-tu faire ? Quel agent pour la comptabilité ?" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500" onkeydown="if(event.key==='Enter') askAssistant()">
+            <button type="button" onclick="askAssistant()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold whitespace-nowrap">
+              Demander
+            </button>
+          </div>
+          <div id="assistant-reply-box" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-line">
+            Bonjour ! Je suis l'Assistant d'Autopilot-IA. Demandez-moi qui je suis, ce que je peux faire ou quel agent choisir pour votre besoin.
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- ONGLET 1 : CATALOGUE DES 10 AGENTS -->
     <section id="view-catalog" class="space-y-6">
@@ -515,6 +580,50 @@
       return flows.find(f => f.id === '02-business') || flows[0];
     }
 
+    function sendDemoToStudio(agentId, sampleText) {
+      selectedFlowId = agentId;
+      localStorage.setItem('autopilot_selected_flow_v3', agentId);
+      const select = document.getElementById('studio-flow-select');
+      if (select) select.value = agentId;
+      document.getElementById('studio-input').value = sampleText;
+      switchTab('studio');
+    }
+
+    function askAssistant() {
+      const inputEl = document.getElementById('assistant-question-input');
+      const boxEl = document.getElementById('assistant-reply-box');
+      const q = (inputEl.value || '').trim().toLowerCase();
+
+      if (!q) {
+        boxEl.textContent =
+          "Je suis l'Assistant d'Autopilot-IA (V3.1).\n" +
+          "• Qui je suis : Un studio multi-agents autonome piloté par 01 AUTOPILOT — Coordinateur avec 9 agents spécialisés.\n" +
+          "• Ce que je peux faire : Générer des tableaux comptables, budgets, plans et contrats OHADA, modifier les livrables (Modifier), les archiver dans le Classeur (Enregistrer) et basculer les dates en FR ou EN.";
+        return;
+      }
+
+      if (q.includes('qui') || q.includes('présent') || q.includes('tu es') || q.includes('elle')) {
+        boxEl.textContent =
+          "Je suis l'Assistant d'Autopilot-IA. L'application réunit 01 AUTOPILOT — Coordinateur et 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique/OHADA, Développement, Projets, Service client et Analyste), avec un moteur autonome à 3 niveaux.";
+        return;
+      }
+
+      if (q.includes('enregistr') || q.includes('classeur') || q.includes('modif') || q.includes('date')) {
+        boxEl.textContent =
+          "• Pour modifier un livrable : cliquez sur « Modifier » sous le résultat, ajustez le texte, puis validez.\n" +
+          "• Pour archiver : cliquez sur « Enregistrer » pour l'ajouter dans l'onglet « Classeur ».\n" +
+          "• Pour la langue des dates : utilisez le bouton FR / EN en haut à côté des onglets.";
+        return;
+      }
+
+      const matched = routeToBestAgent(q);
+      boxEl.textContent =
+        `Pour ce besoin, l'agent le plus adapté est « ${matched.title} » (${matched.badge}).\n` +
+        `Rôle : ${matched.role}\n` +
+        `Mission : ${matched.action}\n` +
+        `Vous pouvez aussi laisser « 01 AUTOPILOT — Coordinateur » actif dans le Studio pour qu'il oriente automatiquement.`;
+    }
+
     function renderCatalog() {
       const grid = document.getElementById('flows-grid');
       const filtered = currentFilter === 'all' ? flows : flows.filter(f => f.category === currentFilter);
@@ -558,7 +667,7 @@
     }
 
     function switchTab(tab) {
-      ['catalog', 'studio', 'vault', 'history'].forEach(t => {
+      ['assistant', 'catalog', 'studio', 'vault', 'history'].forEach(t => {
         document.getElementById(`view-${t}`).classList.toggle('hidden', t !== tab);
         const btn = document.getElementById(`tab-${t}`);
         btn.className = t === tab
