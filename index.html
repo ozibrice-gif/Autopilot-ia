@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Autopilot-IA | Assistant & 10 Agents</title>
+  <title>Autopilot-IA PRO | Suite Multi-Agents</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#090d16">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -37,7 +37,7 @@
   </script>
   <style>
     body { background-color: #090d16; color: #f8fafc; -webkit-tap-highlight-color: transparent; }
-    .glass { background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(12px); border: 1px solid rgba(99, 102, 241, 0.18); }
+    .glass { background: rgba(15, 23, 42, 0.82); backdrop-filter: blur(14px); border: 1px solid rgba(99, 102, 241, 0.2); }
     .no-scrollbar::-webkit-scrollbar { display: none; }
   </style>
 </head>
@@ -45,16 +45,16 @@
 
   <header class="sticky top-0 z-40 glass border-b border-slate-800/80 px-3 sm:px-4 py-3">
     <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2 shrink-0">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-          <i class="fa-solid fa-robot text-white text-base"></i>
+      <div class="flex items-center gap-2.5 shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-600 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+          <i class="fa-solid fa-robot text-white text-sm"></i>
         </div>
         <div>
           <div class="flex items-center gap-1.5">
             <h1 class="font-extrabold text-sm sm:text-base tracking-tight text-white">Autopilot-IA</h1>
-            <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V3.1</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">PRO</span>
           </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block">Assistant + Coordinateur + 10 Agents</p>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Coordinateur + 10 Agents Spécialisés</p>
         </div>
       </div>
 
@@ -64,7 +64,7 @@
           <span id="date-locale-label">FR</span>
         </button>
 
-        <nav class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 overflow-x-auto no-scrollbar">
+        <nav class="flex items-center bg-slate-900/95 p-1 rounded-xl border border-slate-800 overflow-x-auto no-scrollbar">
           <button type="button" onclick="switchTab('assistant')" id="tab-assistant" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
             <i class="fa-solid fa-comment-dots mr-1"></i> Assistant
           </button>
@@ -87,7 +87,7 @@
 
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
 
-    <!-- ONGLET ASSISTANT : IDENTITÉ, CAPACITÉS & ORIENTATION -->
+    <!-- ASSISTANT : IDENTITÉ, CAPACITÉS & ORIENTATION -->
     <section id="view-assistant" class="hidden space-y-5">
       <div class="glass rounded-2xl p-5 sm:p-6 space-y-4">
         <div>
@@ -96,40 +96,40 @@
           </span>
           <h2 class="text-xl sm:text-2xl font-extrabold text-white">Qui suis-je et que puis-je faire pour vous ?</h2>
           <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
-            Je suis l'Assistant d'<strong>Autopilot-IA</strong>, un studio web multi-agents autonome conçu pour analyser vos besoins, produire des livrables structurés (tableaux comptables, plans, contrats, stratégies, rapports), vous permettre de les modifier et de les archiver dans votre <strong>Classeur</strong> local.
+            Je suis l'Assistant d'<strong>Autopilot-IA</strong>, une suite opérationnelle multi-agents conçue pour produire des livrables structurés et exploitables : grilles d'entretien et cadres RH, tableaux comptables et budgets, plans d'action business/projet, trames OHADA, analyses et réponses clients.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-1.5">
+          <div class="bg-slate-950/85 border border-slate-800 rounded-xl p-4 space-y-1.5">
             <div class="font-bold text-indigo-300 flex items-center gap-1.5">
               <i class="fa-solid fa-id-badge"></i> Qui je suis
             </div>
             <p class="text-slate-300 leading-relaxed">
-              Une application autonome articulée autour de <strong>01 AUTOPILOT — Coordinateur</strong> et de 9 agents spécialisés : Business, Finance, Marketing, RH, Juridique (OHADA), Développement, Projets, Service client et Analyste, avec continuité à 3 niveaux (clé Gemini facultative, IA distante ou moteur autonome).
+              Un système orchestré par <strong>01 AUTOPILOT — Coordinateur</strong> et 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique/OHADA, Développement, Projets, Service client, Analyste), avec moteur à 3 niveaux (clé Gemini facultative, IA distante ou moteur autonome structuré).
             </p>
           </div>
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-1.5">
+          <div class="bg-slate-950/85 border border-slate-800 rounded-xl p-4 space-y-1.5">
             <div class="font-bold text-emerald-300 flex items-center gap-1.5">
               <i class="fa-solid fa-wand-magic-sparkles"></i> Ce que je sais faire
             </div>
             <p class="text-slate-300 leading-relaxed">
-              Générer des tableaux comptables et budgets, structurer une offre B2B ou une campagne, rédiger des trames contractuelles OHADA, planifier des projets, répondre aux clients, modifier les résultats en direct (<strong>Modifier</strong>), les enregistrer dans le <strong>Classeur</strong> et afficher les dates en <strong>FR</strong> ou <strong>EN</strong>.
+              Générer des documents complets avec tableaux lisibles sur mobile, vous laisser retoucher chaque livrable via <strong>Modifier</strong>, archiver vos versions validées dans le <strong>Classeur</strong>, consulter l'<strong>Historique</strong> et afficher les dates en <strong>FR</strong> ou <strong>EN</strong>.
             </p>
           </div>
         </div>
 
         <div class="space-y-2">
-          <div class="text-xs font-bold text-slate-200">Essayer directement dans le Studio :</div>
+          <div class="text-xs font-bold text-slate-200">Lancer un cas concret dans le Studio :</div>
           <div class="flex flex-wrap gap-2">
-            <button type="button" onclick="sendDemoToStudio('03-finance', 'Établir un tableau d\'écriture comptable HT / TVA 18% / TTC pour une prestation de 300 000 FCFA HT payée par virement.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
-              Tableau comptable (Finance)
+            <button type="button" onclick="sendDemoToStudio('05-rh', 'Rédiger le cadre de recrutement et la grille d\'entretien pour un responsable administratif et opérationnel polyvalent.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
+              Cadre & grille RH
             </button>
-            <button type="button" onclick="sendDemoToStudio('01-coordinateur', 'Je veux lancer un service d\'abonnement B2B à 45 000 FCFA/mois et planifier son lancement sur 30 jours.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
-              Routage Coordinateur (01)
+            <button type="button" onclick="sendDemoToStudio('03-finance', 'Établir un tableau d\'écriture comptable HT / TVA 18% / TTC pour une prestation de 450 000 FCFA HT réglée par virement.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
+              Écriture comptable (Finance)
             </button>
-            <button type="button" onclick="sendDemoToStudio('06-juridique', 'Rédiger les principales clauses d\'un contrat de prestation de services selon le droit OHADA.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
-              Contrat & cadre OHADA (Juridique)
+            <button type="button" onclick="sendDemoToStudio('01-coordinateur', 'Lancer un abonnement B2B à 45 000 FCFA/mois et structurer le plan d\'exécution sur 30 jours.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
+              Coordinateur (01)
             </button>
           </div>
         </div>
@@ -137,13 +137,13 @@
         <div class="border-t border-slate-800/80 pt-4 space-y-3">
           <label for="assistant-question-input" class="block text-xs font-semibold text-slate-300">Poser une question à l'Assistant</label>
           <div class="flex gap-2">
-            <input id="assistant-question-input" type="text" placeholder="Ex : Qui es-tu ? Que peux-tu faire ? Quel agent pour la comptabilité ?" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500" onkeydown="if(event.key==='Enter') askAssistant()">
+            <input id="assistant-question-input" type="text" placeholder="Ex : Qui es-tu ? Que peux-tu faire ? Quel agent choisir ?" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500" onkeydown="if(event.key==='Enter') askAssistant()">
             <button type="button" onclick="askAssistant()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold whitespace-nowrap">
               Demander
             </button>
           </div>
           <div id="assistant-reply-box" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-line">
-            Bonjour ! Je suis l'Assistant d'Autopilot-IA. Demandez-moi qui je suis, ce que je peux faire ou quel agent choisir pour votre besoin.
+            Bonjour ! Je suis l'Assistant d'Autopilot-IA. Demandez-moi qui je suis, ce que je peux faire ou quel agent mobiliser pour votre tâche.
           </div>
         </div>
       </div>
@@ -153,19 +153,19 @@
     <section id="view-catalog" class="space-y-6">
       <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/50 border border-indigo-500/20 p-5 sm:p-7">
         <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/25 px-3 py-1 rounded-full mb-3">
-          <i class="fa-solid fa-network-wired text-amber-400"></i> Architecture Multi-Agents Autonome
+          <i class="fa-solid fa-network-wired text-amber-400"></i> Architecture Multi-Agents Professionnelle
         </span>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
           10 agents spécialisés pilotés par un coordinateur intelligent
         </h2>
         <p class="text-sm text-slate-300 leading-relaxed mb-5">
-          Laissez <strong class="text-indigo-300">01 AUTOPILOT — Coordinateur</strong> orienter automatiquement votre demande ou sélectionnez directement l'agent spécialiste dans le <strong class="text-emerald-300">Studio</strong>.
+          Utilisez <strong class="text-indigo-300">01 AUTOPILOT — Coordinateur</strong> pour l'orientation automatique ou sélectionnez directement un agent métier dans le <strong class="text-emerald-300">Studio</strong>.
         </p>
 
         <div class="grid grid-cols-3 gap-2.5 text-center">
           <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
             <div id="flow-count-badge" class="text-lg sm:text-xl font-extrabold text-emerald-400">10 Agents</div>
-            <div class="text-[11px] text-slate-400">Spécialisés</div>
+            <div class="text-[11px] text-slate-400">Métiers</div>
           </div>
           <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
             <div class="text-lg sm:text-xl font-extrabold text-indigo-400">Auto-Route</div>
@@ -208,7 +208,7 @@
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-microchip text-indigo-400"></i> Studio Multi-Agents
             </h2>
-            <p class="text-xs text-slate-400">Orientation automatique par 01 AUTOPILOT ou choix direct d'un agent</p>
+            <p class="text-xs text-slate-400">Livrables structurés • Édition directe & boîte interne Classeur</p>
           </div>
           <button type="button" onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
             <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé Gemini
@@ -244,7 +244,7 @@
             <span id="imported-file-name" class="truncate"></span>
             <button type="button" onclick="hideFileBanner()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
           </div>
-          <textarea id="studio-input" rows="5" placeholder="Décrivez votre besoin : stratégie business, plan comptable, campagne marketing, recrutement, contrat OHADA, code, projet, client ou analyse..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
+          <textarea id="studio-input" rows="5" placeholder="Saisissez votre demande précise (ex. grille d'entretien RH, plan comptable, contrat OHADA, stratégie business, plan projet...)." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
         </div>
 
         <button type="button" id="run-btn" onclick="executeWorkflow()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition">
@@ -281,7 +281,7 @@
 
         <div id="output-editor-box" class="hidden space-y-2 pt-2">
           <label class="block text-xs font-semibold text-amber-300">Modification directe du livrable</label>
-          <textarea id="studio-output-editor" rows="8" class="w-full bg-slate-950 border border-amber-500/40 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-amber-400"></textarea>
+          <textarea id="studio-output-editor" rows="10" class="w-full bg-slate-950 border border-amber-500/40 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-amber-400"></textarea>
           <div class="flex items-center justify-end gap-2">
             <button type="button" onclick="cancelEditOutput()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300">Annuler</button>
             <button type="button" onclick="applyEditedOutput(true)" class="text-xs px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold">Appliquer & Enregistrer</button>
@@ -341,9 +341,9 @@
         badge: 'Coordinateur Intelligent',
         icon: 'fa-compass-drafting',
         role: 'Comprend les demandes et oriente vers le bon agent.',
-        action: 'Analyse l\'intention, sélectionne l\'agent spécialiste adapté et synthétise les réponses clés.',
-        systemPrompt: 'Tu es 01 AUTOPILOT, le Coordinateur intelligent d\'une équipe de 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique, Développement, Projets, Service client, Analyste). Réponds en français clair sans ** ni ## ni <br>. Indique d\'abord quel(s) agent(s) spécialiste(s) interviennent, puis livre une réponse structurée, actionnable et concise (avec tableau Markdown si utile).',
-        sample: 'Je lance une offre d\'abonnement B2B à 45 000 FCFA/mois : je veux structurer le modèle commercial, estimer la rentabilité et préparer un plan de lancement sur 30 jours.'
+        action: 'Analyse l\'intention, mobilise l\'agent spécialiste adapté et produit un plan structuré.',
+        systemPrompt: 'Tu es 01 AUTOPILOT, le Coordinateur intelligent d\'une équipe de 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique, Développement, Projets, Service client, Analyste). Réponds en français professionnel, précis et actionnable, sans ** ni ## ni <br>. Indique quel(s) agent(s) interviennent, puis fournis un livrable complet et concret (avec tableau Markdown clair si pertinent).',
+        sample: 'Je lance une offre d\'abonnement B2B à 45 000 FCFA/mois : structurer le modèle commercial, estimer la rentabilité et planifier le lancement sur 30 jours.'
       },
       {
         id: '02-business',
@@ -352,9 +352,9 @@
         badge: 'Stratégie & Développement',
         icon: 'fa-briefcase',
         role: 'Stratégie commerciale, création et développement d\'entreprises.',
-        action: 'Définit l\'offre, le positionnement, les canaux d\'acquisition et la feuille de route business.',
-        systemPrompt: 'Tu es l\'Agent Business (02) spécialisé en stratégie commerciale, création et développement d\'entreprise. Réponds en français clair sans ** ni ## ni <br>. Structure ta réponse avec proposition de valeur, segments clients, modèle de revenus et actions prioritaires (tableau si pertinent).',
-        sample: 'Comment structurer une offre de prestation de sécurité et de contrôle d\'accès pour des PME et résidences à Abidjan ?'
+        action: 'Structure l\'offre, les segments, le modèle économique et la feuille de route.',
+        systemPrompt: 'Tu es l\'Agent Business (02) spécialisé en stratégie commerciale, création et développement d\'entreprise. Réponds en français professionnel sans ** ni ## ni <br>. Livre une structure concrète : proposition de valeur, segments clients, modèle de revenus, risques et plan d\'exécution en tableau.',
+        sample: 'Structurer une offre de prestation de sécurité et de contrôle d\'accès pour des PME et résidences.'
       },
       {
         id: '03-finance',
@@ -362,10 +362,10 @@
         category: 'finance-juridique',
         badge: 'Finance & Comptabilité',
         icon: 'fa-calculator',
-        role: 'Budgets, trésorerie, prévisions et analyse financière.',
-        action: 'Établit des tableaux de comptes, écritures, budgets, prévisions de trésorerie et indicateurs financiers.',
-        systemPrompt: 'Tu es l\'Agent Finance (03) expert en budgets, trésorerie, comptabilité et analyse financière. Réponds en français clair sans ** ni ## ni <br>. Utilise systématiquement un tableau Markdown propre pour les plans/écritures comptables, budgets ou prévisions (ex. Compte / Poste | Intitulé | Débit / Entrée | Crédit / Sortie | Note).',
-        sample: 'Établir un tableau d\'écriture comptable et de suivi de trésorerie pour une facture de 450 000 FCFA HT, TVA 18% (81 000 FCFA), TTC 531 000 FCFA réglée par virement.'
+        role: 'Budgets, trésorerie, plans/écritures comptables et analyse financière.',
+        action: 'Établit des tableaux de comptes, écritures, budgets, prévisions et indicateurs.',
+        systemPrompt: 'Tu es l\'Agent Finance (03) expert en budgets, trésorerie, comptabilité et analyse financière. Réponds en français rigoureux sans ** ni ## ni <br>. Utilise un tableau Markdown clair pour les plans/écritures comptables, budgets ou prévisions (ex. Compte / Poste | Intitulé | Débit / Entrée | Crédit / Sortie | Justification) et vérifie l\'équilibre.',
+        sample: 'Établir un tableau d\'écriture comptable HT / TVA 18% / TTC pour une facture de 450 000 FCFA HT réglée par virement bancaire.'
       },
       {
         id: '04-marketing',
@@ -374,9 +374,9 @@
         badge: 'Marketing & Ventes',
         icon: 'fa-bullhorn',
         role: 'Publicité, communication, ventes et stratégie de marque.',
-        action: 'Conçoit des messages percutants, angles de campagne, accroches commerciales et plans de visibilité.',
-        systemPrompt: 'Tu es l\'Agent Marketing (04) spécialisé en publicité, communication, ventes et stratégie de marque. Réponds en français clair sans ** ni ## ni <br>. Propose un angle de marque, des messages clés, un plan d\'action et un tableau récapitulatif des canaux / objectifs.',
-        sample: 'Campagne de lancement d\'une application web métier pour dirigeants et responsables opérationnels : messages, accroches et plan de diffusion.'
+        action: 'Conçoit des messages ciblés, angles de campagne, offres commerciales et plans de diffusion.',
+        systemPrompt: 'Tu es l\'Agent Marketing (04) spécialisé en publicité, communication, ventes et stratégie de marque. Réponds en français clair et percutant sans ** ni ## ni <br>. Fournis un positionnement, des accroches commerciales et un tableau de campagne (Canal | Cible | Message / Action | Indicateur).',
+        sample: 'Campagne de lancement d\'une solution d\'automatisation pour PME : messages clés, canaux et plan d\'action.'
       },
       {
         id: '05-rh',
@@ -385,8 +385,8 @@
         badge: 'Ressources Humaines',
         icon: 'fa-users',
         role: 'Recrutement, gestion du personnel et organisation.',
-        action: 'Rédige des fiches de poste, critères de sélection, grilles d\'entretien et schémas d\'organisation.',
-        systemPrompt: 'Tu es l\'Agent RH (05) spécialisé en recrutement, gestion du personnel et organisation. Réponds en français clair sans ** ni ## ni <br>. Structure les missions, compétences attendues, critères d\'évaluation et plan d\'intégration.',
+        action: 'Rédige des cadres de recrutement, fiches de poste, critères et grilles d\'entretien.',
+        systemPrompt: 'Tu es l\'Agent RH (05) spécialisé en recrutement, gestion du personnel et organisation. Réponds en français structuré sans ** ni ## ni <br>. Fournis un cadre de poste précis (missions, compétences clés) et un tableau de grille d\'entretien (Thème / Compétence | Question d\'évaluation | Critères attendus | Poids).',
         sample: 'Rédiger le cadre de recrutement et la grille d\'entretien pour un responsable administratif et opérationnel polyvalent.'
       },
       {
@@ -396,9 +396,9 @@
         badge: 'Contrats & Droit OHADA',
         icon: 'fa-scale-balanced',
         role: 'Contrats, droit des affaires et réglementation OHADA.',
-        action: 'Structure des trames contractuelles, vérifie les clauses sensibles et éclaire le cadre OHADA.',
-        systemPrompt: 'Tu es l\'Agent Juridique (06) spécialisé en contrats, droit des affaires et réglementation OHADA. Réponds en français clair et structuré sans ** ni ## ni <br>. Organise par articles (Article 1, Article 2...) ou points de vigilance juridiques, avec mention claire qu\'une validation formelle reste conseillée.',
-        sample: 'Rédiger les clauses essentielles d\'un contrat de prestation de services entre deux sociétés commerciales soumises au droit OHADA (objet, obligations, durée, résiliation, règlement des litiges).'
+        action: 'Structure des trames contractuelles, clauses sensibles et points de vigilance OHADA.',
+        systemPrompt: 'Tu es l\'Agent Juridique (06) spécialisé en contrats, droit des affaires et réglementation OHADA. Réponds en français structuré sans ** ni ## ni <br>. Rédige des articles clairs (Article 1, Article 2...), les points de vigilance OHADA et une mention rappelant la validation juridique formelle.',
+        sample: 'Rédiger les clauses essentielles d\'un contrat de prestation de services commerciales dans l\'espace OHADA.'
       },
       {
         id: '07-developpement',
@@ -407,9 +407,9 @@
         badge: 'Tech & Programmation',
         icon: 'fa-code',
         role: 'Programmation, applications et assistance technique.',
-        action: 'Propose des architectures, extraits de code, corrections de bugs et bonnes pratiques techniques.',
-        systemPrompt: 'Tu es l\'Agent Développement (07) spécialisé en programmation, applications web et assistance technique. Réponds en français clair sans ** ni ## ni <br> (sauf blocs de code ``` si nécessaire). Explique la solution étape par étape de façon claire et maintenable.',
-        sample: 'Comment structurer une sauvegarde locale fiable dans le navigateur (localStorage) avec gestion des erreurs JSON et limite d\'éléments ?'
+        action: 'Propose des architectures, extraits de code fiables, corrections et bonnes pratiques.',
+        systemPrompt: 'Tu es l\'Agent Développement (07) spécialisé en programmation, applications web et assistance technique. Réponds en français clair sans ** ni ## ni <br> (sauf blocs de code ``` si nécessaire). Donne une solution structurée, un tableau des composants/étapes et un exemple concret.',
+        sample: 'Structurer une persistance locale fiable en JavaScript avec gestion des erreurs et contrôle des données.'
       },
       {
         id: '08-projets',
@@ -418,9 +418,9 @@
         badge: 'Gestion de Projet',
         icon: 'fa-list-check',
         role: 'Planification, suivi des tâches et gestion des objectifs.',
-        action: 'Découpe les objectifs en lots, jalons, responsabilités, échéances et indicateurs d\'avancement.',
-        systemPrompt: 'Tu es l\'Agent Projets (08) spécialisé en planification, suivi des tâches et gestion des objectifs. Réponds en français clair sans ** ni ## ni <br>. Présente un tableau de pilotage (Lot / Tâche | Responsable | Échéance | Livrable / Statut) et les risques clés.',
-        sample: 'Planifier le déploiement d\'un nouvel outil interne sur 3 semaines : préparation, test utilisateur, formation et mise en production.'
+        action: 'Découpe en lots, jalons, responsabilités, échéances et livrables vérifiables.',
+        systemPrompt: 'Tu es l\'Agent Projets (08) spécialisé en planification, suivi des tâches et gestion des objectifs. Réponds en français structuré sans ** ni ## ni <br>. Présente un tableau de pilotage (Phase / Lot | Livrable attendu | Responsable | Échéance | Statut) et les risques clés.',
+        sample: 'Planifier le déploiement d\'un processus interne sur 3 semaines avec jalons et livrables.'
       },
       {
         id: '09-service-client',
@@ -429,9 +429,9 @@
         badge: 'Relation & Fidélisation',
         icon: 'fa-headset',
         role: 'Réponses aux clients, réclamations et fidélisation.',
-        action: 'Rédige des réponses empathiques et efficaces, traite les réclamations et propose des actions de fidélisation.',
-        systemPrompt: 'Tu es l\'Agent Service client (09) spécialisé en réponses clients, réclamations et fidélisation. Réponds en français clair, courtois et orienté solution sans ** ni ## ni <br>. Fournis une réponse prête à envoyer et une action de suivi.',
-        sample: 'Un client signale un retard de livraison de 48 heures sur sa commande et demande des explications ainsi qu\'un geste commercial.'
+        action: 'Rédige des réponses professionnelles, traite les réclamations et structure la fidélisation.',
+        systemPrompt: 'Tu es l\'Agent Service client (09) spécialisé en réponses clients, réclamations et fidélisation. Réponds en français clair, courtois et orienté résolution sans ** ni ## ni <br>. Propose une réponse prête à envoyer, une mesure corrective et un tableau de suivi client.',
+        sample: 'Répondre à un client mécontent d\'un retard de livraison et proposer un plan de résolution et de fidélisation.'
       },
       {
         id: '10-analyste',
@@ -440,9 +440,9 @@
         badge: 'Données & Décision',
         icon: 'fa-chart-line',
         role: 'Analyse des données, rapports et aide à la décision.',
-        action: 'Synthétise des chiffres ou faits, compare des options et formule des recommandations argumentées.',
-        systemPrompt: 'Tu es l\'Agent Analyste (10) spécialisé en analyse de données, rapports et aide à la décision. Réponds en français clair sans ** ni ## ni <br>. Présente les constats clés, un tableau comparatif ou de synthèse et une recommandation décisionnelle.',
-        sample: 'Comparer deux options de déploiement (Option A : démarrage rapide à faible coût ; Option B : investissement initial plus élevé avec automatisation avancée).'
+        action: 'Analyse des éléments fournis, compare les options et formule une recommandation argumentée.',
+        systemPrompt: 'Tu es l\'Agent Analyste (10) spécialisé en analyse de données, rapports et aide à la décision. Réponds en français structuré sans ** ni ## ni <br>. Fournis le diagnostic, un tableau comparatif ou de synthèse et une recommandation claire.',
+        sample: 'Comparer deux options d\'organisation (Option A : équipe centralisée ; Option B : pôles autonomes) selon coûts, réactivité et contrôle.'
       }
     ];
     let flows = JSON.parse(localStorage.getItem('autopilot_flows_v3')) || defaultFlows;
@@ -568,7 +568,7 @@
         { id: '07-developpement', keys: ['code', 'javascript', 'html', 'css', 'python', 'api', 'bug', 'application', 'développ', 'script', 'sql'] },
         { id: '08-projets', keys: ['projet', 'planning', 'jalon', 'tâche', 'échéance', 'objectif', 'suivi', 'livrable', 'sprint'] },
         { id: '10-analyste', keys: ['analyse', 'rapport', 'données', 'statistique', 'comparer', 'décision', 'indicateur', 'kpi'] },
-        { id: '02-business', keys: ['business', 'entreprise', 'stratégie commerciale', 'modèle économique', 'création', 'développement', 'offre'] }
+        { id: '02-business', keys: ['business', 'entreprise', 'stratégie commerciale', 'modèle économique', 'création', 'développement', 'offre', 'abonnement'] }
       ];
 
       for (const rule of rules) {
@@ -596,32 +596,32 @@
 
       if (!q) {
         boxEl.textContent =
-          "Je suis l'Assistant d'Autopilot-IA (V3.1).\n" +
-          "• Qui je suis : Un studio multi-agents autonome piloté par 01 AUTOPILOT — Coordinateur avec 9 agents spécialisés.\n" +
-          "• Ce que je peux faire : Générer des tableaux comptables, budgets, plans et contrats OHADA, modifier les livrables (Modifier), les archiver dans le Classeur (Enregistrer) et basculer les dates en FR ou EN.";
+          "Je suis l'Assistant d'Autopilot-IA (PRO).\n" +
+          "• Qui suis-je : Une suite multi-agents pilotée par 01 AUTOPILOT — Coordinateur et 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique/OHADA, Développement, Projets, Service client, Analyste).\n" +
+          "• Ce que je peux faire : Générer des grilles d'entretien RH, plans/écritures comptables, plans d'action, trames OHADA et analyses, modifier les résultats en direct, les enregistrer dans le Classeur et basculer les dates en FR ou EN.";
         return;
       }
 
       if (q.includes('qui') || q.includes('présent') || q.includes('tu es') || q.includes('elle')) {
         boxEl.textContent =
-          "Je suis l'Assistant d'Autopilot-IA. L'application réunit 01 AUTOPILOT — Coordinateur et 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique/OHADA, Développement, Projets, Service client et Analyste), avec un moteur autonome à 3 niveaux.";
+          "Je suis l'Assistant d'Autopilot-IA. L'application réunit 01 AUTOPILOT — Coordinateur et 9 agents métiers spécialisés, avec un moteur à 3 niveaux (clé Gemini facultative, IA distante ou moteur autonome structuré), un éditeur direct et une boîte interne Classeur.";
         return;
       }
 
       if (q.includes('enregistr') || q.includes('classeur') || q.includes('modif') || q.includes('date')) {
         boxEl.textContent =
-          "• Pour modifier un livrable : cliquez sur « Modifier » sous le résultat, ajustez le texte, puis validez.\n" +
-          "• Pour archiver : cliquez sur « Enregistrer » pour l'ajouter dans l'onglet « Classeur ».\n" +
-          "• Pour la langue des dates : utilisez le bouton FR / EN en haut à côté des onglets.";
+          "• Modifier : cliquez sur « Modifier » sous le livrable, ajustez le texte, puis validez.\n" +
+          "• Enregistrer : cliquez sur « Enregistrer » pour archiver le document dans l'onglet « Classeur ».\n" +
+          "• Langue des dates : cliquez sur le bouton FR / EN dans l'en-tête.";
         return;
       }
 
       const matched = routeToBestAgent(q);
       boxEl.textContent =
-        `Pour ce besoin, l'agent le plus adapté est « ${matched.title} » (${matched.badge}).\n` +
+        `Agent recommandé : « ${matched.title} » (${matched.badge}).\n` +
         `Rôle : ${matched.role}\n` +
         `Mission : ${matched.action}\n` +
-        `Vous pouvez aussi laisser « 01 AUTOPILOT — Coordinateur » actif dans le Studio pour qu'il oriente automatiquement.`;
+        `Vous pouvez aussi laisser « 01 AUTOPILOT — Coordinateur » actif dans le Studio pour l'orientation automatique.`;
     }
 
     function renderCatalog() {
@@ -771,46 +771,109 @@
       else localStorage.removeItem('gemini_fallback_key');
       alert('Clé Gemini enregistrée sur cet appareil.');
     }
-
     function extractAmounts(text) {
       return [...String(text || '').matchAll(/(\d[\d\s.,]*\d|\d+)/g)]
         .map(m => Number(m[1].replace(/\s+/g, '').replace(',', '.')))
         .filter(n => !Number.isNaN(n) && n > 0);
     }
 
+    function extractRoleTitle(input) {
+      const match = String(input || '').match(/(?:pour un|pour une|poste de|recrutement d'un|recrutement d'une)\s+([^\n.]+)/i);
+      return match ? match[1].trim() : 'Responsable administratif et opérationnel polyvalent';
+    }
+
     function buildAutonomousOutput(agent, input, wasCoordinated) {
-      const prefix = wasCoordinated
+      const headerNote = wasCoordinated
         ? `Orientation 01 AUTOPILOT -> ${agent.title}\n\n`
-        : `${agent.title}\n\n`;
+        : `${agent.title} — Livrable structuré\n\n`;
+
+      if (agent.id === '05-rh') {
+        const poste = extractRoleTitle(input);
+        return headerNote + [
+          `Cadre de recrutement — ${poste}`,
+          '',
+          'Missions principales :',
+          '1. Gestion administrative et documentaire : suivi des dossiers, courriers, contrats, archivage et conformité interne.',
+          '2. Coordination opérationnelle : planification des activités, suivi des équipes terrain/support et résolution des blocages quotidiens.',
+          '3. Pilotage et reporting : consolidation des indicateurs d\'activité, suivi des budgets/dépenses et préparation des points de direction.',
+          '',
+          'Critères de sélection : expérience confirmée en administration et coordination opérationnelle, rigueur organisationnelle, maîtrise des outils bureautiques et autonomie de décision.',
+          '',
+          'Grille d\'entretien structurée :',
+          '',
+          '| Dimension évaluée | Question d\'entretien | Critères attendus | Pondération |',
+          '| --- | --- | --- | --- |',
+          '| Organisation & Admin | Comment priorisez-vous simultanément des urgences administratives et des dossiers de fond ? | Méthode de priorisation claire, traçabilité et respect des délais | 25% |',
+          '| Pilotage opérationnel | Décrivez une situation où vous avez dû débloquer un retard ou coordonner plusieurs intervenants. | Rôle actif, communication factuelle et résultat vérifiable | 30% |',
+          '| Rigueur & Conformité | Comment sécurisez-vous la fiabilité des documents, contrats et chiffres transmis ? | Contrôles systématiques, confidentialité et anticipation des erreurs | 25% |',
+          '| Posture & Leadership | Quel est votre style de management ou de collaboration avec l\'équipe et la direction ? | Clarté, écoute, responsabilité et orientation solution | 20% |'
+        ].join('\n');
+      }
 
       if (agent.id === '03-finance') {
         const amounts = extractAmounts(input);
-        const base = amounts[0] || 100000;
+        const base = amounts[0] || 450000;
         const tva = amounts[1] && amounts[1] < 100
           ? Math.round(base * (amounts[1] / 100))
           : (amounts[1] || Math.round(base * 0.18));
         const total = amounts[2] || (base + tva);
 
-        return prefix + [
-          '| Compte | Intitulé | Débit | Crédit | Observation |',
+        return headerNote + [
+          'Écriture comptable et contrôle d\'équilibre :',
+          '',
+          '| Compte | Intitulé du compte | Débit | Crédit | Justification |',
           '| --- | --- | --- | --- | --- |',
-          `| 6265 / 613 | Charges / Prestations | ${base.toLocaleString('fr-FR')} | 0 | Base HT |`,
-          `| 4452 | TVA récupérable | ${tva.toLocaleString('fr-FR')} | 0 | Taxe déductible |`,
+          `| 6265 / 613 | Services informatiques / Charges d'exploitation | ${base.toLocaleString('fr-FR')} | 0 | Montant HT |`,
+          `| 4452 | État, TVA récupérable sur charges | ${tva.toLocaleString('fr-FR')} | 0 | TVA déductible |`,
           `| 401 / 521 | Fournisseurs / Banque | 0 | ${total.toLocaleString('fr-FR')} | Total TTC |`,
           '',
-          `Équilibre contrôlé : Débit = ${(base + tva).toLocaleString('fr-FR')} / Crédit = ${total.toLocaleString('fr-FR')}.`
+          `Vérification : Total Débit = ${(base + tva).toLocaleString('fr-FR')} / Total Crédit = ${total.toLocaleString('fr-FR')}.`
         ].join('\n');
       }
 
-      const excerpt = input.length > 220 ? input.slice(0, 220) + '...' : input;
-      return prefix + [
-        `Demande traitée : "${excerpt}"`,
+      if (agent.id === '02-business' || agent.id === '01-coordinateur') {
+        const amounts = extractAmounts(input);
+        const unitPrice = amounts[0] || 45000;
+        const mrr10 = unitPrice * 10;
+        const mrr25 = unitPrice * 25;
+
+        return headerNote + [
+          'Modèle économique et feuille de route d\'exécution :',
+          '',
+          `Hypothèse tarifaire détectée : ${unitPrice.toLocaleString('fr-FR')} FCFA / période (10 clients = ${mrr10.toLocaleString('fr-FR')} ; 25 clients = ${mrr25.toLocaleString('fr-FR')}).`,
+          '',
+          '| Horizon | Objectif clé | Action concrète | Résultat attendu |',
+          '| --- | --- | --- | --- |',
+          '| J+7 | Cadrage de l\'offre | Formaliser la proposition de valeur, les paliers et les conditions | Offre prête à commercialiser |',
+          `| J+15 | Acquisition & Pilotes | Cibler les premiers prospects qualifiés et réaliser les démonstrations | Premiers retours / signatures |`,
+          '| J+30 | Consolidation & Revenus | Suivre l\'onboarding, les encaissements et la rétention mensuelle | Revenus récurrents stabilisés |'
+        ].join('\n');
+      }
+
+      if (agent.id === '06-juridique') {
+        return headerNote + [
+          'Trame contractuelle structurée (cadre des affaires / OHADA) :',
+          '',
+          'Article 1 — Objet du contrat : définit le périmètre exact des prestations ou obligations des parties.',
+          'Article 2 — Obligations des parties : précise les livrables, délais d\'exécution, information mutuelle et paiement.',
+          'Article 3 — Durée et renouvellement : fixe la durée initiale, les modalités de reconduction ou d\'échéance.',
+          'Article 4 — Confidentialité et propriété : protège les informations sensibles et les droits sur les livrables.',
+          'Article 5 — Résiliation et manquements : encadre le préavis, la mise en demeure et les cas de résiliation anticipée.',
+          'Article 6 — Règlement des litiges : prévoit la résolution amiable préalable puis la juridiction compétente selon le droit applicable (OHADA).',
+          '',
+          'Note : cette trame sert de base de structuration et doit être revue et validée formellement avant signature.'
+        ].join('\n');
+      }
+
+      const excerpt = input.length > 200 ? input.slice(0, 200) + '...' : input;
+      return headerNote + [
+        `Contexte analysé : "${excerpt}"`,
         '',
-        '| Axe | Action clé | Priorité |',
-        '| --- | --- | --- |',
-        `| Diagnostic | ${agent.role} | Haute |`,
-        `| Exécution | ${agent.action} | Haute |`,
-        '| Validation | Ajuster avec Modifier puis enregistrer dans le Classeur | Standard |'
+        '| Étape | Livrable concret | Responsable | Priorité |',
+        '| --- | --- | --- | --- |',
+        `| 1. Cadrage | Définir le périmètre exact, les critères de réussite et les ressources | ${agent.title} | Haute |`,
+        '| 2. Déploiement | Mettre en œuvre les actions prioritaires et contrôler la qualité | Équipe opérationnelle | Haute |',
+        '| 3. Suivi & Archivage | Ajuster avec Modifier si besoin et enregistrer dans le Classeur | Pilotage | Standard |'
       ].join('\n');
     }
 
@@ -825,7 +888,7 @@
 
       const btn = document.getElementById('run-btn');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement en cours...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Génération en cours...';
 
       let engineLabel = 'IA distante';
 
@@ -838,7 +901,7 @@
 
         if (localKey) {
           const geminiRes = await fetch(
-            `[https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$](https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$){localKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -856,7 +919,7 @@
         }
 
         if (!outputText) {
-          const res = await fetch('[https://text.pollinations.ai/](https://text.pollinations.ai/)', {
+          const res = await fetch('https://text.pollinations.ai/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
