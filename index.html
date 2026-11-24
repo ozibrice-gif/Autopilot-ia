@@ -59,13 +59,13 @@
       </div>
 
       <nav class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800">
-        <button onclick="switchTab('catalog')" id="tab-catalog" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow">
+        <button type="button" onclick="switchTab('catalog')" id="tab-catalog" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow">
           <i class="fa-solid fa-layer-group mr-1"></i> Flux
         </button>
-        <button onclick="switchTab('studio')" id="tab-studio" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
+        <button type="button" onclick="switchTab('studio')" id="tab-studio" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
           <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Studio IA
         </button>
-        <button onclick="switchTab('history')" id="tab-history" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
+        <button type="button" onclick="switchTab('history')" id="tab-history" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
           <i class="fa-solid fa-clock-rotate-left mr-1"></i> Historique
         </button>
       </nav>
@@ -74,6 +74,7 @@
 
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
 
+    <!-- ONGLET 1 : CATALOGUE DES FLUX -->
     <section id="view-catalog" class="space-y-6">
       <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/50 border border-indigo-500/20 p-5 sm:p-7">
         <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/25 px-3 py-1 rounded-full mb-3">
@@ -104,17 +105,17 @@
 
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="category-filters">
-          <button onclick="filterFlows('all')" data-cat="all" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap">Tous les pôles</button>
-          <button onclick="filterFlows('commercial')" data-cat="commercial" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Commercial & Support</button>
-          <button onclick="filterFlows('operations')" data-cat="operations" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Opérations & Direction</button>
-          <button onclick="filterFlows('finance')" data-cat="finance" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Finance, RH & Juridique</button>
+          <button type="button" onclick="filterFlows('all')" data-cat="all" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap">Tous les pôles</button>
+          <button type="button" onclick="filterFlows('commercial')" data-cat="commercial" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Commercial & Support</button>
+          <button type="button" onclick="filterFlows('operations')" data-cat="operations" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Opérations & Direction</button>
+          <button type="button" onclick="filterFlows('finance')" data-cat="finance" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Finance, RH & Juridique</button>
         </div>
 
         <div class="flex items-center gap-2">
-          <button onclick="resetDefaultFlows()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white transition">
+          <button type="button" onclick="resetDefaultFlows()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white transition">
             Réinitialiser
           </button>
-          <button onclick="openModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition">
+          <button type="button" onclick="openModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition">
             <i class="fa-solid fa-plus mr-1"></i> Créer un flux
           </button>
         </div>
@@ -123,6 +124,7 @@
       <div id="flows-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
+    <!-- ONGLET 2 : STUDIO D'EXÉCUTION IA -->
     <section id="view-studio" class="hidden space-y-5">
       <div class="glass rounded-2xl p-5 space-y-4">
         <div class="flex items-center justify-between gap-2 flex-wrap">
@@ -132,7 +134,7 @@
             </h2>
             <p class="text-xs text-slate-400">Traitement manuel instantané • Import DOCX & texte + historique</p>
           </div>
-          <button onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
+          <button type="button" onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
             <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé Gemini
           </button>
         </div>
@@ -141,7 +143,7 @@
           <label class="block text-xs font-semibold text-slate-300">Clé API Gemini facultative</label>
           <div class="flex gap-2">
             <input type="password" id="local-api-key" placeholder="AIzaSy... (facultatif)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-            <button onclick="saveLocalKey()" class="px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Sauver</button>
+            <button type="button" onclick="saveLocalKey()" class="px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Sauver</button>
           </div>
         </div>
 
@@ -169,7 +171,7 @@
           <textarea id="studio-input" rows="5" placeholder="Collez, dictez ou importez un document (.docx, .txt, .md, .csv)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
         </div>
 
-        <button id="run-btn" onclick="executeWorkflow()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition">
+        <button type="button" id="run-btn" onclick="executeWorkflow()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition">
           <i class="fa-solid fa-play"></i> Lancer l'automatisation IA
         </button>
       </div>
@@ -183,10 +185,10 @@
             <span id="engine-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">IA distante</span>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="shareOutput()" id="share-btn" class="text-xs px-3 py-1 rounded-lg bg-indigo-600/25 hover:bg-indigo-600 text-indigo-200 hover:text-white border border-indigo-500/30 transition">
+            <button type="button" onclick="shareOutput()" id="share-btn" class="text-xs px-3 py-1 rounded-lg bg-indigo-600/25 hover:bg-indigo-600 text-indigo-200 hover:text-white border border-indigo-500/30 transition">
               <i class="fa-solid fa-share-nodes mr-1"></i> Partager
             </button>
-            <button onclick="copyOutput()" id="copy-btn" class="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+            <button type="button" onclick="copyOutput()" id="copy-btn" class="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
               <i class="fa-regular fa-copy mr-1"></i> Copier
             </button>
           </div>
@@ -195,21 +197,23 @@
       </div>
     </section>
 
+    <!-- ONGLET 3 : HISTORIQUE -->
     <section id="view-history" class="hidden space-y-4">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-bold text-white">Exécutions sauvegardées</h2>
-        <button onclick="clearHistory()" class="text-xs text-rose-400 hover:underline">Tout effacer</button>
+        <button type="button" onclick="clearHistory()" class="text-xs text-rose-400 hover:underline">Tout effacer</button>
       </div>
       <div id="history-list" class="space-y-3"></div>
     </section>
 
   </main>
 
+  <!-- MODAL CRÉATION DE FLUX -->
   <div id="create-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-base text-white">Nouveau flux personnalisé</h3>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <input id="new-title" type="text" placeholder="Titre du flux (ex: Trame de contrat)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
       <select id="new-cat" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
@@ -218,7 +222,7 @@
         <option value="finance">Finance, RH & Juridique</option>
       </select>
       <textarea id="new-prompt" rows="3" placeholder="Instruction système pour l'IA (ex: Structure en Article 1, 2, 3...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white"></textarea>
-      <button onclick="addCustomFlow()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm">Enregistrer le flux</button>
+      <button type="button" onclick="addCustomFlow()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm">Enregistrer le flux</button>
     </div>
   </div>
 
@@ -258,7 +262,256 @@
         trigger: 'Notes brutes de réunion, rapport de terrain ou point d\'équipe.',
         action: 'Structuration en décisions actées, plan d\'action par responsable et alertes de blocage.',
         systemPrompt: 'Tu es un directeur des opérations (COO). Réponds en français structuré, sans tableaux Markdown | ni **. Transforme les notes brutes en un compte-rendu exécutif clair avec : 1) Résumé exécutif, 2) Décisions validées, 3) Plan d\'action (Qui / Quoi / Échéance), 4) Points de vigilance.',
-        sample: 'Réunion lundi matin : retard livraison fournisseur sur le chantier Nord, Karim doit rel
+        sample: 'Réunion lundi matin : retard livraison fournisseur sur le chantier Nord, Karim doit relancer avant mercredi. Validation du budget recrutement 2 agents. Prochain audit qualité fixé au 10 décembre.'
+      },
+      {
+        id: 'hr-screening',
+        title: 'Présélection & Analyse de Candidatures',
+        category: 'finance',
+        badge: 'Finance, RH & Juridique',
+        saving: '~3h / semaine',
+        icon: 'fa-user-check',
+        trigger: 'Réception d\'un CV ou profil candidat pour un poste ouvert.',
+        action: 'Évaluation de l\'adéquation au poste, points forts, zones d\'ombre et grille de questions d\'entretien.',
+        systemPrompt: 'Tu es un recruteur senior. Réponds en français clair et structuré, sans ** ni tableaux |. Évalue le profil candidat fourni : donne un score d\'adéquation sur 100, liste 3 points forts, 2 points à vérifier et 4 questions ciblées pour l\'entretien.',
+        sample: 'Profil : 4 ans d\'expérience en gestion administrative et juridique, maîtrise des contrats commerciaux et de la facturation, recherche un poste de responsable administratif.'
+      },
+      {
+        id: 'sales-followup',
+        title: 'Séquence de Relance Commerciale B2B',
+        category: 'commercial',
+        badge: 'Commercial & Support',
+        saving: '~4h / semaine',
+        icon: 'fa-paper-plane',
+        trigger: 'Devis envoyé sans réponse depuis plus de 48 heures.',
+        action: 'Génération d\'une séquence de 3 relances progressives (douce, valeur ajoutée, clôture).',
+        systemPrompt: 'Tu es un expert en négociation B2B. Réponds en français simple et lisible, sans ** ni tableaux |. Rédige une séquence de 3 messages de relance courts, percutants et non agressifs (J+2, J+5, J+10) adaptés au contexte fourni.',
+        sample: 'Devis envoyé il y a 4 jours à la société Ivoire Logistique pour un pack d\'automatisation du service client à 1 200 000 FCFA. Aucun retour pour l\'instant.'
+      },
+      {
+        id: 'legal-audit',
+        title: 'Trames & Revue de Clauses Contractuelles',
+        category: 'finance',
+        badge: 'Finance, RH & Juridique',
+        saving: '~5h / semaine',
+        icon: 'fa-scale-balanced',
+        trigger: 'Besoin d\'une trame structurée par articles ou d\'une revue de clauses.',
+        action: 'Proposition d\'une trame structurée (Article 1, Article 2, Article 3...), identification des risques et points à faire valider.',
+        systemPrompt: 'Tu es un assistant juridique spécialisé dans la structuration documentaire. Réponds en français clair et aéré, sans symboles **, ##, <br> ou tableaux |. Présente l\'analyse ou la trame sous forme de titres et listes simples (Article 1, Article 2, Article 3, Risques et points à faire valider par un juriste).',
+        sample: 'Clause de résiliation : Le Prestataire peut résilier le présent contrat à tout moment sans préavis ni indemnité, tandis que le Client reste engagé pour une durée ferme de 24 mois.'
+      }
+    ];
+    let flows = JSON.parse(localStorage.getItem('autopilot_flows')) || defaultFlows;
+    let currentFilter = 'all';
+    let selectedFlowId = localStorage.getItem('autopilot_selected_flow') || flows[0].id;
+    if (!flows.some(f => f.id === selectedFlowId)) selectedFlowId = flows[0].id;
+
+    function cleanReadableText(rawText) {
+      if (!rawText) return '';
+      return rawText
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/__(.*?)__/g, '$1')
+        .replace(/^#{1,6}\s*/gm, '')
+        .replace(/^\s*\|?[\s:-]+(?:\|[\s:-]+)+\|?\s*$/gm, '')
+        .split('\n')
+        .map(line => {
+          const t = line.trim();
+          if (/^\|.*\|$/.test(t)) {
+            return t.slice(1, -1).split('|').map(c => c.trim()).filter(Boolean).join(' — ');
+          }
+          return t
+            .replace(/^\|\s*|\s*\|$/g, '')
+            .replace(/\s*\|\s*/g, ' — ')
+            .replace(/(?:\s*—){2,}/g, ' —')
+            .replace(/^\s*—\s*|\s*—\s*$/g, '')
+            .replace(/\*\*/g, '')
+            .trim();
+        })
+        .filter(line => line && !/^[-—\s]+$/.test(line))
+        .join('\n')
+        .replace(/\s+(\d+\.\s+)/g, '\n$1')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById('flows-grid');
+      const filtered = currentFilter === 'all' ? flows : flows.filter(f => f.category === currentFilter);
+      document.getElementById('flow-count-badge').textContent = `${flows.length} Flux`;
+
+      grid.innerHTML = filtered.map(f => `
+        <div class="glass rounded-2xl p-5 flex flex-col justify-between gap-4 hover:border-indigo-500/50 transition">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                <i class="fa-solid ${f.icon || 'fa-bolt'}"></i>
+              </div>
+              <div class="text-right">
+                <span class="inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <i class="fa-regular fa-clock mr-1"></i>${f.saving || '~3h / sem'}
+                </span>
+                <div class="text-[11px] text-slate-400 mt-1">${f.badge}</div>
+              </div>
+            </div>
+            <h3 class="font-bold text-base text-white">${f.title}</h3>
+            <p class="text-xs text-slate-300 leading-relaxed"><strong class="text-amber-400">Déclencheur :</strong> ${f.trigger}</p>
+            <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-indigo-300">Action IA :</strong> ${f.action}</p>
+          </div>
+          <button type="button" onclick="launchInStudio('${f.id}')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-bold transition flex items-center justify-center gap-2">
+            Exécuter dans le Studio <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      `).join('');
+
+      const select = document.getElementById('studio-flow-select');
+      select.innerHTML = flows.map(f => `<option value="${f.id}">${f.title}</option>`).join('');
+      select.value = selectedFlowId;
+    }
+
+    function filterFlows(cat) {
+      currentFilter = cat;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        const active = btn.dataset.cat === cat;
+        btn.className = active
+          ? 'filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap'
+          : 'filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap';
+      });
+      renderCatalog();
+    }
+
+    function switchTab(tab) {
+      ['catalog', 'studio', 'history'].forEach(t => {
+        document.getElementById(`view-${t}`).classList.toggle('hidden', t !== tab);
+        const btn = document.getElementById(`tab-${t}`);
+        btn.className = t === tab
+          ? 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow'
+          : 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white';
+      });
+      if (tab === 'history') renderHistory();
+    }
+
+    function launchInStudio(id) {
+      selectedFlowId = id;
+      localStorage.setItem('autopilot_selected_flow', id);
+      document.getElementById('studio-flow-select').value = id;
+      fillSampleData();
+      switchTab('studio');
+    }
+
+    function loadFlowTemplate() {
+      selectedFlowId = document.getElementById('studio-flow-select').value;
+      localStorage.setItem('autopilot_selected_flow', selectedFlowId);
+    }
+
+    function fillSampleData() {
+      const flow = flows.find(f => f.id === document.getElementById('studio-flow-select').value);
+      if (flow && flow.sample) {
+        document.getElementById('studio-input').value = flow.sample;
+      }
+    }
+
+    function clearInput() {
+      document.getElementById('studio-input').value = '';
+      hideFileBanner();
+      document.getElementById('studio-input').focus();
+    }
+
+    function hideFileBanner() {
+      const banner = document.getElementById('imported-file-banner');
+      const input = document.getElementById('doc-file-input');
+      if (banner) banner.classList.add('hidden');
+      if (input) input.value = '';
+    }
+
+    async function extractDocxText(file) {
+      try {
+        const buf = await file.arrayBuffer();
+        const bytes = new Uint8Array(buf);
+        if (bytes[0] !== 0x50 || bytes[1] !== 0x4b) return '';
+        const rawStr = new TextDecoder('latin1').decode(bytes);
+        const xmlMatch = rawStr.match(/<w:document[\s\S]*?<\/w:document>/);
+        const xmlSource = xmlMatch ? xmlMatch[0] : rawStr;
+        const textParts = [];
+        const regex = /<w:t[^>]*>([\s\S]*?)<\/w:t>/g;
+        let match;
+        while ((match = regex.exec(xmlSource)) !== null) {
+          textParts.push(match[1]);
+        }
+        return textParts
+          .join(' ')
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .replace(/\s{2,}/g, ' ')
+          .trim();
+      } catch (err) {
+        return '';
+      }
+    }
+
+    function handleFileImport(event) {
+      const inputEl = event.target;
+      const file = inputEl && inputEl.files ? inputEl.files[0] : null;
+      if (!file) return;
+
+      const maxBytes = 2 * 1024 * 1024;
+      if (file.size > maxBytes) {
+        alert('Fichier trop volumineux (maximum 2 Mo).');
+        inputEl.value = '';
+        return;
+      }
+
+      const lowerName = file.name.toLowerCase();
+      const applyText = (extractedText) => {
+        const cleaned = (extractedText || '').replace(/\u0000/g, '').trim();
+        if (!cleaned) {
+          alert(`Texte non extractible automatiquement pour "${file.name}". Copiez-collez le contenu dans la zone de texte.`);
+          inputEl.value = '';
+          return;
+        }
+
+        const textarea = document.getElementById('studio-input');
+        const existing = textarea.value.trim();
+        const block = `--- Document : ${file.name} ---\n${cleaned.slice(0, 15000)}`;
+        textarea.value = existing ? `${existing}\n\n${block}` : block;
+
+        document.getElementById('imported-file-name').textContent = `Importé : ${file.name} (${Math.max(1, Math.round(file.size / 1024))} Ko)`;
+        document.getElementById('imported-file-banner').classList.remove('hidden');
+        textarea.focus();
+        inputEl.value = '';
+      };
+
+      if (lowerName.endsWith('.docx')) {
+        extractDocxText(file).then(applyText);
+        return;
+      }
+
+      if (lowerName.endsWith('.doc')) {
+        alert('Les fichiers .doc anciens ne sont pas lus directement sur iPhone. Enregistrez en .docx ou copiez-collez le texte.');
+        inputEl.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => applyText(e.target && typeof e.target.result === 'string' ? e.target.result : '');
+      reader.readAsText(file);
+    }
+
+    function toggleKeyBox() {
+      document.getElementById('fallback-key-box').classList.toggle('hidden');
+      document.getElementById('local-api-key').value = localStorage.getItem('gemini_fallback_key') || '';
+    }
+
+    function saveLocalKey() {
+      const val = document.getElementById('local-api-key').value.trim();
+      if (val) localStorage.setItem('gemini_fallback_key', val);
+      else localStorage.removeItem('gemini_fallback_key');
+      alert('Clé Gemini enregistrée sur cet appareil.');
+    }
+
     function buildSimulatedOutput(flow, input) {
       const excerpt = input.length > 180 ? input.slice(0, 180) + '...' : input;
       return `Repli local — Connexion externe temporairement indisponible\n\n` +
