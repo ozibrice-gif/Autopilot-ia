@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Autopilot-IA | Application Autonome IA</title>
+  <title>Autopilot-IA | 10 Agents & Coordinateur</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#090d16">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -52,9 +52,9 @@
         <div>
           <div class="flex items-center gap-1.5">
             <h1 class="font-extrabold text-sm sm:text-base tracking-tight text-white">Autopilot-IA</h1>
-            <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V2.8</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V3.0</span>
           </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block">Application IA autonome</p>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Coordinateur + 10 Agents Spécialisés</p>
         </div>
       </div>
 
@@ -66,7 +66,7 @@
 
         <nav class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 overflow-x-auto no-scrollbar">
           <button type="button" onclick="switchTab('catalog')" id="tab-catalog" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow whitespace-nowrap">
-            <i class="fa-solid fa-layer-group mr-1"></i> Flux
+            <i class="fa-solid fa-layer-group mr-1"></i> Agents
           </button>
           <button type="button" onclick="switchTab('studio')" id="tab-studio" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
             <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Studio
@@ -84,41 +84,42 @@
 
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
 
-    <!-- ONGLET 1 : CATALOGUE DES FLUX -->
+    <!-- ONGLET 1 : CATALOGUE DES 10 AGENTS -->
     <section id="view-catalog" class="space-y-6">
       <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/50 border border-indigo-500/20 p-5 sm:p-7">
         <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/25 px-3 py-1 rounded-full mb-3">
-          <i class="fa-solid fa-bolt text-amber-400"></i> Moteur Autonome Hybride
+          <i class="fa-solid fa-network-wired text-amber-400"></i> Architecture Multi-Agents Autonome
         </span>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
-          Cartographie des processus métiers automatisés par IA
+          10 agents spécialisés pilotés par un coordinateur intelligent
         </h2>
         <p class="text-sm text-slate-300 leading-relaxed mb-5">
-          Sélectionnez un flux métier ci-dessous pour l'exécuter dans le <strong class="text-indigo-300">Studio</strong>, modifier le résultat et l'archiver dans le <strong class="text-emerald-300">Classeur</strong>.
+          Laissez <strong class="text-indigo-300">01 AUTOPILOT — Coordinateur</strong> orienter automatiquement votre demande ou sélectionnez directement l'agent spécialiste dans le <strong class="text-emerald-300">Studio</strong>.
         </p>
 
         <div class="grid grid-cols-3 gap-2.5 text-center">
           <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
-            <div class="text-lg sm:text-xl font-extrabold text-emerald-400">-72%</div>
-            <div class="text-[11px] text-slate-400">Temps admin</div>
+            <div id="flow-count-badge" class="text-lg sm:text-xl font-extrabold text-emerald-400">10 Agents</div>
+            <div class="text-[11px] text-slate-400">Spécialisés</div>
           </div>
           <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
-            <div class="text-lg sm:text-xl font-extrabold text-indigo-400">3 Niveaux</div>
+            <div class="text-lg sm:text-xl font-extrabold text-indigo-400">Auto-Route</div>
+            <div class="text-[11px] text-slate-400">Coordinateur 01</div>
+          </div>
+          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
+            <div class="text-lg sm:text-xl font-extrabold text-violet-400">3 Niveaux</div>
             <div class="text-[11px] text-slate-400">Continuité IA</div>
-          </div>
-          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
-            <div id="flow-count-badge" class="text-lg sm:text-xl font-extrabold text-violet-400">6 Flux</div>
-            <div class="text-[11px] text-slate-400">Prêts à l'emploi</div>
           </div>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="category-filters">
-          <button type="button" onclick="filterFlows('all')" data-cat="all" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap">Tous les pôles</button>
-          <button type="button" onclick="filterFlows('commercial')" data-cat="commercial" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Commercial & Support</button>
-          <button type="button" onclick="filterFlows('operations')" data-cat="operations" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Opérations & Direction</button>
-          <button type="button" onclick="filterFlows('finance')" data-cat="finance" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Finance, RH & Juridique</button>
+          <button type="button" onclick="filterFlows('all')" data-cat="all" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap">Tous (10)</button>
+          <button type="button" onclick="filterFlows('pilotage')" data-cat="pilotage" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Pilotage & Projets</button>
+          <button type="button" onclick="filterFlows('business')" data-cat="business" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Business, Marketing & Client</button>
+          <button type="button" onclick="filterFlows('finance-juridique')" data-cat="finance-juridique" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Finance, RH & Juridique</button>
+          <button type="button" onclick="filterFlows('tech-data')" data-cat="tech-data" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Développement & Analyse</button>
         </div>
 
         <div class="flex items-center gap-2">
@@ -126,7 +127,7 @@
             Réinitialiser
           </button>
           <button type="button" onclick="openModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition">
-            <i class="fa-solid fa-plus mr-1"></i> Créer un flux
+            <i class="fa-solid fa-plus mr-1"></i> Ajouter
           </button>
         </div>
       </div>
@@ -134,15 +135,15 @@
       <div id="flows-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- ONGLET 2 : STUDIO D'EXÉCUTION IA -->
+    <!-- ONGLET 2 : STUDIO MULTI-AGENTS -->
     <section id="view-studio" class="hidden space-y-5">
       <div class="glass rounded-2xl p-5 space-y-4">
         <div class="flex items-center justify-between gap-2 flex-wrap">
           <div>
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-microchip text-indigo-400"></i> Studio d'Exécution IA
+              <i class="fa-solid fa-microchip text-indigo-400"></i> Studio Multi-Agents
             </h2>
-            <p class="text-xs text-slate-400">Tableaux structurés • Édition directe & boîte interne Classeur</p>
+            <p class="text-xs text-slate-400">Orientation automatique par 01 AUTOPILOT ou choix direct d'un agent</p>
           </div>
           <button type="button" onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
             <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé Gemini
@@ -158,13 +159,13 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">1. Choisir le processus métier</label>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">1. Choisir l'agent ou laisser 01 AUTOPILOT orienter</label>
           <select id="studio-flow-select" onchange="loadFlowTemplate()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"></select>
         </div>
 
         <div>
           <div class="flex items-center justify-between mb-1.5 gap-2 flex-wrap">
-            <label class="text-xs font-semibold text-slate-300">2. Données entrantes (texte, consigne, fichier texte)</label>
+            <label class="text-xs font-semibold text-slate-300">2. Données entrantes (demande, consigne, fichier texte)</label>
             <div class="flex items-center gap-3">
               <label for="doc-file-input" class="text-[11px] text-emerald-400 hover:underline cursor-pointer">
                 <i class="fa-solid fa-file-import mr-1"></i>Importer (.txt/.csv)
@@ -178,11 +179,11 @@
             <span id="imported-file-name" class="truncate"></span>
             <button type="button" onclick="hideFileBanner()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
           </div>
-          <textarea id="studio-input" rows="5" placeholder="Collez ici votre texte ou consigne (ex. plan comptable, facture, clause). Pour Word/PDF, copiez-collez directement le texte." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
+          <textarea id="studio-input" rows="5" placeholder="Décrivez votre besoin : stratégie business, plan comptable, campagne marketing, recrutement, contrat OHADA, code, projet, client ou analyse..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
         </div>
 
         <button type="button" id="run-btn" onclick="executeWorkflow()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition">
-          <i class="fa-solid fa-play"></i> Lancer l'automatisation IA
+          <i class="fa-solid fa-play"></i> Exécuter avec l'agent
         </button>
       </div>
 
@@ -192,6 +193,7 @@
             <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
               <i class="fa-solid fa-circle-check"></i> Livrable généré
             </span>
+            <span id="routed-agent-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/25">Agent actif</span>
             <span id="engine-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">IA distante</span>
           </div>
           <div class="flex items-center gap-2 flex-wrap">
@@ -246,102 +248,141 @@
 
   </main>
 
-  <!-- MODAL CRÉATION DE FLUX -->
+  <!-- MODAL AJOUT AGENT / FLUX -->
   <div id="create-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-base text-white">Nouveau flux personnalisé</h3>
+        <h3 class="font-bold text-base text-white">Nouvel agent / flux personnalisé</h3>
         <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <input id="new-title" type="text" placeholder="Titre du flux (ex: Plan comptable SYSCOHADA)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
+      <input id="new-title" type="text" placeholder="Nom de l'agent (ex: 11 Agent Logistique)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
       <select id="new-cat" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <option value="commercial">Commercial & Support</option>
-        <option value="operations">Opérations & Direction</option>
-        <option value="finance">Finance, RH & Juridique</option>
+        <option value="pilotage">Pilotage & Projets</option>
+        <option value="business">Business, Marketing & Client</option>
+        <option value="finance-juridique">Finance, RH & Juridique</option>
+        <option value="tech-data">Développement & Analyse</option>
       </select>
-      <textarea id="new-prompt" rows="3" placeholder="Instruction système pour l'IA (ex: Présente les écritures dans un tableau Compte | Intitulé | Débit | Crédit)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white"></textarea>
-      <button type="button" onclick="addCustomFlow()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm">Enregistrer le flux</button>
+      <textarea id="new-prompt" rows="3" placeholder="Instruction système pour l'agent..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white"></textarea>
+      <button type="button" onclick="addCustomFlow()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm">Enregistrer</button>
     </div>
   </div>
 
   <script>
     const defaultFlows = [
       {
-        id: 'support-leads',
-        title: 'Service Client & Qualification de Leads',
-        category: 'commercial',
-        badge: 'Commercial & Support',
-        saving: '~5h / semaine',
-        icon: 'fa-headset',
-        trigger: 'Réception d\'un email entrant, formulaire de contact ou message client.',
-        action: 'Analyse d\'intention, scoring d\'urgence, extraction des besoins et rédaction d\'une réponse prête à envoyer.',
-        systemPrompt: 'Tu es un responsable commercial et support senior. Réponds en français clair et structuré, sans ** ni ## ni <br>. Analyse le message client fourni et produis : 1) Score d\'urgence (1 à 5) et intention, 2) Besoins clés détectés, 3) Une réponse professionnelle, chaleureuse et orientée conversion prête à être envoyée.',
-        sample: 'Bonjour, nous sommes une PME de 35 salariés et cherchons une solution pour automatiser nos devis et relances clients avant la fin du mois. Pouvez-vous nous faire une proposition rapide ?'
+        id: '01-coordinateur',
+        title: '01 AUTOPILOT — Coordinateur',
+        category: 'pilotage',
+        badge: 'Coordinateur Intelligent',
+        icon: 'fa-compass-drafting',
+        role: 'Comprend les demandes et oriente vers le bon agent.',
+        action: 'Analyse l\'intention, sélectionne l\'agent spécialiste adapté et synthétise les réponses clés.',
+        systemPrompt: 'Tu es 01 AUTOPILOT, le Coordinateur intelligent d\'une équipe de 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique, Développement, Projets, Service client, Analyste). Réponds en français clair sans ** ni ## ni <br>. Indique d\'abord quel(s) agent(s) spécialiste(s) interviennent, puis livre une réponse structurée, actionnable et concise (avec tableau Markdown si utile).',
+        sample: 'Je lance une offre d\'abonnement B2B à 45 000 FCFA/mois : je veux structurer le modèle commercial, estimer la rentabilité et préparer un plan de lancement sur 30 jours.'
       },
       {
-        id: 'invoices-ocr',
-        title: 'Comptabilité, Plan de Comptes & Écritures',
-        category: 'finance',
-        badge: 'Finance, RH & Juridique',
-        saving: '~4h / semaine',
-        icon: 'fa-file-invoice-dollar',
-        trigger: 'Facture, devis ou demande de plan comptable / imputation.',
-        action: 'Tableau structuré des comptes, intitulés, montants Débit / Crédit et contrôle de cohérence.',
-        systemPrompt: 'Tu es un expert-comptable rigoureux. Réponds en français clair sans ** ni ## ni <br>. Lorsque tu présentes un plan comptable ou des écritures comptables, utilise un tableau Markdown propre avec des colonnes claires (par exemple : Compte | Intitulé | Débit | Crédit | Justification), puis ajoute une courte note de contrôle si nécessaire.',
-        sample: 'Établir un tableau d\'écriture comptable et de plan de comptes pour une facture d\'hébergement et maintenance informatique de 450 000 FCFA HT, TVA récupérable 18% (81 000 FCFA), total TTC 531 000 FCFA réglé par virement bancaire.'
+        id: '02-business',
+        title: '02 Agent Business',
+        category: 'business',
+        badge: 'Stratégie & Développement',
+        icon: 'fa-briefcase',
+        role: 'Stratégie commerciale, création et développement d\'entreprises.',
+        action: 'Définit l\'offre, le positionnement, les canaux d\'acquisition et la feuille de route business.',
+        systemPrompt: 'Tu es l\'Agent Business (02) spécialisé en stratégie commerciale, création et développement d\'entreprise. Réponds en français clair sans ** ni ## ni <br>. Structure ta réponse avec proposition de valeur, segments clients, modèle de revenus et actions prioritaires (tableau si pertinent).',
+        sample: 'Comment structurer une offre de prestation de sécurité et de contrôle d\'accès pour des PME et résidences à Abidjan ?'
       },
       {
-        id: 'ops-briefing',
-        title: 'Synthèse Opérationnelle & Compte-Rendu',
-        category: 'operations',
-        badge: 'Opérations & Direction',
-        saving: '~6h / semaine',
-        icon: 'fa-diagram-project',
-        trigger: 'Notes brutes de réunion, rapport de terrain ou point d\'équipe.',
-        action: 'Structuration en décisions actées, tableau d\'actions par responsable et alertes de blocage.',
-        systemPrompt: 'Tu es un directeur des opérations (COO). Réponds en français structuré sans ** ni ## ni <br>. Présente un résumé exécutif court, un tableau d\'actions (Responsable | Action | Échéance | Statut) et les points de vigilance.',
-        sample: 'Réunion lundi matin : retard livraison fournisseur sur le chantier Nord, Karim doit relancer avant mercredi. Validation du budget recrutement 2 agents. Prochain audit qualité fixé au 10 décembre.'
+        id: '03-finance',
+        title: '03 Agent Finance',
+        category: 'finance-juridique',
+        badge: 'Finance & Comptabilité',
+        icon: 'fa-calculator',
+        role: 'Budgets, trésorerie, prévisions et analyse financière.',
+        action: 'Établit des tableaux de comptes, écritures, budgets, prévisions de trésorerie et indicateurs financiers.',
+        systemPrompt: 'Tu es l\'Agent Finance (03) expert en budgets, trésorerie, comptabilité et analyse financière. Réponds en français clair sans ** ni ## ni <br>. Utilise systématiquement un tableau Markdown propre pour les plans/écritures comptables, budgets ou prévisions (ex. Compte / Poste | Intitulé | Débit / Entrée | Crédit / Sortie | Note).',
+        sample: 'Établir un tableau d\'écriture comptable et de suivi de trésorerie pour une facture de 450 000 FCFA HT, TVA 18% (81 000 FCFA), TTC 531 000 FCFA réglée par virement.'
       },
       {
-        id: 'hr-screening',
-        title: 'Présélection & Analyse de Candidatures',
-        category: 'finance',
-        badge: 'Finance, RH & Juridique',
-        saving: '~3h / semaine',
-        icon: 'fa-user-check',
-        trigger: 'Réception d\'un CV ou profil candidat pour un poste ouvert.',
-        action: 'Évaluation de l\'adéquation au poste, points forts, zones d\'ombre et grille de questions d\'entretien.',
-        systemPrompt: 'Tu es un recruteur senior. Réponds en français clair et structuré sans ** ni ## ni <br>. Évalue le profil candidat fourni : score d\'adéquation sur 100, points forts, points à vérifier et questions ciblées pour l\'entretien.',
-        sample: 'Profil : 4 ans d\'expérience en gestion administrative et juridique, maîtrise des contrats commerciaux et de la facturation, recherche un poste de responsable administratif.'
+        id: '04-marketing',
+        title: '04 Agent Marketing',
+        category: 'business',
+        badge: 'Marketing & Ventes',
+        icon: 'fa-bullhorn',
+        role: 'Publicité, communication, ventes et stratégie de marque.',
+        action: 'Conçoit des messages percutants, angles de campagne, accroches commerciales et plans de visibilité.',
+        systemPrompt: 'Tu es l\'Agent Marketing (04) spécialisé en publicité, communication, ventes et stratégie de marque. Réponds en français clair sans ** ni ## ni <br>. Propose un angle de marque, des messages clés, un plan d\'action et un tableau récapitulatif des canaux / objectifs.',
+        sample: 'Campagne de lancement d\'une application web métier pour dirigeants et responsables opérationnels : messages, accroches et plan de diffusion.'
       },
       {
-        id: 'sales-followup',
-        title: 'Séquence de Relance Commerciale B2B',
-        category: 'commercial',
-        badge: 'Commercial & Support',
-        saving: '~4h / semaine',
-        icon: 'fa-paper-plane',
-        trigger: 'Devis envoyé sans réponse depuis plus de 48 heures.',
-        action: 'Génération d\'une séquence de 3 relances progressives (douce, valeur ajoutée, clôture).',
-        systemPrompt: 'Tu es un expert en négociation B2B. Réponds en français simple et lisible sans ** ni ## ni <br>. Rédige une séquence de 3 messages de relance courts, percutants et non agressifs (J+2, J+5, J+10) adaptés au contexte fourni.',
-        sample: 'Devis envoyé il y a 4 jours à la société Ivoire Logistique pour un pack d\'automatisation du service client à 1 200 000 FCFA. Aucun retour pour l\'instant.'
+        id: '05-rh',
+        title: '05 Agent RH',
+        category: 'finance-juridique',
+        badge: 'Ressources Humaines',
+        icon: 'fa-users',
+        role: 'Recrutement, gestion du personnel et organisation.',
+        action: 'Rédige des fiches de poste, critères de sélection, grilles d\'entretien et schémas d\'organisation.',
+        systemPrompt: 'Tu es l\'Agent RH (05) spécialisé en recrutement, gestion du personnel et organisation. Réponds en français clair sans ** ni ## ni <br>. Structure les missions, compétences attendues, critères d\'évaluation et plan d\'intégration.',
+        sample: 'Rédiger le cadre de recrutement et la grille d\'entretien pour un responsable administratif et opérationnel polyvalent.'
       },
       {
-        id: 'legal-audit',
-        title: 'Trames & Revue de Clauses Contractuelles',
-        category: 'finance',
-        badge: 'Finance, RH & Juridique',
-        saving: '~5h / semaine',
+        id: '06-juridique',
+        title: '06 Agent Juridique',
+        category: 'finance-juridique',
+        badge: 'Contrats & Droit OHADA',
         icon: 'fa-scale-balanced',
-        trigger: 'Besoin d\'une trame structurée par articles ou d\'une revue de clauses.',
-        action: 'Proposition d\'une trame structurée (Article 1, Article 2, Article 3...), identification des risques et points à faire valider.',
-        systemPrompt: 'Tu es un assistant juridique spécialisé dans la structuration documentaire. Réponds en français clair et aéré sans ** ni ## ni <br>. Présente l\'analyse ou la trame sous forme de titres et listes simples (Article 1, Article 2, Article 3, Risques et points à faire valider par un juriste).',
-        sample: 'Clause de résiliation : Le Prestataire peut résilier le présent contrat à tout moment sans préavis ni indemnité, tandis que le Client reste engagé pour une durée ferme de 24 mois.'
+        role: 'Contrats, droit des affaires et réglementation OHADA.',
+        action: 'Structure des trames contractuelles, vérifie les clauses sensibles et éclaire le cadre OHADA.',
+        systemPrompt: 'Tu es l\'Agent Juridique (06) spécialisé en contrats, droit des affaires et réglementation OHADA. Réponds en français clair et structuré sans ** ni ## ni <br>. Organise par articles (Article 1, Article 2...) ou points de vigilance juridiques, avec mention claire qu\'une validation formelle reste conseillée.',
+        sample: 'Rédiger les clauses essentielles d\'un contrat de prestation de services entre deux sociétés commerciales soumises au droit OHADA (objet, obligations, durée, résiliation, règlement des litiges).'
+      },
+      {
+        id: '07-developpement',
+        title: '07 Agent Développement',
+        category: 'tech-data',
+        badge: 'Tech & Programmation',
+        icon: 'fa-code',
+        role: 'Programmation, applications et assistance technique.',
+        action: 'Propose des architectures, extraits de code, corrections de bugs et bonnes pratiques techniques.',
+        systemPrompt: 'Tu es l\'Agent Développement (07) spécialisé en programmation, applications web et assistance technique. Réponds en français clair sans ** ni ## ni <br> (sauf blocs de code ``` si nécessaire). Explique la solution étape par étape de façon claire et maintenable.',
+        sample: 'Comment structurer une sauvegarde locale fiable dans le navigateur (localStorage) avec gestion des erreurs JSON et limite d\'éléments ?'
+      },
+      {
+        id: '08-projets',
+        title: '08 Agent Projets',
+        category: 'pilotage',
+        badge: 'Gestion de Projet',
+        icon: 'fa-list-check',
+        role: 'Planification, suivi des tâches et gestion des objectifs.',
+        action: 'Découpe les objectifs en lots, jalons, responsabilités, échéances et indicateurs d\'avancement.',
+        systemPrompt: 'Tu es l\'Agent Projets (08) spécialisé en planification, suivi des tâches et gestion des objectifs. Réponds en français clair sans ** ni ## ni <br>. Présente un tableau de pilotage (Lot / Tâche | Responsable | Échéance | Livrable / Statut) et les risques clés.',
+        sample: 'Planifier le déploiement d\'un nouvel outil interne sur 3 semaines : préparation, test utilisateur, formation et mise en production.'
+      },
+      {
+        id: '09-service-client',
+        title: '09 Agent Service client',
+        category: 'business',
+        badge: 'Relation & Fidélisation',
+        icon: 'fa-headset',
+        role: 'Réponses aux clients, réclamations et fidélisation.',
+        action: 'Rédige des réponses empathiques et efficaces, traite les réclamations et propose des actions de fidélisation.',
+        systemPrompt: 'Tu es l\'Agent Service client (09) spécialisé en réponses clients, réclamations et fidélisation. Réponds en français clair, courtois et orienté solution sans ** ni ## ni <br>. Fournis une réponse prête à envoyer et une action de suivi.',
+        sample: 'Un client signale un retard de livraison de 48 heures sur sa commande et demande des explications ainsi qu\'un geste commercial.'
+      },
+      {
+        id: '10-analyste',
+        title: '10 Agent Analyste',
+        category: 'tech-data',
+        badge: 'Données & Décision',
+        icon: 'fa-chart-line',
+        role: 'Analyse des données, rapports et aide à la décision.',
+        action: 'Synthétise des chiffres ou faits, compare des options et formule des recommandations argumentées.',
+        systemPrompt: 'Tu es l\'Agent Analyste (10) spécialisé en analyse de données, rapports et aide à la décision. Réponds en français clair sans ** ni ## ni <br>. Présente les constats clés, un tableau comparatif ou de synthèse et une recommandation décisionnelle.',
+        sample: 'Comparer deux options de déploiement (Option A : démarrage rapide à faible coût ; Option B : investissement initial plus élevé avec automatisation avancée).'
       }
     ];
-    let flows = JSON.parse(localStorage.getItem('autopilot_flows')) || defaultFlows;
+    let flows = JSON.parse(localStorage.getItem('autopilot_flows_v3')) || defaultFlows;
     let currentFilter = 'all';
-    let selectedFlowId = localStorage.getItem('autopilot_selected_flow') || flows[0].id;
+    let selectedFlowId = localStorage.getItem('autopilot_selected_flow_v3') || flows[0].id;
     if (!flows.some(f => f.id === selectedFlowId)) selectedFlowId = flows[0].id;
     let rawLastOutputText = '';
     let dateLocale = localStorage.getItem('autopilot_date_locale') || 'fr-FR';
@@ -451,37 +492,57 @@
       containerEl.innerHTML = buildFormattedHtml(rawText);
     }
 
+    function routeToBestAgent(inputText) {
+      const t = String(inputText || '').toLowerCase();
+      const rules = [
+        { id: '03-finance', keys: ['comptab', 'plan de comptes', 'écriture', 'bilan', 'trésorerie', 'budget', 'tva', 'facture', 'ht', 'ttc', 'débit', 'crédit', 'finance'] },
+        { id: '06-juridique', keys: ['contrat', 'clause', 'ohada', 'juridique', 'droit', 'résiliation', 'litige', 'statut', 'bail'] },
+        { id: '05-rh', keys: ['recrut', 'candidat', 'cv', 'entretien', 'personnel', 'employé', 'salaire', 'rh', 'ressources humaines', 'poste'] },
+        { id: '04-marketing', keys: ['marketing', 'publicité', 'campagne', 'communication', 'marque', 'promo', 'affiche', 'réseaux sociaux', 'clientèle'] },
+        { id: '09-service-client', keys: ['réclamation', 'plainte', 'support client', 'service client', 'fidélis', 'relance client', 'sav'] },
+        { id: '07-developpement', keys: ['code', 'javascript', 'html', 'css', 'python', 'api', 'bug', 'application', 'développ', 'script', 'sql'] },
+        { id: '08-projets', keys: ['projet', 'planning', 'jalon', 'tâche', 'échéance', 'objectif', 'suivi', 'livrable', 'sprint'] },
+        { id: '10-analyste', keys: ['analyse', 'rapport', 'données', 'statistique', 'comparer', 'décision', 'indicateur', 'kpi'] },
+        { id: '02-business', keys: ['business', 'entreprise', 'stratégie commerciale', 'modèle économique', 'création', 'développement', 'offre'] }
+      ];
+
+      for (const rule of rules) {
+        if (rule.keys.some(k => t.includes(k))) {
+          const found = flows.find(f => f.id === rule.id);
+          if (found) return found;
+        }
+      }
+      return flows.find(f => f.id === '02-business') || flows[0];
+    }
+
     function renderCatalog() {
       const grid = document.getElementById('flows-grid');
       const filtered = currentFilter === 'all' ? flows : flows.filter(f => f.category === currentFilter);
-      document.getElementById('flow-count-badge').textContent = `${flows.length} Flux`;
+      document.getElementById('flow-count-badge').textContent = `${flows.length} Agents`;
 
       grid.innerHTML = filtered.map(f => `
         <div class="glass rounded-2xl p-5 flex flex-col justify-between gap-4 hover:border-indigo-500/50 transition">
           <div class="space-y-3">
             <div class="flex items-center justify-between gap-2">
               <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-                <i class="fa-solid ${f.icon || 'fa-bolt'}"></i>
+                <i class="fa-solid ${f.icon || 'fa-robot'}"></i>
               </div>
-              <div class="text-right">
-                <span class="inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  <i class="fa-regular fa-clock mr-1"></i>${f.saving || '~3h / sem'}
-                </span>
-                <div class="text-[11px] text-slate-400 mt-1">${f.badge}</div>
-              </div>
+              <span class="inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                ${escapeHtml(f.badge)}
+              </span>
             </div>
-            <h3 class="font-bold text-base text-white">${f.title}</h3>
-            <p class="text-xs text-slate-300 leading-relaxed"><strong class="text-amber-400">Déclencheur :</strong> ${f.trigger}</p>
-            <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-indigo-300">Action IA :</strong> ${f.action}</p>
+            <h3 class="font-bold text-base text-white">${escapeHtml(f.title)}</h3>
+            <p class="text-xs text-slate-300 leading-relaxed"><strong class="text-amber-400">Rôle :</strong> ${escapeHtml(f.role)}</p>
+            <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-indigo-300">Mission :</strong> ${escapeHtml(f.action)}</p>
           </div>
           <button type="button" onclick="launchInStudio('${f.id}')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-bold transition flex items-center justify-center gap-2">
-            Exécuter dans le Studio <i class="fa-solid fa-arrow-right"></i>
+            Ouvrir dans le Studio <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
       `).join('');
 
       const select = document.getElementById('studio-flow-select');
-      select.innerHTML = flows.map(f => `<option value="${f.id}">${f.title}</option>`).join('');
+      select.innerHTML = flows.map(f => `<option value="${f.id}">${escapeHtml(f.title)}</option>`).join('');
       select.value = selectedFlowId;
     }
 
@@ -510,7 +571,7 @@
 
     function launchInStudio(id) {
       selectedFlowId = id;
-      localStorage.setItem('autopilot_selected_flow', id);
+      localStorage.setItem('autopilot_selected_flow_v3', id);
       document.getElementById('studio-flow-select').value = id;
       fillSampleData();
       switchTab('studio');
@@ -518,7 +579,7 @@
 
     function loadFlowTemplate() {
       selectedFlowId = document.getElementById('studio-flow-select').value;
-      localStorage.setItem('autopilot_selected_flow', selectedFlowId);
+      localStorage.setItem('autopilot_selected_flow_v3', selectedFlowId);
     }
 
     function fillSampleData() {
@@ -603,72 +664,77 @@
     }
 
     function extractAmounts(text) {
-      const matches = [...String(text || '').matchAll(/(\d[\d\s.,]*\d|\d+)/g)]
+      return [...String(text || '').matchAll(/(\d[\d\s.,]*\d|\d+)/g)]
         .map(m => Number(m[1].replace(/\s+/g, '').replace(',', '.')))
         .filter(n => !Number.isNaN(n) && n > 0);
-      return matches;
     }
 
-    function buildAutonomousOutput(flow, input) {
-      const amounts = extractAmounts(input);
-      const base = amounts[0] || 100000;
-      const tva = amounts[1] && amounts[1] < 100
-        ? Math.round(base * (amounts[1] / 100))
-        : (amounts[1] || Math.round(base * 0.18));
-      const total = amounts[2] || (base + tva);
+    function buildAutonomousOutput(agent, input, wasCoordinated) {
+      const prefix = wasCoordinated
+        ? `Orientation 01 AUTOPILOT -> ${agent.title}\n\n`
+        : `${agent.title}\n\n`;
 
-      if (flow.id === 'invoices-ocr' || /comptab|plan de comptes|écriture|bilan|facture/i.test(flow.title + ' ' + input)) {
-        return [
-          `Proposition comptable autonome — ${flow.title}`,
-          '',
-          '| Compte | Intitulé | Débit | Crédit | Justification |',
+      if (agent.id === '03-finance') {
+        const amounts = extractAmounts(input);
+        const base = amounts[0] || 100000;
+        const tva = amounts[1] && amounts[1] < 100
+          ? Math.round(base * (amounts[1] / 100))
+          : (amounts[1] || Math.round(base * 0.18));
+        const total = amounts[2] || (base + tva);
+
+        return prefix + [
+          '| Compte | Intitulé | Débit | Crédit | Observation |',
           '| --- | --- | --- | --- | --- |',
-          `| 6265 / 613 | Services informatiques / Charges | ${base.toLocaleString('fr-FR')} | 0 | Montant HT |`,
-          `| 4452 | État, TVA récupérable | ${tva.toLocaleString('fr-FR')} | 0 | TVA déductible |`,
-          `| 401 / 521 | Fournisseurs / Banque | 0 | ${total.toLocaleString('fr-FR')} | Règlement / Dette TTC |`,
+          `| 6265 / 613 | Charges / Prestations | ${base.toLocaleString('fr-FR')} | 0 | Base HT |`,
+          `| 4452 | TVA récupérable | ${tva.toLocaleString('fr-FR')} | 0 | Taxe déductible |`,
+          `| 401 / 521 | Fournisseurs / Banque | 0 | ${total.toLocaleString('fr-FR')} | Total TTC |`,
           '',
-          `Contrôle d'équilibre : Total Débit = ${(base + tva).toLocaleString('fr-FR')} / Total Crédit = ${total.toLocaleString('fr-FR')}. Cliquez sur Modifier pour ajuster les comptes ou montants.`
+          `Équilibre contrôlé : Débit = ${(base + tva).toLocaleString('fr-FR')} / Crédit = ${total.toLocaleString('fr-FR')}.`
         ].join('\n');
       }
 
       const excerpt = input.length > 220 ? input.slice(0, 220) + '...' : input;
-      return [
-        `Traitement autonome — ${flow.title} (${flow.badge})`,
+      return prefix + [
+        `Demande traitée : "${excerpt}"`,
         '',
-        `Données analysées : "${excerpt}"`,
-        '',
-        '| Étape | Action recommandée | Priorité |',
+        '| Axe | Action clé | Priorité |',
         '| --- | --- | --- |',
-        `| 1. Cadrage | ${flow.action} | Haute |`,
-        '| 2. Validation | Vérifier les chiffres, dates et destinataires avant diffusion | Moyenne |',
-        '| 3. Archivage | Enregistrer dans le Classeur ou partager le livrable | Standard |'
+        `| Diagnostic | ${agent.role} | Haute |`,
+        `| Exécution | ${agent.action} | Haute |`,
+        '| Validation | Ajuster avec Modifier puis enregistrer dans le Classeur | Standard |'
       ].join('\n');
     }
 
     async function executeWorkflow() {
-      const flowId = document.getElementById('studio-flow-select').value;
-      const flow = flows.find(f => f.id === flowId);
+      const selectedId = document.getElementById('studio-flow-select').value;
+      const selectedFlow = flows.find(f => f.id === selectedId) || flows[0];
       const input = document.getElementById('studio-input').value.trim();
       if (!input) return alert('Veuillez saisir des données à traiter.');
 
+      const isCoordinator = selectedFlow.id === '01-coordinateur';
+      const activeAgent = isCoordinator ? routeToBestAgent(input) : selectedFlow;
+
       const btn = document.getElementById('run-btn');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Génération IA en cours...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement en cours...';
 
       let engineLabel = 'IA distante';
 
       try {
         let outputText = '';
         const localKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
+        const combinedPrompt = isCoordinator
+          ? `01 AUTOPILOT — Coordinateur a orienté cette demande vers ${activeAgent.title}. ${activeAgent.systemPrompt}`
+          : activeAgent.systemPrompt;
 
         if (localKey) {
           const geminiRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
+            `[https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$](https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$){localKey}`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                systemInstruction: { parts: [{ text: flow.systemPrompt }] },
+                systemInstruction: { parts: [{ text: combinedPrompt }] },
                 contents: [{ parts: [{ text: input }] }]
               })
             }
@@ -681,12 +747,12 @@
         }
 
         if (!outputText) {
-          const res = await fetch('https://text.pollinations.ai/', {
+          const res = await fetch('[https://text.pollinations.ai/](https://text.pollinations.ai/)', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               messages: [
-                { role: 'system', content: flow.systemPrompt },
+                { role: 'system', content: combinedPrompt },
                 { role: 'user', content: input }
               ],
               model: 'openai'
@@ -695,13 +761,16 @@
           if (!res.ok) throw new Error('Service IA indisponible');
           outputText = (await res.text()).trim();
           if (!outputText) {
-            outputText = buildAutonomousOutput(flow, input);
+            outputText = buildAutonomousOutput(activeAgent, input, isCoordinator);
             engineLabel = 'Moteur autonome';
+          } else if (isCoordinator) {
+            outputText = `Orientation 01 AUTOPILOT -> ${activeAgent.title}\n\n` + outputText;
           }
         }
 
         rawLastOutputText = outputText;
         document.getElementById('output-editor-box').classList.add('hidden');
+        document.getElementById('routed-agent-badge').textContent = activeAgent.title;
         document.getElementById('engine-badge').textContent = engineLabel;
         renderFormattedOutput(outputText, document.getElementById('studio-output'));
         document.getElementById('result-card').classList.remove('hidden');
@@ -711,17 +780,18 @@
         history.unshift({
           isoDate: nowIso,
           date: formatDisplayDate(nowIso),
-          title: flow.title,
+          title: isCoordinator ? `01 Coordinateur -> ${activeAgent.title}` : activeAgent.title,
           engine: engineLabel,
           input,
           output: outputText
         });
         localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 25)));
       } catch (err) {
-        const autoText = buildAutonomousOutput(flow, input);
+        const autoText = buildAutonomousOutput(activeAgent, input, isCoordinator);
         rawLastOutputText = autoText;
         engineLabel = 'Moteur autonome';
         document.getElementById('output-editor-box').classList.add('hidden');
+        document.getElementById('routed-agent-badge').textContent = activeAgent.title;
         document.getElementById('engine-badge').textContent = engineLabel;
         renderFormattedOutput(autoText, document.getElementById('studio-output'));
         document.getElementById('result-card').classList.remove('hidden');
@@ -731,7 +801,7 @@
         history.unshift({
           isoDate: nowIso,
           date: formatDisplayDate(nowIso),
-          title: flow.title,
+          title: isCoordinator ? `01 Coordinateur -> ${activeAgent.title}` : activeAgent.title,
           engine: engineLabel,
           input,
           output: autoText
@@ -739,7 +809,7 @@
         localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 25)));
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-play"></i> Lancer l\'automatisation IA';
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> Exécuter avec l\'agent';
       }
     }
 
@@ -779,13 +849,15 @@
       if (!text) return alert('Aucun résultat à enregistrer.');
 
       const nowIso = new Date().toISOString();
-      const flowTitle = document.getElementById('studio-flow-select').selectedOptions[0]?.textContent || 'Livrable';
+      const agentLabel = document.getElementById('routed-agent-badge').textContent
+        || document.getElementById('studio-flow-select').selectedOptions[0]?.textContent
+        || 'Livrable';
       const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
       vault.unshift({
         id: 'vault-' + Date.now(),
         isoDate: nowIso,
         date: formatDisplayDate(nowIso),
-        title: flowTitle,
+        title: agentLabel,
         content: text
       });
       localStorage.setItem('autopilot_vault', JSON.stringify(vault.slice(0, 50)));
@@ -856,7 +928,9 @@
     }
 
     async function shareOutput() {
-      const flowTitle = document.getElementById('studio-flow-select').selectedOptions[0]?.textContent || 'Autopilot-IA';
+      const flowTitle = document.getElementById('routed-agent-badge').textContent
+        || document.getElementById('studio-flow-select').selectedOptions[0]?.textContent
+        || 'Autopilot-IA';
       const text = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
       if (!text) return;
 
@@ -909,11 +983,11 @@
     }
 
     function resetDefaultFlows() {
-      if (!confirm('Revenir aux 6 flux par défaut ?')) return;
+      if (!confirm('Revenir aux 10 agents par défaut ?')) return;
       flows = [...defaultFlows];
-      localStorage.setItem('autopilot_flows', JSON.stringify(flows));
+      localStorage.setItem('autopilot_flows_v3', JSON.stringify(flows));
       selectedFlowId = flows[0].id;
-      localStorage.setItem('autopilot_selected_flow', selectedFlowId);
+      localStorage.setItem('autopilot_selected_flow_v3', selectedFlowId);
       currentFilter = 'all';
       filterFlows('all');
     }
@@ -925,25 +999,29 @@
       const title = document.getElementById('new-title').value.trim();
       const category = document.getElementById('new-cat').value;
       const systemPrompt = document.getElementById('new-prompt').value.trim();
-      if (!title || !systemPrompt) return alert('Remplissez le titre et l\'instruction.');
+      if (!title || !systemPrompt) return alert('Remplissez le nom de l\'agent et son instruction.');
 
-      const badges = { commercial: 'Commercial & Support', operations: 'Opérations & Direction', finance: 'Finance, RH & Juridique' };
+      const badges = {
+        pilotage: 'Pilotage & Projets',
+        business: 'Business, Marketing & Client',
+        'finance-juridique': 'Finance, RH & Juridique',
+        'tech-data': 'Développement & Analyse'
+      };
       const newFlow = {
         id: 'custom-' + Date.now(),
         title,
         category,
         badge: badges[category],
-        saving: 'Personnalisé',
         icon: 'fa-wand-magic-sparkles',
-        trigger: 'Déclenchement manuel dans le Studio IA.',
-        action: 'Traitement sur-mesure selon vos instructions.',
+        role: 'Agent personnalisé ajouté dans le Studio.',
+        action: 'Exécute les instructions personnalisées définies.',
         systemPrompt,
         sample: ''
       };
-      flows.unshift(newFlow);
-      localStorage.setItem('autopilot_flows', JSON.stringify(flows));
+      flows.push(newFlow);
+      localStorage.setItem('autopilot_flows_v3', JSON.stringify(flows));
       selectedFlowId = newFlow.id;
-      localStorage.setItem('autopilot_selected_flow', selectedFlowId);
+      localStorage.setItem('autopilot_selected_flow_v3', selectedFlowId);
       closeModal();
       renderCatalog();
     }
