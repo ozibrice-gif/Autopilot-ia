@@ -52,7 +52,7 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="font-extrabold text-base tracking-tight text-white">Autopilot-IA</h1>
-            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V2.5 PRO</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V2.6 PRO</span>
           </div>
           <p class="text-[11px] text-slate-400 hidden sm:block">Moteur d'automatisation opérationnelle</p>
         </div>
@@ -132,7 +132,7 @@
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-microchip text-indigo-400"></i> Studio d'Exécution IA
             </h2>
-            <p class="text-xs text-slate-400">Traitement manuel instantané • Import DOCX & texte + historique</p>
+            <p class="text-xs text-slate-400">Tableaux structurés • Import texte pur & historique</p>
           </div>
           <button type="button" onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
             <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé Gemini
@@ -154,12 +154,12 @@
 
         <div>
           <div class="flex items-center justify-between mb-1.5 gap-2 flex-wrap">
-            <label class="text-xs font-semibold text-slate-300">2. Données entrantes (texte, consigne, document)</label>
+            <label class="text-xs font-semibold text-slate-300">2. Données entrantes (texte, consigne, fichier texte)</label>
             <div class="flex items-center gap-3">
               <label for="doc-file-input" class="text-[11px] text-emerald-400 hover:underline cursor-pointer">
-                <i class="fa-solid fa-file-import mr-1"></i>Importer
+                <i class="fa-solid fa-file-import mr-1"></i>Importer (.txt/.csv)
               </label>
-              <input type="file" id="doc-file-input" accept="*/*" onchange="handleFileImport(event)" class="hidden">
+              <input type="file" id="doc-file-input" accept=".txt,.md,.csv,.json,.log,text/*" onchange="handleFileImport(event)" class="hidden">
               <button type="button" onclick="fillSampleData()" class="text-[11px] text-indigo-400 hover:underline">Exemple</button>
               <button type="button" onclick="clearInput()" class="text-[11px] text-rose-400 hover:underline">Effacer</button>
             </div>
@@ -168,7 +168,7 @@
             <span id="imported-file-name" class="truncate"></span>
             <button type="button" onclick="hideFileBanner()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
           </div>
-          <textarea id="studio-input" rows="5" placeholder="Collez, dictez ou importez un document (.docx, .txt, .md, .csv)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
+          <textarea id="studio-input" rows="5" placeholder="Collez ici votre texte ou consigne (ex. plan comptable, facture, clause). Pour Word/PDF, copiez-collez directement le texte." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
         </div>
 
         <button type="button" id="run-btn" onclick="executeWorkflow()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition">
@@ -193,7 +193,7 @@
             </button>
           </div>
         </div>
-        <div id="studio-output" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 whitespace-pre-wrap leading-relaxed font-sans"></div>
+        <div id="studio-output" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 leading-relaxed font-sans"></div>
       </div>
     </section>
 
@@ -215,13 +215,13 @@
         <h3 class="font-bold text-base text-white">Nouveau flux personnalisé</h3>
         <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <input id="new-title" type="text" placeholder="Titre du flux (ex: Trame de contrat)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
+      <input id="new-title" type="text" placeholder="Titre du flux (ex: Plan comptable SYSCOHADA)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
       <select id="new-cat" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
         <option value="commercial">Commercial & Support</option>
         <option value="operations">Opérations & Direction</option>
         <option value="finance">Finance, RH & Juridique</option>
       </select>
-      <textarea id="new-prompt" rows="3" placeholder="Instruction système pour l'IA (ex: Structure en Article 1, 2, 3...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white"></textarea>
+      <textarea id="new-prompt" rows="3" placeholder="Instruction système pour l'IA (ex: Présente les écritures dans un tableau Compte | Intitulé | Débit | Crédit)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white"></textarea>
       <button type="button" onclick="addCustomFlow()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm">Enregistrer le flux</button>
     </div>
   </div>
@@ -237,20 +237,20 @@
         icon: 'fa-headset',
         trigger: 'Réception d\'un email entrant, formulaire de contact ou message client.',
         action: 'Analyse d\'intention, scoring d\'urgence, extraction des besoins et rédaction d\'une réponse prête à envoyer.',
-        systemPrompt: 'Tu es un responsable commercial et support senior. Réponds en français clair et structuré, sans symboles Markdown bruts (** ou ## ou tableaux |). Analyse le message client fourni et produis : 1) Score d\'urgence (1 à 5) et intention, 2) Besoins clés détectés, 3) Une réponse professionnelle, chaleureuse et orientée conversion prête à être envoyée.',
+        systemPrompt: 'Tu es un responsable commercial et support senior. Réponds en français clair et structuré, sans ** ni ## ni <br>. Analyse le message client fourni et produis : 1) Score d\'urgence (1 à 5) et intention, 2) Besoins clés détectés, 3) Une réponse professionnelle, chaleureuse et orientée conversion prête à être envoyée.',
         sample: 'Bonjour, nous sommes une PME de 35 salariés et cherchons une solution pour automatiser nos devis et relances clients avant la fin du mois. Pouvez-vous nous faire une proposition rapide ?'
       },
       {
         id: 'invoices-ocr',
-        title: 'Extraction & Contrôle de Factures',
+        title: 'Comptabilité, Plan de Comptes & Écritures',
         category: 'finance',
         badge: 'Finance, RH & Juridique',
         saving: '~4h / semaine',
         icon: 'fa-file-invoice-dollar',
-        trigger: 'Réception d\'une facture fournisseur ou d\'un devis.',
-        action: 'Extraction structurée des montants HT/TVA/TTC, échéance, détection d\'anomalies et écriture comptable.',
-        systemPrompt: 'Tu es un contrôleur financier expert. Réponds en français clair avec des lignes simples (sans tableaux | ni **). Extrais toutes les données clés du texte de facture/devis fourni (Fournisseur, Date, Montant HT, TVA, TTC, Échéance), vérifie la cohérence des calculs et propose l\'imputation comptable.',
-        sample: 'Facture N°2026-884 - Fournisseur : TechCloud Services - Date : 15/11/2026 - Prestation hébergement serveur : 450 000 FCFA HT - TVA 18% : 81 000 FCFA - Total TTC : 531 000 FCFA - Règlement sous 30 jours.'
+        trigger: 'Facture, devis ou demande de plan comptable / imputation.',
+        action: 'Tableau structuré des comptes, intitulés, montants Débit / Crédit et contrôle de cohérence.',
+        systemPrompt: 'Tu es un expert-comptable rigoureux. Réponds en français clair sans ** ni ## ni <br>. Lorsque tu présentes un plan comptable ou des écritures comptables, utilise un tableau Markdown propre avec des colonnes claires (par exemple : Compte | Intitulé | Débit | Crédit | Justification), puis ajoute une courte note de contrôle si nécessaire.',
+        sample: 'Établir un tableau d\'écriture comptable et de plan de comptes pour une facture d\'hébergement et maintenance informatique de 450 000 FCFA HT, TVA récupérable 18% (81 000 FCFA), total TTC 531 000 FCFA réglé par virement bancaire.'
       },
       {
         id: 'ops-briefing',
@@ -260,8 +260,8 @@
         saving: '~6h / semaine',
         icon: 'fa-diagram-project',
         trigger: 'Notes brutes de réunion, rapport de terrain ou point d\'équipe.',
-        action: 'Structuration en décisions actées, plan d\'action par responsable et alertes de blocage.',
-        systemPrompt: 'Tu es un directeur des opérations (COO). Réponds en français structuré, sans tableaux Markdown | ni **. Transforme les notes brutes en un compte-rendu exécutif clair avec : 1) Résumé exécutif, 2) Décisions validées, 3) Plan d\'action (Qui / Quoi / Échéance), 4) Points de vigilance.',
+        action: 'Structuration en décisions actées, tableau d\'actions par responsable et alertes de blocage.',
+        systemPrompt: 'Tu es un directeur des opérations (COO). Réponds en français structuré sans ** ni ## ni <br>. Présente un résumé exécutif court, un tableau d\'actions (Responsable | Action | Échéance | Statut) et les points de vigilance.',
         sample: 'Réunion lundi matin : retard livraison fournisseur sur le chantier Nord, Karim doit relancer avant mercredi. Validation du budget recrutement 2 agents. Prochain audit qualité fixé au 10 décembre.'
       },
       {
@@ -273,7 +273,7 @@
         icon: 'fa-user-check',
         trigger: 'Réception d\'un CV ou profil candidat pour un poste ouvert.',
         action: 'Évaluation de l\'adéquation au poste, points forts, zones d\'ombre et grille de questions d\'entretien.',
-        systemPrompt: 'Tu es un recruteur senior. Réponds en français clair et structuré, sans ** ni tableaux |. Évalue le profil candidat fourni : donne un score d\'adéquation sur 100, liste 3 points forts, 2 points à vérifier et 4 questions ciblées pour l\'entretien.',
+        systemPrompt: 'Tu es un recruteur senior. Réponds en français clair et structuré sans ** ni ## ni <br>. Évalue le profil candidat fourni : score d\'adéquation sur 100, points forts, points à vérifier et questions ciblées pour l\'entretien.',
         sample: 'Profil : 4 ans d\'expérience en gestion administrative et juridique, maîtrise des contrats commerciaux et de la facturation, recherche un poste de responsable administratif.'
       },
       {
@@ -285,7 +285,7 @@
         icon: 'fa-paper-plane',
         trigger: 'Devis envoyé sans réponse depuis plus de 48 heures.',
         action: 'Génération d\'une séquence de 3 relances progressives (douce, valeur ajoutée, clôture).',
-        systemPrompt: 'Tu es un expert en négociation B2B. Réponds en français simple et lisible, sans ** ni tableaux |. Rédige une séquence de 3 messages de relance courts, percutants et non agressifs (J+2, J+5, J+10) adaptés au contexte fourni.',
+        systemPrompt: 'Tu es un expert en négociation B2B. Réponds en français simple et lisible sans ** ni ## ni <br>. Rédige une séquence de 3 messages de relance courts, percutants et non agressifs (J+2, J+5, J+10) adaptés au contexte fourni.',
         sample: 'Devis envoyé il y a 4 jours à la société Ivoire Logistique pour un pack d\'automatisation du service client à 1 200 000 FCFA. Aucun retour pour l\'instant.'
       },
       {
@@ -297,7 +297,7 @@
         icon: 'fa-scale-balanced',
         trigger: 'Besoin d\'une trame structurée par articles ou d\'une revue de clauses.',
         action: 'Proposition d\'une trame structurée (Article 1, Article 2, Article 3...), identification des risques et points à faire valider.',
-        systemPrompt: 'Tu es un assistant juridique spécialisé dans la structuration documentaire. Réponds en français clair et aéré, sans symboles **, ##, <br> ou tableaux |. Présente l\'analyse ou la trame sous forme de titres et listes simples (Article 1, Article 2, Article 3, Risques et points à faire valider par un juriste).',
+        systemPrompt: 'Tu es un assistant juridique spécialisé dans la structuration documentaire. Réponds en français clair et aéré sans ** ni ## ni <br>. Présente l\'analyse ou la trame sous forme de titres et listes simples (Article 1, Article 2, Article 3, Risques et points à faire valider par un juriste).',
         sample: 'Clause de résiliation : Le Prestataire peut résilier le présent contrat à tout moment sans préavis ni indemnité, tandis que le Client reste engagé pour une durée ferme de 24 mois.'
       }
     ];
@@ -306,33 +306,89 @@
     let selectedFlowId = localStorage.getItem('autopilot_selected_flow') || flows[0].id;
     if (!flows.some(f => f.id === selectedFlowId)) selectedFlowId = flows[0].id;
 
-    function cleanReadableText(rawText) {
-      if (!rawText) return '';
-      return rawText
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function formatInlineMarkdown(str) {
+      return String(str || '')
+        .replace(/<br\s*\/?>/gi, ' ')
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/__(.*?)__/g, '$1')
+        .replace(/\*\*/g, '')
+        .trim();
+    }
+
+    function buildFormattedHtml(rawText) {
+      const cleaned = String(rawText || '')
         .replace(/<br\s*\/?>/gi, '\n')
         .replace(/\*\*(.*?)\*\*/g, '$1')
         .replace(/__(.*?)__/g, '$1')
+        .replace(/\*\*/g, '')
         .replace(/^#{1,6}\s*/gm, '')
-        .replace(/^\s*\|?[\s:-]+(?:\|[\s:-]+)+\|?\s*$/gm, '')
-        .split('\n')
-        .map(line => {
-          const t = line.trim();
-          if (/^\|.*\|$/.test(t)) {
-            return t.slice(1, -1).split('|').map(c => c.trim()).filter(Boolean).join(' — ');
-          }
-          return t
-            .replace(/^\|\s*|\s*\|$/g, '')
-            .replace(/\s*\|\s*/g, ' — ')
-            .replace(/(?:\s*—){2,}/g, ' —')
-            .replace(/^\s*—\s*|\s*—\s*$/g, '')
-            .replace(/\*\*/g, '')
-            .trim();
-        })
-        .filter(line => line && !/^[-—\s]+$/.test(line))
-        .join('\n')
-        .replace(/\s+(\d+\.\s+)/g, '\n$1')
         .replace(/\n{3,}/g, '\n\n')
         .trim();
+
+      if (!cleaned) return '';
+
+      const lines = cleaned.split('\n');
+      let html = '';
+      let tableRows = [];
+
+      const flushTable = () => {
+        if (!tableRows.length) return;
+        const parsedRows = tableRows
+          .filter(row => !/^\s*\|?[\s:-]+(?:\|[\s:-]+)+\|?\s*$/.test(row.trim()))
+          .map(row =>
+            row
+              .trim()
+              .replace(/^\||\|$/g, '')
+              .split('|')
+              .map(cell => formatInlineMarkdown(cell))
+          )
+          .filter(cells => cells.some(c => c.length > 0));
+
+        if (parsedRows.length > 0) {
+          const [header, ...body] = parsedRows;
+          html += '<div class="my-3 overflow-x-auto rounded-xl border border-slate-700/80 bg-slate-900/90">';
+          html += '<table class="w-full text-left border-collapse text-xs">';
+          html += '<thead class="bg-slate-800/90 text-indigo-300 border-b border-slate-700">';
+          html += '<tr>' + header.map(h => `<th class="px-3 py-2.5 font-bold whitespace-nowrap">${escapeHtml(h)}</th>`).join('') + '</tr>';
+          html += '</thead><tbody class="divide-y divide-slate-800/80">';
+          body.forEach(r => {
+            html += '<tr class="hover:bg-slate-800/40">' +
+              r.map(c => `<td class="px-3 py-2 text-slate-200 align-top">${escapeHtml(c)}</td>`).join('') +
+              '</tr>';
+          });
+          html += '</tbody></table></div>';
+        }
+        tableRows = [];
+      };
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.includes('|') && (trimmed.startsWith('|') || trimmed.split('|').length >= 3)) {
+          tableRows.push(trimmed);
+        } else {
+          flushTable();
+          if (!trimmed) {
+            html += '<div class="h-2"></div>';
+          } else {
+            html += `<p class="text-sm text-slate-200 leading-relaxed my-1">${escapeHtml(trimmed)}</p>`;
+          }
+        }
+      }
+      flushTable();
+
+      return html;
+    }
+
+    function renderFormattedOutput(rawText, containerEl) {
+      containerEl.innerHTML = buildFormattedHtml(rawText);
     }
 
     function renderCatalog() {
@@ -424,79 +480,52 @@
       if (input) input.value = '';
     }
 
-    async function extractDocxText(file) {
-      try {
-        const buf = await file.arrayBuffer();
-        const bytes = new Uint8Array(buf);
-        if (bytes[0] !== 0x50 || bytes[1] !== 0x4b) return '';
-        const rawStr = new TextDecoder('latin1').decode(bytes);
-        const xmlMatch = rawStr.match(/<w:document[\s\S]*?<\/w:document>/);
-        const xmlSource = xmlMatch ? xmlMatch[0] : rawStr;
-        const textParts = [];
-        const regex = /<w:t[^>]*>([\s\S]*?)<\/w:t>/g;
-        let match;
-        while ((match = regex.exec(xmlSource)) !== null) {
-          textParts.push(match[1]);
-        }
-        return textParts
-          .join(' ')
-          .replace(/&amp;/g, '&')
-          .replace(/&lt;/g, '<')
-          .replace(/&gt;/g, '>')
-          .replace(/&quot;/g, '"')
-          .replace(/&#39;/g, "'")
-          .replace(/\s{2,}/g, ' ')
-          .trim();
-      } catch (err) {
-        return '';
-      }
-    }
-
     function handleFileImport(event) {
       const inputEl = event.target;
       const file = inputEl && inputEl.files ? inputEl.files[0] : null;
       if (!file) return;
 
-      const maxBytes = 2 * 1024 * 1024;
-      if (file.size > maxBytes) {
-        alert('Fichier trop volumineux (maximum 2 Mo).');
+      const lowerName = file.name.toLowerCase();
+      const isPlainText =
+        /\.(txt|md|csv|json|log)$/i.test(lowerName) ||
+        (file.type && file.type.startsWith('text/'));
+
+      if (!isPlainText) {
+        alert(
+          `Le fichier "${file.name}" n'est pas un fichier texte brut.\n` +
+          `Pour éviter tout texte binaire, ouvrez le document, copiez son contenu, puis collez-le directement dans la zone de texte.`
+        );
         inputEl.value = '';
         return;
       }
 
-      const lowerName = file.name.toLowerCase();
-      const applyText = (extractedText) => {
-        const cleaned = (extractedText || '').replace(/\u0000/g, '').trim();
+      if (file.size > 300 * 1024) {
+        alert('Fichier texte trop volumineux (maximum 300 Ko).');
+        inputEl.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const raw = (e.target && typeof e.target.result === 'string') ? e.target.result : '';
+        const cleaned = raw.replace(/\u0000/g, '').trim();
         if (!cleaned) {
-          alert(`Texte non extractible automatiquement pour "${file.name}". Copiez-collez le contenu dans la zone de texte.`);
+          alert('Le fichier sélectionné est vide.');
           inputEl.value = '';
           return;
         }
 
         const textarea = document.getElementById('studio-input');
         const existing = textarea.value.trim();
-        const block = `--- Document : ${file.name} ---\n${cleaned.slice(0, 15000)}`;
+        const block = `--- ${file.name} ---\n${cleaned.slice(0, 15000)}`;
         textarea.value = existing ? `${existing}\n\n${block}` : block;
 
-        document.getElementById('imported-file-name').textContent = `Importé : ${file.name} (${Math.max(1, Math.round(file.size / 1024))} Ko)`;
+        document.getElementById('imported-file-name').textContent =
+          `Fichier texte chargé : ${file.name} (${Math.max(1, Math.round(file.size / 1024))} Ko)`;
         document.getElementById('imported-file-banner').classList.remove('hidden');
         textarea.focus();
         inputEl.value = '';
       };
-
-      if (lowerName.endsWith('.docx')) {
-        extractDocxText(file).then(applyText);
-        return;
-      }
-
-      if (lowerName.endsWith('.doc')) {
-        alert('Les fichiers .doc anciens ne sont pas lus directement sur iPhone. Enregistrez en .docx ou copiez-collez le texte.');
-        inputEl.value = '';
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => applyText(e.target && typeof e.target.result === 'string' ? e.target.result : '');
       reader.readAsText(file);
     }
 
@@ -525,7 +554,7 @@
       const flowId = document.getElementById('studio-flow-select').value;
       const flow = flows.find(f => f.id === flowId);
       const input = document.getElementById('studio-input').value.trim();
-      if (!input) return alert('Veuillez saisir ou importer des données à traiter.');
+      if (!input) return alert('Veuillez saisir des données à traiter.');
 
       const btn = document.getElementById('run-btn');
       btn.disabled = true;
@@ -551,7 +580,7 @@
           );
           const geminiData = await geminiRes.json();
           if (geminiRes.ok && geminiData.candidates?.[0]?.content?.parts?.[0]?.text) {
-            outputText = cleanReadableText(geminiData.candidates[0].content.parts[0].text);
+            outputText = geminiData.candidates[0].content.parts[0].text.trim();
             engineLabel = 'Gemini';
           }
         }
@@ -569,7 +598,7 @@
             })
           });
           if (!res.ok) throw new Error('Service IA indisponible');
-          outputText = cleanReadableText(await res.text());
+          outputText = (await res.text()).trim();
           if (!outputText) {
             outputText = buildSimulatedOutput(flow, input);
             engineLabel = 'Repli local';
@@ -577,7 +606,7 @@
         }
 
         document.getElementById('engine-badge').textContent = engineLabel;
-        document.getElementById('studio-output').textContent = outputText;
+        renderFormattedOutput(outputText, document.getElementById('studio-output'));
         document.getElementById('result-card').classList.remove('hidden');
 
         const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
@@ -592,7 +621,7 @@
       } catch (err) {
         engineLabel = 'Repli local';
         document.getElementById('engine-badge').textContent = engineLabel;
-        document.getElementById('studio-output').textContent = buildSimulatedOutput(flow, input);
+        renderFormattedOutput(buildSimulatedOutput(flow, input), document.getElementById('studio-output'));
         document.getElementById('result-card').classList.remove('hidden');
       } finally {
         btn.disabled = false;
@@ -602,7 +631,7 @@
 
     async function shareOutput() {
       const flowTitle = document.getElementById('studio-flow-select').selectedOptions[0]?.textContent || 'Autopilot-IA';
-      const text = document.getElementById('studio-output').textContent;
+      const text = document.getElementById('studio-output').innerText.trim();
       if (!text) return;
 
       if (navigator.share) {
@@ -620,7 +649,7 @@
     }
 
     function copyOutput() {
-      const text = document.getElementById('studio-output').textContent;
+      const text = document.getElementById('studio-output').innerText.trim();
       navigator.clipboard.writeText(text);
       const copyBtn = document.getElementById('copy-btn');
       copyBtn.innerHTML = '<i class="fa-solid fa-check mr-1 text-emerald-400"></i> Copié';
@@ -639,11 +668,11 @@
       list.innerHTML = history.map(item => `
         <div class="glass rounded-2xl p-4 space-y-2">
           <div class="flex items-center justify-between text-xs gap-2">
-            <span class="font-bold text-indigo-400">${item.title}</span>
-            <span class="text-slate-500">${item.date}</span>
+            <span class="font-bold text-indigo-400">${escapeHtml(item.title)}</span>
+            <span class="text-slate-500">${escapeHtml(item.date)}</span>
           </div>
-          <p class="text-xs text-slate-400 line-clamp-2">Entrée : ${item.input}</p>
-          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 whitespace-pre-wrap max-h-48 overflow-y-auto">${cleanReadableText(item.output)}</div>
+          <p class="text-xs text-slate-400 line-clamp-2">Entrée : ${escapeHtml(item.input)}</p>
+          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 max-h-60 overflow-y-auto">${buildFormattedHtml(item.output)}</div>
         </div>
       `).join('');
     }
