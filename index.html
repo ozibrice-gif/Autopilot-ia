@@ -308,13 +308,21 @@ function cleanReadableText(rawText) {
       if (/^\|.*\|$/.test(t)) {
         return t.slice(1, -1).split('|').map(c => c.trim()).filter(Boolean).join(' — ');
       }
-      return t.replace(/\s*\|\s*/g, ' — ').replace(/\*\*/g, '');
+      return t
+        .replace(/^\|\s*|\s*\|$/g, '')
+        .replace(/\s*\|\s*/g, ' — ')
+        .replace(/(?:\s*—){2,}/g, ' —')
+        .replace(/^\s*—\s*|\s*—\s*$/g, '')
+        .replace(/\*\*/g, '')
+        .trim();
     })
-    .filter(line => !/^[-—\s]+$/.test(line))
+    .filter(line => line && !/^[-—\s]+$/.test(line))
     .join('\n')
+    .replace(/\s+(\d+\.\s+)/g, '\n$1')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
+
 
     function renderCatalog() {
       const grid = document.getElementById('flows-grid');
