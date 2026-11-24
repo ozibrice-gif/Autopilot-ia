@@ -52,20 +52,23 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="font-extrabold text-base tracking-tight text-white">Autopilot-IA</h1>
-            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V2.6 PRO</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V2.7 PRO</span>
           </div>
           <p class="text-[11px] text-slate-400 hidden sm:block">Moteur d'automatisation opérationnelle</p>
         </div>
       </div>
 
-      <nav class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800">
-        <button type="button" onclick="switchTab('catalog')" id="tab-catalog" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow">
+      <nav class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 overflow-x-auto no-scrollbar">
+        <button type="button" onclick="switchTab('catalog')" id="tab-catalog" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow whitespace-nowrap">
           <i class="fa-solid fa-layer-group mr-1"></i> Flux
         </button>
-        <button type="button" onclick="switchTab('studio')" id="tab-studio" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
-          <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Studio IA
+        <button type="button" onclick="switchTab('studio')" id="tab-studio" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
+          <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Studio
         </button>
-        <button type="button" onclick="switchTab('history')" id="tab-history" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
+        <button type="button" onclick="switchTab('vault')" id="tab-vault" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
+          <i class="fa-solid fa-box-archive mr-1"></i> Classeur
+        </button>
+        <button type="button" onclick="switchTab('history')" id="tab-history" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
           <i class="fa-solid fa-clock-rotate-left mr-1"></i> Historique
         </button>
       </nav>
@@ -132,7 +135,7 @@
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-microchip text-indigo-400"></i> Studio d'Exécution IA
             </h2>
-            <p class="text-xs text-slate-400">Tableaux structurés • Import texte pur & historique</p>
+            <p class="text-xs text-slate-400">Tableaux structurés • Édition & boîte interne Classeur</p>
           </div>
           <button type="button" onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
             <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé Gemini
@@ -184,7 +187,13 @@
             </span>
             <span id="engine-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">IA distante</span>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            <button type="button" onclick="toggleEditOutput()" id="edit-btn" class="text-xs px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-200 hover:text-slate-950 border border-amber-500/30 transition">
+              <i class="fa-solid fa-pen mr-1"></i>Modifier
+            </button>
+            <button type="button" onclick="saveOutputToVault()" id="save-vault-btn" class="text-xs px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500 text-emerald-200 hover:text-slate-950 border border-emerald-500/30 transition">
+              <i class="fa-solid fa-box-archive mr-1"></i>Enregistrer
+            </button>
             <button type="button" onclick="shareOutput()" id="share-btn" class="text-xs px-3 py-1 rounded-lg bg-indigo-600/25 hover:bg-indigo-600 text-indigo-200 hover:text-white border border-indigo-500/30 transition">
               <i class="fa-solid fa-share-nodes mr-1"></i> Partager
             </button>
@@ -193,11 +202,33 @@
             </button>
           </div>
         </div>
+
         <div id="studio-output" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 leading-relaxed font-sans"></div>
+
+        <div id="output-editor-box" class="hidden space-y-2 pt-2">
+          <label class="block text-xs font-semibold text-amber-300">Modification directe du livrable</label>
+          <textarea id="studio-output-editor" rows="8" class="w-full bg-slate-950 border border-amber-500/40 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-amber-400"></textarea>
+          <div class="flex items-center justify-end gap-2">
+            <button type="button" onclick="cancelEditOutput()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300">Annuler</button>
+            <button type="button" onclick="applyEditedOutput(true)" class="text-xs px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold">Appliquer & Enregistrer</button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ONGLET 3 : HISTORIQUE -->
+    <!-- ONGLET 3 : BOÎTE INTERNE (CLASSEUR) -->
+    <section id="view-vault" class="hidden space-y-4">
+      <div class="flex items-center justify-between gap-2">
+        <div>
+          <h2 class="text-lg font-bold text-white">Boîte interne — Livrables enregistrés</h2>
+          <p class="text-xs text-slate-400">Vos documents modifiés et archivés localement sur l'appareil</p>
+        </div>
+        <button type="button" onclick="clearVault()" class="text-xs text-rose-400 hover:underline">Tout vider</button>
+      </div>
+      <div id="vault-list" class="space-y-3"></div>
+    </section>
+
+    <!-- ONGLET 4 : HISTORIQUE -->
     <section id="view-history" class="hidden space-y-4">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-bold text-white">Exécutions sauvegardées</h2>
@@ -305,6 +336,7 @@
     let currentFilter = 'all';
     let selectedFlowId = localStorage.getItem('autopilot_selected_flow') || flows[0].id;
     if (!flows.some(f => f.id === selectedFlowId)) selectedFlowId = flows[0].id;
+    let rawLastOutputText = '';
 
     function escapeHtml(str) {
       return String(str || '')
@@ -437,13 +469,14 @@
     }
 
     function switchTab(tab) {
-      ['catalog', 'studio', 'history'].forEach(t => {
+      ['catalog', 'studio', 'vault', 'history'].forEach(t => {
         document.getElementById(`view-${t}`).classList.toggle('hidden', t !== tab);
         const btn = document.getElementById(`tab-${t}`);
         btn.className = t === tab
-          ? 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow'
-          : 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white';
+          ? 'px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow whitespace-nowrap'
+          : 'px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap';
       });
+      if (tab === 'vault') renderVault();
       if (tab === 'history') renderHistory();
     }
 
@@ -605,6 +638,8 @@
           }
         }
 
+        rawLastOutputText = outputText;
+        document.getElementById('output-editor-box').classList.add('hidden');
         document.getElementById('engine-badge').textContent = engineLabel;
         renderFormattedOutput(outputText, document.getElementById('studio-output'));
         document.getElementById('result-card').classList.remove('hidden');
@@ -619,9 +654,12 @@
         });
         localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 25)));
       } catch (err) {
+        const fallbackText = buildSimulatedOutput(flow, input);
+        rawLastOutputText = fallbackText;
         engineLabel = 'Repli local';
+        document.getElementById('output-editor-box').classList.add('hidden');
         document.getElementById('engine-badge').textContent = engineLabel;
-        renderFormattedOutput(buildSimulatedOutput(flow, input), document.getElementById('studio-output'));
+        renderFormattedOutput(fallbackText, document.getElementById('studio-output'));
         document.getElementById('result-card').classList.remove('hidden');
       } finally {
         btn.disabled = false;
@@ -629,9 +667,121 @@
       }
     }
 
+    function toggleEditOutput() {
+      const editorBox = document.getElementById('output-editor-box');
+      const textarea = document.getElementById('studio-output-editor');
+      const isHidden = editorBox.classList.contains('hidden');
+      if (isHidden) {
+        textarea.value = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
+        editorBox.classList.remove('hidden');
+        textarea.focus();
+      } else {
+        editorBox.classList.add('hidden');
+      }
+    }
+
+    function cancelEditOutput() {
+      document.getElementById('output-editor-box').classList.add('hidden');
+    }
+
+    function applyEditedOutput(alsoSaveVault) {
+      const textarea = document.getElementById('studio-output-editor');
+      const updated = textarea.value.trim();
+      if (!updated) return alert('Le livrable ne peut pas être vide.');
+      rawLastOutputText = updated;
+      renderFormattedOutput(updated, document.getElementById('studio-output'));
+      document.getElementById('output-editor-box').classList.add('hidden');
+      if (alsoSaveVault) {
+        saveOutputToVault();
+      }
+    }
+
+    function saveOutputToVault() {
+      const editorBox = document.getElementById('output-editor-box');
+      const text = (!editorBox.classList.contains('hidden'))
+        ? document.getElementById('studio-output-editor').value.trim()
+        : (rawLastOutputText || document.getElementById('studio-output').innerText.trim());
+
+      if (!text) return alert('Aucun résultat à enregistrer.');
+
+      const flowTitle = document.getElementById('studio-flow-select').selectedOptions[0]?.textContent || 'Livrable';
+      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
+      vault.unshift({
+        id: 'vault-' + Date.now(),
+        date: new Date().toLocaleString('fr-FR'),
+        title: flowTitle,
+        content: text
+      });
+      localStorage.setItem('autopilot_vault', JSON.stringify(vault.slice(0, 50)));
+
+      const btn = document.getElementById('save-vault-btn');
+      const prevHtml = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Enregistré';
+      setTimeout(() => { btn.innerHTML = prevHtml; }, 1500);
+    }
+
+    function renderVault() {
+      const list = document.getElementById('vault-list');
+      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
+      if (!vault.length) {
+        list.innerHTML = '<div class="glass rounded-2xl p-6 text-center text-xs text-slate-400">Aucun élément enregistré dans la boîte interne pour le moment.</div>';
+        return;
+      }
+      list.innerHTML = vault.map((item, idx) => `
+        <div class="glass rounded-2xl p-4 space-y-2.5">
+          <div class="flex items-center justify-between text-xs gap-2 flex-wrap">
+            <span class="font-bold text-emerald-400">${escapeHtml(item.title)}</span>
+            <span class="text-slate-500">${escapeHtml(item.date)}</span>
+          </div>
+          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 max-h-60 overflow-y-auto">${buildFormattedHtml(item.content)}</div>
+          <div class="flex items-center justify-end gap-2 pt-1">
+            <button type="button" onclick="loadVaultIntoStudio(${idx})" class="text-xs px-3 py-1 rounded-lg bg-amber-500/20 text-amber-200 border border-amber-500/30">
+              <i class="fa-solid fa-pen mr-1"></i>Modifier
+            </button>
+            <button type="button" onclick="copyVaultItem(${idx})" class="text-xs px-3 py-1 rounded-lg bg-slate-800 text-slate-200">
+              <i class="fa-regular fa-copy mr-1"></i>Copier
+            </button>
+            <button type="button" onclick="deleteVaultItem(${idx})" class="text-xs px-3 py-1 rounded-lg bg-rose-500/15 text-rose-300">
+              Supprimer
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadVaultIntoStudio(idx) {
+      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
+      const item = vault[idx];
+      if (!item) return;
+      rawLastOutputText = item.content;
+      renderFormattedOutput(item.content, document.getElementById('studio-output'));
+      document.getElementById('result-card').classList.remove('hidden');
+      document.getElementById('studio-output-editor').value = item.content;
+      document.getElementById('output-editor-box').classList.remove('hidden');
+      switchTab('studio');
+    }
+
+    function copyVaultItem(idx) {
+      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
+      if (vault[idx]) navigator.clipboard.writeText(vault[idx].content);
+    }
+
+    function deleteVaultItem(idx) {
+      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
+      vault.splice(idx, 1);
+      localStorage.setItem('autopilot_vault', JSON.stringify(vault));
+      renderVault();
+    }
+
+    function clearVault() {
+      if (!confirm('Vider toute la boîte interne ?')) return;
+      localStorage.removeItem('autopilot_vault');
+      renderVault();
+    }
+
     async function shareOutput() {
       const flowTitle = document.getElementById('studio-flow-select').selectedOptions[0]?.textContent || 'Autopilot-IA';
-      const text = document.getElementById('studio-output').innerText.trim();
+      const text = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
       if (!text) return;
 
       if (navigator.share) {
@@ -649,7 +799,7 @@
     }
 
     function copyOutput() {
-      const text = document.getElementById('studio-output').innerText.trim();
+      const text = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
       navigator.clipboard.writeText(text);
       const copyBtn = document.getElementById('copy-btn');
       copyBtn.innerHTML = '<i class="fa-solid fa-check mr-1 text-emerald-400"></i> Copié';
