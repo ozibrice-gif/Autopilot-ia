@@ -54,7 +54,7 @@
             <h1 class="font-extrabold text-sm sm:text-base tracking-tight text-white">Autopilot-IA</h1>
             <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">PRO</span>
           </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block">Coordinateur + 10 Agents Spécialisés</p>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Assistant + Coordinateur + 10 Agents Spécialisés</p>
         </div>
       </div>
 
@@ -87,7 +87,7 @@
 
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
 
-    <!-- ASSISTANT : IDENTITÉ, CAPACITÉS & ORIENTATION -->
+    <!-- ASSISTANT : IDENTITÉ, CAPACITÉS & RAISONNEMENT STRUCTURÉ -->
     <section id="view-assistant" class="hidden space-y-5">
       <div class="glass rounded-2xl p-5 sm:p-6 space-y-4">
         <div>
@@ -96,7 +96,7 @@
           </span>
           <h2 class="text-xl sm:text-2xl font-extrabold text-white">Qui suis-je et que puis-je faire pour vous ?</h2>
           <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
-            Je suis l'Assistant d'<strong>Autopilot-IA</strong>, une suite opérationnelle multi-agents conçue pour produire des livrables structurés et exploitables : grilles d'entretien et cadres RH, tableaux comptables et budgets, plans d'action business/projet, trames OHADA, analyses et réponses clients.
+            Je suis l'Assistant d'<strong>Autopilot-IA</strong>, une suite opérationnelle multi-agents conçue pour raisonner, structurer et produire des livrables exploitables : grilles d'entretien et cadres RH, tableaux comptables et budgets, plans d'action business/projet, trames OHADA, analyses et réponses clients.
           </p>
         </div>
 
@@ -137,13 +137,13 @@
         <div class="border-t border-slate-800/80 pt-4 space-y-3">
           <label for="assistant-question-input" class="block text-xs font-semibold text-slate-300">Poser une question à l'Assistant</label>
           <div class="flex gap-2">
-            <input id="assistant-question-input" type="text" placeholder="Ex : Qui es-tu ? Que peux-tu faire ? Quel agent choisir ?" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500" onkeydown="if(event.key==='Enter') askAssistant()">
+            <input id="assistant-question-input" type="text" placeholder="Ex : Bonjour, Qui es-tu ? Que peux-tu faire ? Comment structurer..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500" onkeydown="if(event.key==='Enter') askAssistant()">
             <button type="button" onclick="askAssistant()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold whitespace-nowrap">
               Demander
             </button>
           </div>
-          <div id="assistant-reply-box" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-line">
-            Bonjour ! Je suis l'Assistant d'Autopilot-IA. Demandez-moi qui je suis, ce que je peux faire ou quel agent mobiliser pour votre tâche.
+          <div id="assistant-reply-box" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs sm:text-sm text-slate-200 leading-relaxed">
+            Bonjour ! Je suis l'Assistant d'Autopilot-IA. Demandez-moi qui je suis, ce que je peux faire ou posez-moi un problème à analyser et structurer.
           </div>
         </div>
       </div>
@@ -331,7 +331,6 @@
       <button type="button" onclick="addCustomFlow()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm">Enregistrer</button>
     </div>
   </div>
-
   <script>
     const defaultFlows = [
       {
@@ -445,6 +444,7 @@
         sample: 'Comparer deux options d\'organisation (Option A : équipe centralisée ; Option B : pôles autonomes) selon coûts, réactivité et contrôle.'
       }
     ];
+
     let flows = JSON.parse(localStorage.getItem('autopilot_flows_v3')) || defaultFlows;
     let currentFilter = 'all';
     let selectedFlowId = localStorage.getItem('autopilot_selected_flow_v3') || flows[0].id;
@@ -589,41 +589,182 @@
       switchTab('studio');
     }
 
-    function askAssistant() {
-      const inputEl = document.getElementById('assistant-question-input');
-      const boxEl = document.getElementById('assistant-reply-box');
-      const q = (inputEl.value || '').trim().toLowerCase();
-
-      if (!q) {
-        boxEl.textContent =
-          "Je suis l'Assistant d'Autopilot-IA (PRO).\n" +
-          "• Qui suis-je : Une suite multi-agents pilotée par 01 AUTOPILOT — Coordinateur et 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique/OHADA, Développement, Projets, Service client, Analyste).\n" +
-          "• Ce que je peux faire : Générer des grilles d'entretien RH, plans/écritures comptables, plans d'action, trames OHADA et analyses, modifier les résultats en direct, les enregistrer dans le Classeur et basculer les dates en FR ou EN.";
-        return;
-      }
-
-      if (q.includes('qui') || q.includes('présent') || q.includes('tu es') || q.includes('elle')) {
-        boxEl.textContent =
-          "Je suis l'Assistant d'Autopilot-IA. L'application réunit 01 AUTOPILOT — Coordinateur et 9 agents métiers spécialisés, avec un moteur à 3 niveaux (clé Gemini facultative, IA distante ou moteur autonome structuré), un éditeur direct et une boîte interne Classeur.";
-        return;
-      }
-
-      if (q.includes('enregistr') || q.includes('classeur') || q.includes('modif') || q.includes('date')) {
-        boxEl.textContent =
-          "• Modifier : cliquez sur « Modifier » sous le livrable, ajustez le texte, puis validez.\n" +
-          "• Enregistrer : cliquez sur « Enregistrer » pour archiver le document dans l'onglet « Classeur ».\n" +
-          "• Langue des dates : cliquez sur le bouton FR / EN dans l'en-tête.";
-        return;
-      }
-
-      const matched = routeToBestAgent(q);
-      boxEl.textContent =
-        `Agent recommandé : « ${matched.title} » (${matched.badge}).\n` +
-        `Rôle : ${matched.role}\n` +
-        `Mission : ${matched.action}\n` +
-        `Vous pouvez aussi laisser « 01 AUTOPILOT — Coordinateur » actif dans le Studio pour l'orientation automatique.`;
+    function isGreetingText(text) {
+      const cleaned = String(text || '').toLowerCase().trim();
+      return /^(bonjour|bonsoir|salut|hello|hi|coucou|hey|yo|ça va|ca va|comment ça va|comment ca va)[!.?\s]*$/i.test(cleaned);
     }
 
+    function buildStructuredAssistantReasoning(rawQuestion) {
+      const q = String(rawQuestion || '').trim();
+      const lower = q.toLowerCase();
+
+      if (!q || isGreetingText(q)) {
+        return [
+          '1. Intention détectée : Accueil et prise de contact.',
+          '2. Raisonnement : Avant d\'orienter vers un agent spécialisé, je clarifie mon identité, mes capacités et la méthode la plus efficace pour traiter votre besoin.',
+          '3. Réponse structurée :',
+          '• Qui je suis : L\'Assistant d\'Autopilot-IA (PRO), adossé à 01 AUTOPILOT — Coordinateur et 9 agents métiers (Business, Finance, Marketing, RH, Juridique/OHADA, Développement, Projets, Service client, Analyste).',
+          '• Ce que je sais faire : Structurer des plans d\'action, grilles d\'entretien RH, écritures/budgets financiers, trames contractuelles OHADA, analyses comparatives et réponses clients.',
+          '• Organisation du travail : Vous pouvez me poser une question ici ou envoyer directement un cas précis dans le Studio, puis retoucher via Modifier et archiver dans le Classeur.',
+          '4. Prochaine étape : Indiquez-moi votre objectif concret (ex. un poste à recruter, un calcul/budget, un projet à planifier ou un problème à trancher).'
+        ].join('\n');
+      }
+
+      if (
+        lower.includes('qui es-tu') ||
+        lower.includes('qui est') ||
+        lower.includes('présente') ||
+        lower.includes('que peux-tu') ||
+        lower.includes('que sais-tu') ||
+        lower.includes('capable') ||
+        lower.includes('fonctionne') ||
+        lower.includes('aide')
+      ) {
+        return [
+          '1. Intention détectée : Compréhension de l\'identité et des capacités du système.',
+          '2. Raisonnement : Je détaille les rôles complémentaires de l\'Assistant, du Coordinateur (01) et des agents spécialisés (02 à 10) afin d\'éviter toute confusion.',
+          '3. Réponse structurée :',
+          '• Identité : Autopilot-IA PRO combine un Assistant d\'orientation, un Coordinateur (01 AUTOPILOT) et 9 agents spécialisés.',
+          '• Capacités clés : Rédaction structurée, tableaux (comptabilité, budgets, grilles d\'évaluation, plans de projet), édition directe (Modifier), archivage local (Classeur), suivi (Historique) et dates FR/EN.',
+          '• Continuité : Fonctionne avec clé Gemini optionnelle, IA distante ou moteur autonome structuré.',
+          '4. Prochaine étape : Choisissez un raccourci ci-dessus ou décrivez votre besoin en 2 à 3 phrases précises.'
+        ].join('\n');
+      }
+
+      if (
+        lower.includes('classeur') ||
+        lower.includes('enregistr') ||
+        lower.includes('modif') ||
+        lower.includes('historique') ||
+        lower.includes('date') ||
+        lower.includes('fr') ||
+        lower.includes('en') ||
+        lower.includes('gemini')
+      ) {
+        return [
+          '1. Intention détectée : Utilisation pratique des fonctions de l\'application.',
+          '2. Raisonnement : Je donne la procédure exacte, étape par étape, pour exploiter le Studio, l\'édition, l\'archivage et l\'affichage des dates.',
+          '3. Réponse structurée :',
+          '• Générer et modifier : Exécutez dans le Studio, cliquez sur Modifier pour ajuster le texte, puis validez.',
+          '• Archiver : Cliquez sur Enregistrer pour conserver la version retenue dans le Classeur ; l\'Historique garde la trace des exécutions.',
+          '• Dates FR / EN : Basculez le bouton FR / EN dans l\'en-tête pour formater les dates selon la langue choisie.',
+          '4. Prochaine étape : Testez une génération dans le Studio puis utilisez Modifier puis Enregistrer pour vérifier l\'archivage.'
+        ].join('\n');
+      }
+
+      const bestAgent = routeToBestAgent(q);
+      const hasNumbers = /\d/.test(q);
+      const isComparison = /compar|choisir|option|différence|avantage|inconvénient|vs\b/i.test(q);
+      const isPlan = /plan|étape|lancer|projet|organisation|stratégie|déploy/i.test(q);
+
+      const methodLines = [];
+      if (isComparison) {
+        methodLines.push('• Méthode d\'analyse comparative : Poser des critères communs (coût, délai, maîtrise, risque) avant de trancher.');
+      } else if (isPlan) {
+        methodLines.push('• Méthode de structuration : Découper en phases séquentielles avec livrable vérifiable et priorité à chaque étape.');
+      } else if (hasNumbers) {
+        methodLines.push('• Méthode quantitative : Isoler les montants/paramètres chiffrés, vérifier la cohérence des calculs et en déduire l\'impact.');
+      } else {
+        methodLines.push('• Méthode de cadrage : Clarifier l\'objectif final, les contraintes concrètes et les actions prioritaires.');
+      }
+
+      return [
+        `1. Intention détectée : Demande structurée relevant de « ${bestAgent.title} » (${bestAgent.badge}).`,
+        `2. Raisonnement : Plutôt que de répondre au hasard, j'isole le cœur du problème (« ${q.slice(0, 140)}${q.length > 140 ? '...' : ''} ») et j'associe l'agent spécialiste le plus pertinent.`,
+        '3. Cadre de réponse structuré :',
+        `• Agent recommandé : ${bestAgent.title} — ${bestAgent.role}`,
+        ...methodLines,
+        `• Livrable attendu : ${bestAgent.action}`,
+        `4. Prochaine étape : Envoyez cette demande directement dans le Studio avec « ${bestAgent.title} » ou « 01 AUTOPILOT — Coordinateur » pour obtenir le livrable complet.`
+      ].join('\n');
+    }
+
+    async function askAssistant() {
+      const inputEl = document.getElementById('assistant-question-input');
+      const boxEl = document.getElementById('assistant-reply-box');
+      const rawQuestion = (inputEl.value || '').trim();
+      const lower = rawQuestion.toLowerCase();
+
+      const structuredFallback = buildStructuredAssistantReasoning(rawQuestion);
+
+      if (
+        !rawQuestion ||
+        isGreetingText(rawQuestion) ||
+        lower.includes('qui es-tu') ||
+        lower.includes('qui est') ||
+        lower.includes('présente') ||
+        lower.includes('que peux-tu') ||
+        lower.includes('que sais-tu') ||
+        lower.includes('capable') ||
+        lower.includes('fonctionne') ||
+        lower.includes('aide') ||
+        lower.includes('classeur') ||
+        lower.includes('enregistr') ||
+        lower.includes('modif') ||
+        lower.includes('historique') ||
+        lower.includes('date') ||
+        lower.includes('gemini')
+      ) {
+        renderFormattedOutput(structuredFallback, boxEl);
+        return;
+      }
+
+      boxEl.innerHTML = '<span class="text-indigo-300"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Analyse et structuration en cours...</span>';
+
+      const assistantSystemPrompt = [
+        'Tu es l\'Assistant d\'Autopilot-IA PRO.',
+        'Réponds en français clair, structuré et rigoureux, sans ** ni ## ni <br>.',
+        'Organise systématiquement ta réponse en 4 parties numérotées :',
+        '1. Compréhension du besoin',
+        '2. Raisonnement et critères clés',
+        '3. Structure ou solution actionnable (avec tableau Markdown si cela clarifie)',
+        '4. Prochaine étape recommandée'
+      ].join(' ');
+
+      try {
+        const localKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
+        if (localKey) {
+          const res = await fetch(
+            `[https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$](https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$){localKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                systemInstruction: { parts: [{ text: assistantSystemPrompt }] },
+                contents: [{ parts: [{ text: rawQuestion }] }]
+              })
+            }
+          );
+          const data = await res.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+          if (res.ok && text) {
+            renderFormattedOutput(text, boxEl);
+            return;
+          }
+        }
+
+        const remoteRes = await fetch('[https://text.pollinations.ai/](https://text.pollinations.ai/)', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [
+              { role: 'system', content: assistantSystemPrompt },
+              { role: 'user', content: rawQuestion }
+            ],
+            model: 'openai'
+          })
+        });
+        const remoteText = remoteRes.ok ? (await remoteRes.text()).trim() : '';
+        if (remoteText) {
+          renderFormattedOutput(remoteText, boxEl);
+          return;
+        }
+      } catch (_) {
+        // Repli structuré immédiat si l'appel réseau échoue
+      }
+
+      renderFormattedOutput(structuredFallback, boxEl);
+    }
     function renderCatalog() {
       const grid = document.getElementById('flows-grid');
       const filtered = currentFilter === 'all' ? flows : flows.filter(f => f.category === currentFilter);
@@ -771,6 +912,7 @@
       else localStorage.removeItem('gemini_fallback_key');
       alert('Clé Gemini enregistrée sur cet appareil.');
     }
+
     function extractAmounts(text) {
       return [...String(text || '').matchAll(/(\d[\d\s.,]*\d|\d+)/g)]
         .map(m => Number(m[1].replace(/\s+/g, '').replace(',', '.')))
@@ -901,7 +1043,7 @@
 
         if (localKey) {
           const geminiRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
+            `[https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$](https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$){localKey}`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -919,7 +1061,7 @@
         }
 
         if (!outputText) {
-          const res = await fetch('https://text.pollinations.ai/', {
+          const res = await fetch('[https://text.pollinations.ai/](https://text.pollinations.ai/)', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
