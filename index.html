@@ -1,878 +1,659 @@
+
+
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+
+<html lang="fr">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Autopilot-IA | Automatisation Métier</title>
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#090d16">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Autopilot-IA">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712035.png">
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
 
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace']
-          },
-          colors: {
-            slate: {
-              850: '#151e32',
-              900: '#0f172a',
-              950: '#090d16'
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    body { background-color: #090d16; color: #f8fafc; -webkit-tap-highlight-color: transparent; }
-    .glass { background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(12px); border: 1px solid rgba(99, 102, 241, 0.18); }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-  </style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AUTOPILOT AI</title>
+
+<style>
+
+*{box-sizing:border-box}
+
+body{margin:0;background:#080f1e;color:#edf3ff;font-family:Arial,sans-serif}
+
+header{padding:20px;background:#111d33;border-bottom:1px solid #263650}
+
+header h2{margin:0;color:#64dce9;letter-spacing:2px}
+
+header p{color:#91a2bd;font-size:12px}
+
+nav{display:flex;overflow-x:auto;background:#101a2d;padding:10px;gap:8px}
+
+button{background:#263b61;color:white;border:0;padding:11px 14px;border-radius:9px;cursor:pointer}
+
+button.active{background:#527de5}
+
+main{padding:18px;max-width:1100px;margin:auto}
+
+.page{display:none}
+
+.page.active{display:block}
+
+h1{font-size:25px}
+
+p{color:#a5b4ce}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+
+.card{background:#111d33;border:1px solid #293b59;padding:17px;border-radius:13px;margin-bottom:12px}
+
+.number{font-size:27px;color:#61dce8;font-weight:bold}
+
+input,textarea,select{width:100%;padding:12px;margin:7px 0;background:#091426;border:1px solid #30425e;color:white;border-radius:8px}
+
+.action{background:#527de5;margin-top:8px;width:100%}
+
+.chat{height:260px;overflow:auto;background:#091426;padding:12px;border-radius:10px;margin-bottom:10px}
+
+.message{background:#1b2c48;padding:10px;border-radius:9px;margin:8px 0;white-space:pre-wrap}
+
+.message.user{background:#294d85;text-align:right}
+
+table{width:100%;border-collapse:collapse;font-size:12px}
+
+td,th{padding:10px;border-bottom:1px solid #30425e;text-align:left}
+
+.small{font-size:11px;color:#91a2bd}
+
+@media(max-width:500px){main{padding:12px}nav button{white-space:nowrap}}
+
+</style>
+
 </head>
-<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
-
-  <header class="sticky top-0 z-40 glass border-b border-slate-800/80 px-4 py-3">
-    <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-          <i class="fa-solid fa-robot text-white text-base"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="font-extrabold text-base tracking-tight text-white">Autopilot-IA</h1>
-            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V2.7 PRO</span>
-          </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block">Moteur d'automatisation opérationnelle</p>
-        </div>
-      </div>
-
-      <nav class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 overflow-x-auto no-scrollbar">
-        <button type="button" onclick="switchTab('catalog')" id="tab-catalog" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow whitespace-nowrap">
-          <i class="fa-solid fa-layer-group mr-1"></i> Flux
-        </button>
-        <button type="button" onclick="switchTab('studio')" id="tab-studio" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
-          <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Studio
-        </button>
-        <button type="button" onclick="switchTab('vault')" id="tab-vault" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
-          <i class="fa-solid fa-box-archive mr-1"></i> Classeur
-        </button>
-        <button type="button" onclick="switchTab('history')" id="tab-history" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
-          <i class="fa-solid fa-clock-rotate-left mr-1"></i> Historique
-        </button>
-      </nav>
-    </div>
-  </header>
-
-  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
-
-    <!-- ONGLET 1 : CATALOGUE DES FLUX -->
-    <section id="view-catalog" class="space-y-6">
-      <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/50 border border-indigo-500/20 p-5 sm:p-7">
-        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/25 px-3 py-1 rounded-full mb-3">
-          <i class="fa-solid fa-bolt text-amber-400"></i> Studio Manuel Optimisé
-        </span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
-          Cartographie des processus métiers automatisés par IA
-        </h2>
-        <p class="text-sm text-slate-300 leading-relaxed mb-5">
-          Sélectionnez un flux métier ci-dessous pour inspecter son déclencheur et l'exécuter directement dans le <strong class="text-indigo-300">Studio IA</strong>.
-        </p>
-
-        <div class="grid grid-cols-3 gap-2.5 text-center">
-          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
-            <div class="text-lg sm:text-xl font-extrabold text-emerald-400">-72%</div>
-            <div class="text-[11px] text-slate-400">Temps admin</div>
-          </div>
-          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
-            <div class="text-lg sm:text-xl font-extrabold text-indigo-400">1 Tap</div>
-            <div class="text-[11px] text-slate-400">Exécution rapide</div>
-          </div>
-          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
-            <div id="flow-count-badge" class="text-lg sm:text-xl font-extrabold text-violet-400">6 Flux</div>
-            <div class="text-[11px] text-slate-400">Prêts à l'emploi</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="category-filters">
-          <button type="button" onclick="filterFlows('all')" data-cat="all" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap">Tous les pôles</button>
-          <button type="button" onclick="filterFlows('commercial')" data-cat="commercial" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Commercial & Support</button>
-          <button type="button" onclick="filterFlows('operations')" data-cat="operations" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Opérations & Direction</button>
-          <button type="button" onclick="filterFlows('finance')" data-cat="finance" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Finance, RH & Juridique</button>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="resetDefaultFlows()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white transition">
-            Réinitialiser
-          </button>
-          <button type="button" onclick="openModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition">
-            <i class="fa-solid fa-plus mr-1"></i> Créer un flux
-          </button>
-        </div>
-      </div>
-
-      <div id="flows-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </section>
-
-    <!-- ONGLET 2 : STUDIO D'EXÉCUTION IA -->
-    <section id="view-studio" class="hidden space-y-5">
-      <div class="glass rounded-2xl p-5 space-y-4">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-          <div>
-            <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-microchip text-indigo-400"></i> Studio d'Exécution IA
-            </h2>
-            <p class="text-xs text-slate-400">Tableaux structurés • Édition & boîte interne Classeur</p>
-          </div>
-          <button type="button" onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
-            <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé Gemini
-          </button>
-        </div>
-
-        <div id="fallback-key-box" class="hidden bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
-          <label class="block text-xs font-semibold text-slate-300">Clé API Gemini facultative</label>
-          <div class="flex gap-2">
-            <input type="password" id="local-api-key" placeholder="AIzaSy... (facultatif)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-            <button type="button" onclick="saveLocalKey()" class="px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Sauver</button>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">1. Choisir le processus métier</label>
-          <select id="studio-flow-select" onchange="loadFlowTemplate()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"></select>
-        </div>
-
-        <div>
-          <div class="flex items-center justify-between mb-1.5 gap-2 flex-wrap">
-            <label class="text-xs font-semibold text-slate-300">2. Données entrantes (texte, consigne, fichier texte)</label>
-            <div class="flex items-center gap-3">
-              <label for="doc-file-input" class="text-[11px] text-emerald-400 hover:underline cursor-pointer">
-                <i class="fa-solid fa-file-import mr-1"></i>Importer (.txt/.csv)
-              </label>
-              <input type="file" id="doc-file-input" accept=".txt,.md,.csv,.json,.log,text/*" onchange="handleFileImport(event)" class="hidden">
-              <button type="button" onclick="fillSampleData()" class="text-[11px] text-indigo-400 hover:underline">Exemple</button>
-              <button type="button" onclick="clearInput()" class="text-[11px] text-rose-400 hover:underline">Effacer</button>
-            </div>
-          </div>
-          <div id="imported-file-banner" class="hidden mb-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-[11px] text-emerald-300 flex items-center justify-between gap-2">
-            <span id="imported-file-name" class="truncate"></span>
-            <button type="button" onclick="hideFileBanner()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-          </div>
-          <textarea id="studio-input" rows="5" placeholder="Collez ici votre texte ou consigne (ex. plan comptable, facture, clause). Pour Word/PDF, copiez-collez directement le texte." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
-        </div>
-
-        <button type="button" id="run-btn" onclick="executeWorkflow()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition">
-          <i class="fa-solid fa-play"></i> Lancer l'automatisation IA
-        </button>
-      </div>
-
-      <div id="result-card" class="hidden glass rounded-2xl p-5 space-y-3 border-emerald-500/30">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-              <i class="fa-solid fa-circle-check"></i> Livrable généré
-            </span>
-            <span id="engine-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">IA distante</span>
-          </div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <button type="button" onclick="toggleEditOutput()" id="edit-btn" class="text-xs px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-200 hover:text-slate-950 border border-amber-500/30 transition">
-              <i class="fa-solid fa-pen mr-1"></i>Modifier
-            </button>
-            <button type="button" onclick="saveOutputToVault()" id="save-vault-btn" class="text-xs px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500 text-emerald-200 hover:text-slate-950 border border-emerald-500/30 transition">
-              <i class="fa-solid fa-box-archive mr-1"></i>Enregistrer
-            </button>
-            <button type="button" onclick="shareOutput()" id="share-btn" class="text-xs px-3 py-1 rounded-lg bg-indigo-600/25 hover:bg-indigo-600 text-indigo-200 hover:text-white border border-indigo-500/30 transition">
-              <i class="fa-solid fa-share-nodes mr-1"></i> Partager
-            </button>
-            <button type="button" onclick="copyOutput()" id="copy-btn" class="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
-              <i class="fa-regular fa-copy mr-1"></i> Copier
-            </button>
-          </div>
-        </div>
-
-        <div id="studio-output" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 leading-relaxed font-sans"></div>
-
-        <div id="output-editor-box" class="hidden space-y-2 pt-2">
-          <label class="block text-xs font-semibold text-amber-300">Modification directe du livrable</label>
-          <textarea id="studio-output-editor" rows="8" class="w-full bg-slate-950 border border-amber-500/40 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-amber-400"></textarea>
-          <div class="flex items-center justify-end gap-2">
-            <button type="button" onclick="cancelEditOutput()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300">Annuler</button>
-            <button type="button" onclick="applyEditedOutput(true)" class="text-xs px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold">Appliquer & Enregistrer</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ONGLET 3 : BOÎTE INTERNE (CLASSEUR) -->
-    <section id="view-vault" class="hidden space-y-4">
-      <div class="flex items-center justify-between gap-2">
-        <div>
-          <h2 class="text-lg font-bold text-white">Boîte interne — Livrables enregistrés</h2>
-          <p class="text-xs text-slate-400">Vos documents modifiés et archivés localement sur l'appareil</p>
-        </div>
-        <button type="button" onclick="clearVault()" class="text-xs text-rose-400 hover:underline">Tout vider</button>
-      </div>
-      <div id="vault-list" class="space-y-3"></div>
-    </section>
-
-    <!-- ONGLET 4 : HISTORIQUE -->
-    <section id="view-history" class="hidden space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 class="text-lg font-bold text-white">Exécutions sauvegardées</h2>
-        <button type="button" onclick="clearHistory()" class="text-xs text-rose-400 hover:underline">Tout effacer</button>
-      </div>
-      <div id="history-list" class="space-y-3"></div>
-    </section>
-
-  </main>
-
-  <!-- MODAL CRÉATION DE FLUX -->
-  <div id="create-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="font-bold text-base text-white">Nouveau flux personnalisé</h3>
-        <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <input id="new-title" type="text" placeholder="Titre du flux (ex: Plan comptable SYSCOHADA)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-      <select id="new-cat" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <option value="commercial">Commercial & Support</option>
-        <option value="operations">Opérations & Direction</option>
-        <option value="finance">Finance, RH & Juridique</option>
-      </select>
-      <textarea id="new-prompt" rows="3" placeholder="Instruction système pour l'IA (ex: Présente les écritures dans un tableau Compte | Intitulé | Débit | Crédit)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white"></textarea>
-      <button type="button" onclick="addCustomFlow()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm">Enregistrer le flux</button>
-    </div>
-  </div>
-
-  <script>
-    const defaultFlows = [
-      {
-        id: 'support-leads',
-        title: 'Service Client & Qualification de Leads',
-        category: 'commercial',
-        badge: 'Commercial & Support',
-        saving: '~5h / semaine',
-        icon: 'fa-headset',
-        trigger: 'Réception d\'un email entrant, formulaire de contact ou message client.',
-        action: 'Analyse d\'intention, scoring d\'urgence, extraction des besoins et rédaction d\'une réponse prête à envoyer.',
-        systemPrompt: 'Tu es un responsable commercial et support senior. Réponds en français clair et structuré, sans ** ni ## ni <br>. Analyse le message client fourni et produis : 1) Score d\'urgence (1 à 5) et intention, 2) Besoins clés détectés, 3) Une réponse professionnelle, chaleureuse et orientée conversion prête à être envoyée.',
-        sample: 'Bonjour, nous sommes une PME de 35 salariés et cherchons une solution pour automatiser nos devis et relances clients avant la fin du mois. Pouvez-vous nous faire une proposition rapide ?'
-      },
-      {
-        id: 'invoices-ocr',
-        title: 'Comptabilité, Plan de Comptes & Écritures',
-        category: 'finance',
-        badge: 'Finance, RH & Juridique',
-        saving: '~4h / semaine',
-        icon: 'fa-file-invoice-dollar',
-        trigger: 'Facture, devis ou demande de plan comptable / imputation.',
-        action: 'Tableau structuré des comptes, intitulés, montants Débit / Crédit et contrôle de cohérence.',
-        systemPrompt: 'Tu es un expert-comptable rigoureux. Réponds en français clair sans ** ni ## ni <br>. Lorsque tu présentes un plan comptable ou des écritures comptables, utilise un tableau Markdown propre avec des colonnes claires (par exemple : Compte | Intitulé | Débit | Crédit | Justification), puis ajoute une courte note de contrôle si nécessaire.',
-        sample: 'Établir un tableau d\'écriture comptable et de plan de comptes pour une facture d\'hébergement et maintenance informatique de 450 000 FCFA HT, TVA récupérable 18% (81 000 FCFA), total TTC 531 000 FCFA réglé par virement bancaire.'
-      },
-      {
-        id: 'ops-briefing',
-        title: 'Synthèse Opérationnelle & Compte-Rendu',
-        category: 'operations',
-        badge: 'Opérations & Direction',
-        saving: '~6h / semaine',
-        icon: 'fa-diagram-project',
-        trigger: 'Notes brutes de réunion, rapport de terrain ou point d\'équipe.',
-        action: 'Structuration en décisions actées, tableau d\'actions par responsable et alertes de blocage.',
-        systemPrompt: 'Tu es un directeur des opérations (COO). Réponds en français structuré sans ** ni ## ni <br>. Présente un résumé exécutif court, un tableau d\'actions (Responsable | Action | Échéance | Statut) et les points de vigilance.',
-        sample: 'Réunion lundi matin : retard livraison fournisseur sur le chantier Nord, Karim doit relancer avant mercredi. Validation du budget recrutement 2 agents. Prochain audit qualité fixé au 10 décembre.'
-      },
-      {
-        id: 'hr-screening',
-        title: 'Présélection & Analyse de Candidatures',
-        category: 'finance',
-        badge: 'Finance, RH & Juridique',
-        saving: '~3h / semaine',
-        icon: 'fa-user-check',
-        trigger: 'Réception d\'un CV ou profil candidat pour un poste ouvert.',
-        action: 'Évaluation de l\'adéquation au poste, points forts, zones d\'ombre et grille de questions d\'entretien.',
-        systemPrompt: 'Tu es un recruteur senior. Réponds en français clair et structuré sans ** ni ## ni <br>. Évalue le profil candidat fourni : score d\'adéquation sur 100, points forts, points à vérifier et questions ciblées pour l\'entretien.',
-        sample: 'Profil : 4 ans d\'expérience en gestion administrative et juridique, maîtrise des contrats commerciaux et de la facturation, recherche un poste de responsable administratif.'
-      },
-      {
-        id: 'sales-followup',
-        title: 'Séquence de Relance Commerciale B2B',
-        category: 'commercial',
-        badge: 'Commercial & Support',
-        saving: '~4h / semaine',
-        icon: 'fa-paper-plane',
-        trigger: 'Devis envoyé sans réponse depuis plus de 48 heures.',
-        action: 'Génération d\'une séquence de 3 relances progressives (douce, valeur ajoutée, clôture).',
-        systemPrompt: 'Tu es un expert en négociation B2B. Réponds en français simple et lisible sans ** ni ## ni <br>. Rédige une séquence de 3 messages de relance courts, percutants et non agressifs (J+2, J+5, J+10) adaptés au contexte fourni.',
-        sample: 'Devis envoyé il y a 4 jours à la société Ivoire Logistique pour un pack d\'automatisation du service client à 1 200 000 FCFA. Aucun retour pour l\'instant.'
-      },
-      {
-        id: 'legal-audit',
-        title: 'Trames & Revue de Clauses Contractuelles',
-        category: 'finance',
-        badge: 'Finance, RH & Juridique',
-        saving: '~5h / semaine',
-        icon: 'fa-scale-balanced',
-        trigger: 'Besoin d\'une trame structurée par articles ou d\'une revue de clauses.',
-        action: 'Proposition d\'une trame structurée (Article 1, Article 2, Article 3...), identification des risques et points à faire valider.',
-        systemPrompt: 'Tu es un assistant juridique spécialisé dans la structuration documentaire. Réponds en français clair et aéré sans ** ni ## ni <br>. Présente l\'analyse ou la trame sous forme de titres et listes simples (Article 1, Article 2, Article 3, Risques et points à faire valider par un juriste).',
-        sample: 'Clause de résiliation : Le Prestataire peut résilier le présent contrat à tout moment sans préavis ni indemnité, tandis que le Client reste engagé pour une durée ferme de 24 mois.'
-      }
-    ];
-    let flows = JSON.parse(localStorage.getItem('autopilot_flows')) || defaultFlows;
-    let currentFilter = 'all';
-    let selectedFlowId = localStorage.getItem('autopilot_selected_flow') || flows[0].id;
-    if (!flows.some(f => f.id === selectedFlowId)) selectedFlowId = flows[0].id;
-    let rawLastOutputText = '';
-
-    function escapeHtml(str) {
-      return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function formatInlineMarkdown(str) {
-      return String(str || '')
-        .replace(/<br\s*\/?>/gi, ' ')
-        .replace(/\*\*(.*?)\*\*/g, '$1')
-        .replace(/__(.*?)__/g, '$1')
-        .replace(/\*\*/g, '')
-        .trim();
-    }
-
-    function buildFormattedHtml(rawText) {
-      const cleaned = String(rawText || '')
-        .replace(/<br\s*\/?>/gi, '\n')
-        .replace(/\*\*(.*?)\*\*/g, '$1')
-        .replace(/__(.*?)__/g, '$1')
-        .replace(/\*\*/g, '')
-        .replace(/^#{1,6}\s*/gm, '')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim();
-
-      if (!cleaned) return '';
-
-      const lines = cleaned.split('\n');
-      let html = '';
-      let tableRows = [];
-
-      const flushTable = () => {
-        if (!tableRows.length) return;
-        const parsedRows = tableRows
-          .filter(row => !/^\s*\|?[\s:-]+(?:\|[\s:-]+)+\|?\s*$/.test(row.trim()))
-          .map(row =>
-            row
-              .trim()
-              .replace(/^\||\|$/g, '')
-              .split('|')
-              .map(cell => formatInlineMarkdown(cell))
-          )
-          .filter(cells => cells.some(c => c.length > 0));
-
-        if (parsedRows.length > 0) {
-          const [header, ...body] = parsedRows;
-          html += '<div class="my-3 overflow-x-auto rounded-xl border border-slate-700/80 bg-slate-900/90">';
-          html += '<table class="w-full text-left border-collapse text-xs">';
-          html += '<thead class="bg-slate-800/90 text-indigo-300 border-b border-slate-700">';
-          html += '<tr>' + header.map(h => `<th class="px-3 py-2.5 font-bold whitespace-nowrap">${escapeHtml(h)}</th>`).join('') + '</tr>';
-          html += '</thead><tbody class="divide-y divide-slate-800/80">';
-          body.forEach(r => {
-            html += '<tr class="hover:bg-slate-800/40">' +
-              r.map(c => `<td class="px-3 py-2 text-slate-200 align-top">${escapeHtml(c)}</td>`).join('') +
-              '</tr>';
-          });
-          html += '</tbody></table></div>';
-        }
-        tableRows = [];
-      };
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.includes('|') && (trimmed.startsWith('|') || trimmed.split('|').length >= 3)) {
-          tableRows.push(trimmed);
-        } else {
-          flushTable();
-          if (!trimmed) {
-            html += '<div class="h-2"></div>';
-          } else {
-            html += `<p class="text-sm text-slate-200 leading-relaxed my-1">${escapeHtml(trimmed)}</p>`;
-          }
-        }
-      }
-      flushTable();
-
-      return html;
-    }
-
-    function renderFormattedOutput(rawText, containerEl) {
-      containerEl.innerHTML = buildFormattedHtml(rawText);
-    }
-
-    function renderCatalog() {
-      const grid = document.getElementById('flows-grid');
-      const filtered = currentFilter === 'all' ? flows : flows.filter(f => f.category === currentFilter);
-      document.getElementById('flow-count-badge').textContent = `${flows.length} Flux`;
-
-      grid.innerHTML = filtered.map(f => `
-        <div class="glass rounded-2xl p-5 flex flex-col justify-between gap-4 hover:border-indigo-500/50 transition">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between gap-2">
-              <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-                <i class="fa-solid ${f.icon || 'fa-bolt'}"></i>
-              </div>
-              <div class="text-right">
-                <span class="inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  <i class="fa-regular fa-clock mr-1"></i>${f.saving || '~3h / sem'}
-                </span>
-                <div class="text-[11px] text-slate-400 mt-1">${f.badge}</div>
-              </div>
-            </div>
-            <h3 class="font-bold text-base text-white">${f.title}</h3>
-            <p class="text-xs text-slate-300 leading-relaxed"><strong class="text-amber-400">Déclencheur :</strong> ${f.trigger}</p>
-            <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-indigo-300">Action IA :</strong> ${f.action}</p>
-          </div>
-          <button type="button" onclick="launchInStudio('${f.id}')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-bold transition flex items-center justify-center gap-2">
-            Exécuter dans le Studio <i class="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
-      `).join('');
-
-      const select = document.getElementById('studio-flow-select');
-      select.innerHTML = flows.map(f => `<option value="${f.id}">${f.title}</option>`).join('');
-      select.value = selectedFlowId;
-    }
-
-    function filterFlows(cat) {
-      currentFilter = cat;
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        const active = btn.dataset.cat === cat;
-        btn.className = active
-          ? 'filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap'
-          : 'filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap';
-      });
-      renderCatalog();
-    }
-
-    function switchTab(tab) {
-      ['catalog', 'studio', 'vault', 'history'].forEach(t => {
-        document.getElementById(`view-${t}`).classList.toggle('hidden', t !== tab);
-        const btn = document.getElementById(`tab-${t}`);
-        btn.className = t === tab
-          ? 'px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow whitespace-nowrap'
-          : 'px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap';
-      });
-      if (tab === 'vault') renderVault();
-      if (tab === 'history') renderHistory();
-    }
-
-    function launchInStudio(id) {
-      selectedFlowId = id;
-      localStorage.setItem('autopilot_selected_flow', id);
-      document.getElementById('studio-flow-select').value = id;
-      fillSampleData();
-      switchTab('studio');
-    }
-
-    function loadFlowTemplate() {
-      selectedFlowId = document.getElementById('studio-flow-select').value;
-      localStorage.setItem('autopilot_selected_flow', selectedFlowId);
-    }
-
-    function fillSampleData() {
-      const flow = flows.find(f => f.id === document.getElementById('studio-flow-select').value);
-      if (flow && flow.sample) {
-        document.getElementById('studio-input').value = flow.sample;
-      }
-    }
-
-    function clearInput() {
-      document.getElementById('studio-input').value = '';
-      hideFileBanner();
-      document.getElementById('studio-input').focus();
-    }
-
-    function hideFileBanner() {
-      const banner = document.getElementById('imported-file-banner');
-      const input = document.getElementById('doc-file-input');
-      if (banner) banner.classList.add('hidden');
-      if (input) input.value = '';
-    }
-
-    function handleFileImport(event) {
-      const inputEl = event.target;
-      const file = inputEl && inputEl.files ? inputEl.files[0] : null;
-      if (!file) return;
-
-      const lowerName = file.name.toLowerCase();
-      const isPlainText =
-        /\.(txt|md|csv|json|log)$/i.test(lowerName) ||
-        (file.type && file.type.startsWith('text/'));
-
-      if (!isPlainText) {
-        alert(
-          `Le fichier "${file.name}" n'est pas un fichier texte brut.\n` +
-          `Pour éviter tout texte binaire, ouvrez le document, copiez son contenu, puis collez-le directement dans la zone de texte.`
-        );
-        inputEl.value = '';
-        return;
-      }
-
-      if (file.size > 300 * 1024) {
-        alert('Fichier texte trop volumineux (maximum 300 Ko).');
-        inputEl.value = '';
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const raw = (e.target && typeof e.target.result === 'string') ? e.target.result : '';
-        const cleaned = raw.replace(/\u0000/g, '').trim();
-        if (!cleaned) {
-          alert('Le fichier sélectionné est vide.');
-          inputEl.value = '';
-          return;
-        }
-
-        const textarea = document.getElementById('studio-input');
-        const existing = textarea.value.trim();
-        const block = `--- ${file.name} ---\n${cleaned.slice(0, 15000)}`;
-        textarea.value = existing ? `${existing}\n\n${block}` : block;
-
-        document.getElementById('imported-file-name').textContent =
-          `Fichier texte chargé : ${file.name} (${Math.max(1, Math.round(file.size / 1024))} Ko)`;
-        document.getElementById('imported-file-banner').classList.remove('hidden');
-        textarea.focus();
-        inputEl.value = '';
-      };
-      reader.readAsText(file);
-    }
-
-    function toggleKeyBox() {
-      document.getElementById('fallback-key-box').classList.toggle('hidden');
-      document.getElementById('local-api-key').value = localStorage.getItem('gemini_fallback_key') || '';
-    }
-
-    function saveLocalKey() {
-      const val = document.getElementById('local-api-key').value.trim();
-      if (val) localStorage.setItem('gemini_fallback_key', val);
-      else localStorage.removeItem('gemini_fallback_key');
-      alert('Clé Gemini enregistrée sur cet appareil.');
-    }
-
-    function buildSimulatedOutput(flow, input) {
-      const excerpt = input.length > 180 ? input.slice(0, 180) + '...' : input;
-      return `Repli local — Connexion externe temporairement indisponible\n\n` +
-        `Flux : ${flow.title} (${flow.badge})\n` +
-        `Entrée : "${excerpt}"\n\n` +
-        `1. Synthèse : ${flow.action}\n` +
-        `2. Action suivante : relancez dans quelques secondes pour obtenir la réponse complète de l'IA.`;
-    }
-
-    async function executeWorkflow() {
-      const flowId = document.getElementById('studio-flow-select').value;
-      const flow = flows.find(f => f.id === flowId);
-      const input = document.getElementById('studio-input').value.trim();
-      if (!input) return alert('Veuillez saisir des données à traiter.');
-
-      const btn = document.getElementById('run-btn');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Génération IA en cours...';
-
-      let engineLabel = 'IA distante';
-
-      try {
-        let outputText = '';
-        const localKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
-
-        if (localKey) {
-          const geminiRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                systemInstruction: { parts: [{ text: flow.systemPrompt }] },
-                contents: [{ parts: [{ text: input }] }]
-              })
-            }
-          );
-          const geminiData = await geminiRes.json();
-          if (geminiRes.ok && geminiData.candidates?.[0]?.content?.parts?.[0]?.text) {
-            outputText = geminiData.candidates[0].content.parts[0].text.trim();
-            engineLabel = 'Gemini';
-          }
-        }
-
-        if (!outputText) {
-          const res = await fetch('https://text.pollinations.ai/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              messages: [
-                { role: 'system', content: flow.systemPrompt },
-                { role: 'user', content: input }
-              ],
-              model: 'openai'
-            })
-          });
-          if (!res.ok) throw new Error('Service IA indisponible');
-          outputText = (await res.text()).trim();
-          if (!outputText) {
-            outputText = buildSimulatedOutput(flow, input);
-            engineLabel = 'Repli local';
-          }
-        }
-
-        rawLastOutputText = outputText;
-        document.getElementById('output-editor-box').classList.add('hidden');
-        document.getElementById('engine-badge').textContent = engineLabel;
-        renderFormattedOutput(outputText, document.getElementById('studio-output'));
-        document.getElementById('result-card').classList.remove('hidden');
-
-        const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
-        history.unshift({
-          date: new Date().toLocaleString('fr-FR'),
-          title: flow.title,
-          engine: engineLabel,
-          input,
-          output: outputText
-        });
-        localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 25)));
-      } catch (err) {
-        const fallbackText = buildSimulatedOutput(flow, input);
-        rawLastOutputText = fallbackText;
-        engineLabel = 'Repli local';
-        document.getElementById('output-editor-box').classList.add('hidden');
-        document.getElementById('engine-badge').textContent = engineLabel;
-        renderFormattedOutput(fallbackText, document.getElementById('studio-output'));
-        document.getElementById('result-card').classList.remove('hidden');
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-play"></i> Lancer l\'automatisation IA';
-      }
-    }
-
-    function toggleEditOutput() {
-      const editorBox = document.getElementById('output-editor-box');
-      const textarea = document.getElementById('studio-output-editor');
-      const isHidden = editorBox.classList.contains('hidden');
-      if (isHidden) {
-        textarea.value = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-        editorBox.classList.remove('hidden');
-        textarea.focus();
-      } else {
-        editorBox.classList.add('hidden');
-      }
-    }
-
-    function cancelEditOutput() {
-      document.getElementById('output-editor-box').classList.add('hidden');
-    }
-
-    function applyEditedOutput(alsoSaveVault) {
-      const textarea = document.getElementById('studio-output-editor');
-      const updated = textarea.value.trim();
-      if (!updated) return alert('Le livrable ne peut pas être vide.');
-      rawLastOutputText = updated;
-      renderFormattedOutput(updated, document.getElementById('studio-output'));
-      document.getElementById('output-editor-box').classList.add('hidden');
-      if (alsoSaveVault) {
-        saveOutputToVault();
-      }
-    }
-
-    function saveOutputToVault() {
-      const editorBox = document.getElementById('output-editor-box');
-      const text = (!editorBox.classList.contains('hidden'))
-        ? document.getElementById('studio-output-editor').value.trim()
-        : (rawLastOutputText || document.getElementById('studio-output').innerText.trim());
-
-      if (!text) return alert('Aucun résultat à enregistrer.');
-
-      const flowTitle = document.getElementById('studio-flow-select').selectedOptions[0]?.textContent || 'Livrable';
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      vault.unshift({
-        id: 'vault-' + Date.now(),
-        date: new Date().toLocaleString('fr-FR'),
-        title: flowTitle,
-        content: text
-      });
-      localStorage.setItem('autopilot_vault', JSON.stringify(vault.slice(0, 50)));
-
-      const btn = document.getElementById('save-vault-btn');
-      const prevHtml = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Enregistré';
-      setTimeout(() => { btn.innerHTML = prevHtml; }, 1500);
-    }
-
-    function renderVault() {
-      const list = document.getElementById('vault-list');
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      if (!vault.length) {
-        list.innerHTML = '<div class="glass rounded-2xl p-6 text-center text-xs text-slate-400">Aucun élément enregistré dans la boîte interne pour le moment.</div>';
-        return;
-      }
-      list.innerHTML = vault.map((item, idx) => `
-        <div class="glass rounded-2xl p-4 space-y-2.5">
-          <div class="flex items-center justify-between text-xs gap-2 flex-wrap">
-            <span class="font-bold text-emerald-400">${escapeHtml(item.title)}</span>
-            <span class="text-slate-500">${escapeHtml(item.date)}</span>
-          </div>
-          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 max-h-60 overflow-y-auto">${buildFormattedHtml(item.content)}</div>
-          <div class="flex items-center justify-end gap-2 pt-1">
-            <button type="button" onclick="loadVaultIntoStudio(${idx})" class="text-xs px-3 py-1 rounded-lg bg-amber-500/20 text-amber-200 border border-amber-500/30">
-              <i class="fa-solid fa-pen mr-1"></i>Modifier
-            </button>
-            <button type="button" onclick="copyVaultItem(${idx})" class="text-xs px-3 py-1 rounded-lg bg-slate-800 text-slate-200">
-              <i class="fa-regular fa-copy mr-1"></i>Copier
-            </button>
-            <button type="button" onclick="deleteVaultItem(${idx})" class="text-xs px-3 py-1 rounded-lg bg-rose-500/15 text-rose-300">
-              Supprimer
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function loadVaultIntoStudio(idx) {
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      const item = vault[idx];
-      if (!item) return;
-      rawLastOutputText = item.content;
-      renderFormattedOutput(item.content, document.getElementById('studio-output'));
-      document.getElementById('result-card').classList.remove('hidden');
-      document.getElementById('studio-output-editor').value = item.content;
-      document.getElementById('output-editor-box').classList.remove('hidden');
-      switchTab('studio');
-    }
-
-    function copyVaultItem(idx) {
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      if (vault[idx]) navigator.clipboard.writeText(vault[idx].content);
-    }
-
-    function deleteVaultItem(idx) {
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      vault.splice(idx, 1);
-      localStorage.setItem('autopilot_vault', JSON.stringify(vault));
-      renderVault();
-    }
-
-    function clearVault() {
-      if (!confirm('Vider toute la boîte interne ?')) return;
-      localStorage.removeItem('autopilot_vault');
-      renderVault();
-    }
-
-    async function shareOutput() {
-      const flowTitle = document.getElementById('studio-flow-select').selectedOptions[0]?.textContent || 'Autopilot-IA';
-      const text = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-      if (!text) return;
-
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: `Autopilot-IA — ${flowTitle}`,
-            text
-          });
-          return;
-        } catch (e) {
-          if (e && e.name === 'AbortError') return;
-        }
-      }
-      copyOutput();
-    }
-
-    function copyOutput() {
-      const text = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-      navigator.clipboard.writeText(text);
-      const copyBtn = document.getElementById('copy-btn');
-      copyBtn.innerHTML = '<i class="fa-solid fa-check mr-1 text-emerald-400"></i> Copié';
-      setTimeout(() => {
-        copyBtn.innerHTML = '<i class="fa-regular fa-copy mr-1"></i> Copier';
-      }, 1500);
-    }
-
-    function renderHistory() {
-      const list = document.getElementById('history-list');
-      const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
-      if (!history.length) {
-        list.innerHTML = '<div class="glass rounded-2xl p-6 text-center text-xs text-slate-400">Aucune exécution enregistrée pour le moment.</div>';
-        return;
-      }
-      list.innerHTML = history.map(item => `
-        <div class="glass rounded-2xl p-4 space-y-2">
-          <div class="flex items-center justify-between text-xs gap-2">
-            <span class="font-bold text-indigo-400">${escapeHtml(item.title)}</span>
-            <span class="text-slate-500">${escapeHtml(item.date)}</span>
-          </div>
-          <p class="text-xs text-slate-400 line-clamp-2">Entrée : ${escapeHtml(item.input)}</p>
-          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 max-h-60 overflow-y-auto">${buildFormattedHtml(item.output)}</div>
-        </div>
-      `).join('');
-    }
-
-    function clearHistory() {
-      localStorage.removeItem('autopilot_history');
-      renderHistory();
-    }
-
-    function resetDefaultFlows() {
-      if (!confirm('Revenir aux 6 flux par défaut ?')) return;
-      flows = [...defaultFlows];
-      localStorage.setItem('autopilot_flows', JSON.stringify(flows));
-      selectedFlowId = flows[0].id;
-      localStorage.setItem('autopilot_selected_flow', selectedFlowId);
-      currentFilter = 'all';
-      filterFlows('all');
-    }
-
-    function openModal() { document.getElementById('create-modal').classList.remove('hidden'); }
-    function closeModal() { document.getElementById('create-modal').classList.add('hidden'); }
-
-    function addCustomFlow() {
-      const title = document.getElementById('new-title').value.trim();
-      const category = document.getElementById('new-cat').value;
-      const systemPrompt = document.getElementById('new-prompt').value.trim();
-      if (!title || !systemPrompt) return alert('Remplissez le titre et l\'instruction.');
-
-      const badges = { commercial: 'Commercial & Support', operations: 'Opérations & Direction', finance: 'Finance, RH & Juridique' };
-      const newFlow = {
-        id: 'custom-' + Date.now(),
-        title,
-        category,
-        badge: badges[category],
-        saving: 'Personnalisé',
-        icon: 'fa-wand-magic-sparkles',
-        trigger: 'Déclenchement manuel dans le Studio IA.',
-        action: 'Traitement sur-mesure selon vos instructions.',
-        systemPrompt,
-        sample: ''
-      };
-      flows.unshift(newFlow);
-      localStorage.setItem('autopilot_flows', JSON.stringify(flows));
-      selectedFlowId = newFlow.id;
-      localStorage.setItem('autopilot_selected_flow', selectedFlowId);
-      closeModal();
-      renderCatalog();
-    }
-
-    renderCatalog();
-  </script>
+
+<body>
+
+<header>
+
+<h2>AUTOPILOT AI</h2>
+
+<p>INTELLIGENT BUSINESS MANAGEMENT</p>
+
+</header>
+
+<nav>
+
+<button class="active" onclick="show('dashboard',this)">Accueil</button>
+
+<button onclick="show('assistant',this)">Assistant IA</button>
+
+<button onclick="show('clients',this)">Clients</button>
+
+<button onclick="show('tasks',this)">Tâches</button>
+
+<button onclick="show('quotes',this)">Devis</button>
+
+<button onclick="show('agents',this)">Agents IA</button>
+
+<button onclick="show('finance',this)">Finances</button>
+
+<button onclick="show('settings',this)">Paramètres</button>
+
+</nav>
+
+<main>
+
+<section id="dashboard" class="page active">
+
+<h1>Tableau de bord</h1>
+
+<p>Bienvenue dans votre centre de commande intelligent.</p>
+
+<div class="grid">
+
+<div class="card">Clients<div class="number" id="totalClients">0</div></div>
+
+<div class="card">Tâches<div class="number" id="totalTasks">0</div></div>
+
+<div class="card">Devis<div class="number" id="totalQuotes">0</div></div>
+
+<div class="card">Agents IA<div class="number">10</div></div>
+
+</div>
+
+<div class="card">
+
+<h3>Activité récente</h3>
+
+<div id="activity">Aucune activité.</div>
+
+</div>
+
+</section>
+
+<section id="assistant" class="page">
+
+<h1>Assistant IA</h1>
+
+<p>Votre assistant de gestion professionnelle.</p>
+
+<div class="card">
+
+<div class="chat" id="chat">
+
+<div class="message">Bonjour ! Que souhaitez-vous faire aujourd'hui ?</div>
+
+</div>
+
+<input id="question" placeholder="Écrivez votre demande...">
+
+<button class="action" onclick="askAI()">Envoyer</button>
+
+<p class="small">Assistant de démonstration : un véritable moteur IA devra être connecté au serveur.</p>
+
+</div>
+
+</section>
+
+<section id="clients" class="page">
+
+<h1>Gestion des clients</h1>
+
+<div class="card">
+
+<input id="clientName" placeholder="Nom du client">
+
+<input id="clientCompany" placeholder="Entreprise">
+
+<input id="clientPhone" placeholder="Téléphone">
+
+<input id="clientEmail" placeholder="Email">
+
+<button class="action" onclick="addClient()">Ajouter le client</button>
+
+</div>
+
+<div class="card">
+
+<h3>Liste des clients</h3>
+
+<div id="clientList"></div>
+
+</div>
+
+</section>
+
+<section id="tasks" class="page">
+
+<h1>Gestion des tâches</h1>
+
+<div class="card">
+
+<input id="taskName" placeholder="Nom de la tâche">
+
+<input id="taskOwner" placeholder="Responsable">
+
+<input id="taskDate" type="date">
+
+<select id="taskPriority">
+
+<option>Normale</option>
+
+<option>Haute</option>
+
+<option>Urgente</option>
+
+</select>
+
+<button class="action" onclick="addTask()">Créer une tâche</button>
+
+</div>
+
+<div class="card">
+
+<h3>Liste des tâches</h3>
+
+<div id="taskList"></div>
+
+</div>
+
+</section>
+
+<section id="quotes" class="page">
+
+<h1>Devis commerciaux</h1>
+
+<div class="card">
+
+<input id="quoteClient" placeholder="Nom du client">
+
+<input id="quoteSubject" placeholder="Objet du devis">
+
+<input id="quoteAmount" type="number" placeholder="Montant en FCFA">
+
+<button class="action" onclick="addQuote()">Créer le devis</button>
+
+</div>
+
+<div class="card">
+
+<h3>Devis enregistrés</h3>
+
+<div id="quoteList"></div>
+
+</div>
+
+</section>
+
+<section id="agents" class="page">
+
+<h1>Équipe des agents IA</h1>
+
+<div class="grid" id="agentList"></div>
+
+</section>
+
+<section id="finance" class="page">
+
+<h1>Gestion financière</h1>
+
+<div class="card">
+
+<p>Valeur totale des devis</p>
+
+<div class="number" id="financeTotal">0 FCFA</div>
+
+<p class="small">Montant déclaré des devis, pas un solde bancaire.</p>
+
+</div>
+
+</section>
+
+<section id="settings" class="page">
+
+<h1>Paramètres</h1>
+
+<div class="card">
+
+<input id="company" placeholder="Nom de votre entreprise">
+
+<select id="currency">
+
+<option>FCFA</option>
+
+<option>EUR</option>
+
+<option>USD</option>
+
+</select>
+
+<button class="action" onclick="saveSettings()">Enregistrer</button>
+
+</div>
+
+<div class="card">
+
+<button class="action" onclick="exportData()">Exporter mes données</button>
+
+<button class="action" onclick="resetData()">Réinitialiser l'application</button>
+
+</div>
+
+</section>
+
+</main>
+
+<script>
+
+const getData=(key)=>JSON.parse(localStorage.getItem("ozi_"+key)||"[]");
+
+const saveData=(key,data)=>localStorage.setItem("ozi_"+key,JSON.stringify(data));
+
+let clients=getData("clients");
+
+let tasks=getData("tasks");
+
+let quotes=getData("quotes");
+
+let activity=getData("activity");
+
+const agents=[
+
+"Intelligence centrale",
+
+"Agent commercial",
+
+"Agent clientèle",
+
+"Agent administratif",
+
+"Agent financier",
+
+"Agent planification",
+
+"Agent analyste",
+
+"Agent automatisation",
+
+"Agent de contrôle",
+
+"Agent multilingue"
+
+];
+
+function show(id,button){
+
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+
+document.getElementById(id).classList.add("active");
+
+document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+
+button.classList.add("active");
+
+refresh();
+
+}
+
+function log(message){
+
+activity.unshift(new Date().toLocaleString("fr-FR")+" : "+message);
+
+activity=activity.slice(0,20);
+
+saveData("activity",activity);
+
+renderActivity();
+
+}
+
+function renderActivity(){
+
+document.getElementById("activity").innerHTML=activity.map(x=>"<p>"+escapeHTML(x)+"</p>").join("")||"Aucune activité.";
+
+}
+
+function escapeHTML(value){
+
+return String(value).replace(/[&<>"']/g,c=>({
+
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+
+}[c]));
+
+}
+
+function addClient(){
+
+let name=document.getElementById("clientName").value.trim();
+
+if(!name)return alert("Entrez le nom du client.");
+
+clients.push({
+
+id:Date.now(),
+
+name,
+
+company:document.getElementById("clientCompany").value,
+
+phone:document.getElementById("clientPhone").value,
+
+email:document.getElementById("clientEmail").value
+
+});
+
+saveData("clients",clients);
+
+log("Nouveau client : "+name);
+
+["clientName","clientCompany","clientPhone","clientEmail"].forEach(id=>document.getElementById(id).value="");
+
+refresh();
+
+}
+
+function renderClients(){
+
+document.getElementById("clientList").innerHTML=clients.map(c=>
+
+`<p>${escapeHTML(c.name)} — ${escapeHTML(c.company)} 
+
+<button onclick="deleteItem('clients',${c.id})">Supprimer</button></p>`
+
+).join("")||"Aucun client.";
+
+}
+
+function addTask(){
+
+let name=document.getElementById("taskName").value.trim();
+
+if(!name)return alert("Entrez une tâche.");
+
+tasks.push({
+
+id:Date.now(),
+
+name,
+
+owner:document.getElementById("taskOwner").value,
+
+date:document.getElementById("taskDate").value,
+
+priority:document.getElementById("taskPriority").value,
+
+status:"À faire"
+
+});
+
+saveData("tasks",tasks);
+
+log("Nouvelle tâche : "+name);
+
+document.getElementById("taskName").value="";
+
+refresh();
+
+}
+
+function renderTasks(){
+
+document.getElementById("taskList").innerHTML=tasks.map(t=>
+
+`<div class="card">
+
+<strong>${escapeHTML(t.name)}</strong>
+
+<p>${escapeHTML(t.owner)} · ${escapeHTML(t.date)} · ${escapeHTML(t.priority)}</p>
+
+<select onchange="changeStatus(${t.id},this.value)">
+
+<option ${t.status==="À faire"?"selected":""}>À faire</option>
+
+<option ${t.status==="En cours"?"selected":""}>En cours</option>
+
+<option ${t.status==="Terminée"?"selected":""}>Terminée</option>
+
+</select>
+
+<button onclick="deleteItem('tasks',${t.id})">Supprimer</button>
+
+</div>`
+
+).join("")||"Aucune tâche.";
+
+}
+
+function changeStatus(id,status){
+
+tasks=tasks.map(t=>t.id===id?{...t,status}:t);
+
+saveData("tasks",tasks);
+
+refresh();
+
+}
+
+function addQuote(){
+
+let client=document.getElementById("quoteClient").value.trim();
+
+let subject=document.getElementById("quoteSubject").value.trim();
+
+let amount=Number(document.getElementById("quoteAmount").value);
+
+if(!client||!subject||amount<=0)return alert("Remplissez correctement le devis.");
+
+quotes.push({id:Date.now(),client,subject,amount,status:"En attente"});
+
+saveData("quotes",quotes);
+
+log("Nouveau devis créé pour "+client);
+
+document.getElementById("quoteClient").value="";
+
+document.getElementById("quoteSubject").value="";
+
+document.getElementById("quoteAmount").value="";
+
+refresh();
+
+}
+
+function renderQuotes(){
+
+document.getElementById("quoteList").innerHTML=quotes.map(q=>
+
+`<p>${escapeHTML(q.client)} — ${escapeHTML(q.subject)} : ${q.amount.toLocaleString("fr-FR")} FCFA
+
+<button onclick="deleteItem('quotes',${q.id})">Supprimer</button></p>`
+
+).join("")||"Aucun devis.";
+
+}
+
+function deleteItem(type,id){
+
+if(!confirm("Confirmer la suppression ?"))return;
+
+if(type==="clients")clients=clients.filter(x=>x.id!==id);
+
+if(type==="tasks")tasks=tasks.filter(x=>x.id!==id);
+
+if(type==="quotes")quotes=quotes.filter(x=>x.id!==id);
+
+saveData(type,({clients,tasks,quotes})[type]);
+
+refresh();
+
+}
+
+function renderAgents(){
+
+document.getElementById("agentList").innerHTML=agents.map((a,i)=>
+
+`<div class="card"><h3>◈ ${escapeHTML(a)}</h3><p class="small">Module fonctionnel prévu · Connexion IA requise</p></div>`
+
+).join("");
+
+}
+
+function askAI(){
+
+let input=document.getElementById("question");
+
+let q=input.value.trim();
+
+if(!q)return;
+
+let chat=document.getElementById("chat");
+
+let answer="J'ai reçu votre demande. Je suis actuellement en mode démonstration. Je peux vous orienter vers les modules Clients, Tâches et Devis. Un moteur IA réel sera nécessaire pour le raisonnement avancé.";
+
+if(/client/i.test(q))answer="Vous avez actuellement "+clients.length+" client(s) enregistré(s).";
+
+else if(/tâche|travail|projet/i.test(q))answer="Vous avez "+tasks.filter(t=>t.status!=="Terminée").length+" tâche(s) non terminée(s).";
+
+else if(/devis|finance|argent/i.test(q))answer="La valeur de vos devis est de "+quotes.reduce((s,q)=>s+q.amount,0).toLocaleString("fr-FR")+" FCFA.";
+
+chat.innerHTML+=`<div class="message user">${escapeHTML(q)}</div><div class="message">${escapeHTML(answer)}</div>`;
+
+input.value="";
+
+chat.scrollTop=chat.scrollHeight;
+
+}
+
+function saveSettings(){
+
+localStorage.setItem("ozi_company",document.getElementById("company").value);
+
+localStorage.setItem("ozi_currency",document.getElementById("currency").value);
+
+alert("Paramètres enregistrés.");
+
+}
+
+function exportData(){
+
+let data={clients,tasks,quotes,activity};
+
+let file=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+
+let url=URL.createObjectURL(file);
+
+let a=document.createElement("a");
+
+a.href=url;
+
+a.download="autopilot-ai-data.json";
+
+a.click();
+
+URL.revokeObjectURL(url);
+
+}
+
+function resetData(){
+
+if(!confirm("Effacer toutes les données ?"))return;
+
+["clients","tasks","quotes","activity"].forEach(k=>localStorage.removeItem("ozi_"+k));
+
+clients=[];tasks=[];quotes=[];activity=[];
+
+refresh();
+
+}
+
+function refresh(){
+
+document.getElementById("totalClients").textContent=clients.length;
+
+document.getElementById("totalTasks").textContent=tasks.length;
+
+document.getElementById("totalQuotes").textContent=quotes.length;
+
+document.getElementById("financeTotal").textContent=quotes.reduce((s,q)=>s+q.amount,0).toLocaleString("fr-FR")+" FCFA";
+
+renderClients();
+
+renderTasks();
+
+renderQuotes();
+
+renderActivity();
+
+}
+
+document.getElementById("company").value=localStorage.getItem("ozi_company")||"";
+
+document.getElementById("currency").value=localStorage.getItem("ozi_currency")||"FCFA";
+
+renderAgents();
+
+refresh();
+
+</script>
+
 </body>
+
 </html>
