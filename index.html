@@ -43,7 +43,6 @@
 </head>
 <body class="min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- Barre de navigation supérieure -->
   <header class="sticky top-0 z-40 glass border-b border-slate-800/80 px-4 py-3">
     <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
       <div class="flex items-center gap-2.5">
@@ -53,13 +52,12 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="font-extrabold text-base tracking-tight text-white">Autopilot-IA</h1>
-            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V2.2 PRO</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">V2.3 PRO</span>
           </div>
           <p class="text-[11px] text-slate-400 hidden sm:block">Moteur d'automatisation opérationnelle</p>
         </div>
       </div>
 
-      <!-- Navigation principale -->
       <nav class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800">
         <button onclick="switchTab('catalog')" id="tab-catalog" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow">
           <i class="fa-solid fa-layer-group mr-1"></i> Flux
@@ -76,7 +74,6 @@
 
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
 
-    <!-- ONGLET 1 : CATALOGUE DES FLUX -->
     <section id="view-catalog" class="space-y-6">
       <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/50 border border-indigo-500/20 p-5 sm:p-7">
         <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/25 px-3 py-1 rounded-full mb-3">
@@ -105,7 +102,6 @@
         </div>
       </div>
 
-      <!-- Filtres & bouton création -->
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="category-filters">
           <button onclick="filterFlows('all')" data-cat="all" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap">Tous les pôles</button>
@@ -124,11 +120,9 @@
         </div>
       </div>
 
-      <!-- Grille des cartes -->
       <div id="flows-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- ONGLET 2 : STUDIO D'EXÉCUTION IA -->
     <section id="view-studio" class="hidden space-y-5">
       <div class="glass rounded-2xl p-5 space-y-4">
         <div class="flex items-center justify-between gap-2 flex-wrap">
@@ -143,7 +137,6 @@
           </button>
         </div>
 
-        <!-- Option clé Gemini facultative -->
         <div id="fallback-key-box" class="hidden bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
           <label class="block text-xs font-semibold text-slate-300">Clé API Gemini facultative</label>
           <div class="flex gap-2">
@@ -152,13 +145,11 @@
           </div>
         </div>
 
-        <!-- Sélecteur de flux -->
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1.5">1. Choisir le processus métier</label>
           <select id="studio-flow-select" onchange="loadFlowTemplate()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"></select>
         </div>
 
-        <!-- Données d'entrée -->
         <div>
           <div class="flex items-center justify-between mb-1.5 gap-2">
             <label class="text-xs font-semibold text-slate-300">2. Données entrantes (texte, consigne, brouillon)</label>
@@ -175,24 +166,27 @@
         </button>
       </div>
 
-      <!-- Résultat généré -->
       <div id="result-card" class="hidden glass rounded-2xl p-5 space-y-3 border-emerald-500/30">
-        <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center justify-between gap-2 flex-wrap">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
               <i class="fa-solid fa-circle-check"></i> Livrable généré
             </span>
             <span id="engine-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">IA distante</span>
           </div>
-          <button onclick="copyOutput()" id="copy-btn" class="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200">
-            <i class="fa-regular fa-copy mr-1"></i> Copier
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="shareOutput()" id="share-btn" class="text-xs px-3 py-1 rounded-lg bg-indigo-600/25 hover:bg-indigo-600 text-indigo-200 hover:text-white border border-indigo-500/30 transition">
+              <i class="fa-solid fa-share-nodes mr-1"></i> Partager
+            </button>
+            <button onclick="copyOutput()" id="copy-btn" class="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+              <i class="fa-regular fa-copy mr-1"></i> Copier
+            </button>
+          </div>
         </div>
         <div id="studio-output" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 whitespace-pre-wrap leading-relaxed font-sans"></div>
       </div>
     </section>
 
-    <!-- ONGLET 3 : HISTORIQUE -->
     <section id="view-history" class="hidden space-y-4">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-bold text-white">Exécutions sauvegardées</h2>
@@ -203,7 +197,6 @@
 
   </main>
 
-  <!-- MODAL CRÉATION DE FLUX -->
   <div id="create-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4">
       <div class="flex items-center justify-between">
@@ -232,7 +225,7 @@
         icon: 'fa-headset',
         trigger: 'Réception d\'un email entrant, formulaire de contact ou message client.',
         action: 'Analyse d\'intention, scoring d\'urgence, extraction des besoins et rédaction d\'une réponse prête à envoyer.',
-        systemPrompt: 'Tu es un responsable commercial et support senior. Réponds en français clair et structuré. Analyse le message client fourni et produis : 1) Score d\'urgence (1 à 5) et intention, 2) Besoins clés détectés, 3) Une réponse professionnelle, chaleureuse et orientée conversion prête à être envoyée.',
+        systemPrompt: 'Tu es un responsable commercial et support senior. Réponds en français clair et structuré, sans symboles Markdown bruts (** ou ## ou tableaux |). Analyse le message client fourni et produis : 1) Score d\'urgence (1 à 5) et intention, 2) Besoins clés détectés, 3) Une réponse professionnelle, chaleureuse et orientée conversion prête à être envoyée.',
         sample: 'Bonjour, nous sommes une PME de 35 salariés et cherchons une solution pour automatiser nos devis et relances clients avant la fin du mois. Pouvez-vous nous faire une proposition rapide ?'
       },
       {
@@ -244,7 +237,7 @@
         icon: 'fa-file-invoice-dollar',
         trigger: 'Réception d\'une facture fournisseur ou d\'un devis.',
         action: 'Extraction structurée des montants HT/TVA/TTC, échéance, détection d\'anomalies et écriture comptable.',
-        systemPrompt: 'Tu es un contrôleur financier expert. Réponds en français. Extrais toutes les données clés du texte de facture/devis fourni (Fournisseur, Date, Montant HT, TVA, TTC, Échéance), vérifie la cohérence des calculs et propose l\'imputation comptable.',
+        systemPrompt: 'Tu es un contrôleur financier expert. Réponds en français clair avec des lignes simples (sans tableaux | ni **). Extrais toutes les données clés du texte de facture/devis fourni (Fournisseur, Date, Montant HT, TVA, TTC, Échéance), vérifie la cohérence des calculs et propose l\'imputation comptable.',
         sample: 'Facture N°2026-884 - Fournisseur : TechCloud Services - Date : 15/11/2026 - Prestation hébergement serveur : 450 000 FCFA HT - TVA 18% : 81 000 FCFA - Total TTC : 531 000 FCFA - Règlement sous 30 jours.'
       },
       {
@@ -256,7 +249,7 @@
         icon: 'fa-diagram-project',
         trigger: 'Notes brutes de réunion, rapport de terrain ou point d\'équipe.',
         action: 'Structuration en décisions actées, plan d\'action par responsable et alertes de blocage.',
-        systemPrompt: 'Tu es un directeur des opérations (COO). Réponds en français. Transforme les notes brutes en un compte-rendu exécutif clair avec : 1) Résumé exécutif, 2) Décisions validées, 3) Plan d\'action (Qui / Quoi / Échéance), 4) Points de vigilance.',
+        systemPrompt: 'Tu es un directeur des opérations (COO). Réponds en français structuré, sans tableaux Markdown | ni **. Transforme les notes brutes en un compte-rendu exécutif clair avec : 1) Résumé exécutif, 2) Décisions validées, 3) Plan d\'action (Qui / Quoi / Échéance), 4) Points de vigilance.',
         sample: 'Réunion lundi matin : retard livraison fournisseur sur le chantier Nord, Karim doit relancer avant mercredi. Validation du budget recrutement 2 agents. Prochain audit qualité fixé au 10 décembre.'
       },
       {
@@ -268,7 +261,7 @@
         icon: 'fa-user-check',
         trigger: 'Réception d\'un CV ou profil candidat pour un poste ouvert.',
         action: 'Évaluation de l\'adéquation au poste, points forts, zones d\'ombre et grille de questions d\'entretien.',
-        systemPrompt: 'Tu es un recruteur senior. Réponds en français. Évalue le profil candidat fourni : donne un score d\'adéquation sur 100, liste 3 points forts, 2 points à vérifier et 4 questions ciblées pour l\'entretien.',
+        systemPrompt: 'Tu es un recruteur senior. Réponds en français clair et structuré, sans ** ni tableaux |. Évalue le profil candidat fourni : donne un score d\'adéquation sur 100, liste 3 points forts, 2 points à vérifier et 4 questions ciblées pour l\'entretien.',
         sample: 'Profil : 4 ans d\'expérience en gestion administrative et juridique, maîtrise des contrats commerciaux et de la facturation, recherche un poste de responsable administratif.'
       },
       {
@@ -280,7 +273,7 @@
         icon: 'fa-paper-plane',
         trigger: 'Devis envoyé sans réponse depuis plus de 48 heures.',
         action: 'Génération d\'une séquence de 3 relances progressives (douce, valeur ajoutée, clôture).',
-        systemPrompt: 'Tu es un expert en négociation B2B. Réponds en français. Rédige une séquence de 3 messages de relance courts, percutants et non agressifs (J+2, J+5, J+10) adaptés au contexte fourni.',
+        systemPrompt: 'Tu es un expert en négociation B2B. Réponds en français simple et lisible, sans ** ni tableaux |. Rédige une séquence de 3 messages de relance courts, percutants et non agressifs (J+2, J+5, J+10) adaptés au contexte fourni.',
         sample: 'Devis envoyé il y a 4 jours à la société Ivoire Logistique pour un pack d\'automatisation du service client à 1 200 000 FCFA. Aucun retour pour l\'instant.'
       },
       {
@@ -292,8 +285,8 @@
         icon: 'fa-scale-balanced',
         trigger: 'Besoin d\'une trame structurée par articles ou d\'une revue de clauses.',
         action: 'Proposition d\'une trame structurée (Article 1, Article 2, Article 3...), identification des risques et points à faire valider.',
-        systemPrompt: 'Tu es un assistant juridique spécialisé dans la structuration documentaire. Réponds en français. Fournis toujours une trame de travail claire et structurée par articles (Article 1 : Objet, Article 2 : Obligations des parties, Article 3 : Durée, tarifs et résiliation, etc.) ainsi que les points clés à faire valider par un juriste.',
-        sample: 'Propose une trame structurée par Article 1, Article 2 et Article 3 pour une prestation de services de sécurité et gardiennage (périmètre, horaires, responsabilités et facturation).'
+        systemPrompt: 'Tu es un assistant juridique spécialisé dans la structuration documentaire. Réponds en français clair et aéré, sans symboles **, ##, <br> ou tableaux |. Présente l\'analyse ou la trame sous forme de titres et listes simples (Article 1, Article 2, Article 3, Risques et points à faire valider par un juriste).',
+        sample: 'Clause de résiliation : Le Prestataire peut résilier le présent contrat à tout moment sans préavis ni indemnité, tandis que le Client reste engagé pour une durée ferme de 24 mois.'
       }
     ];
 
@@ -301,6 +294,32 @@
     let currentFilter = 'all';
     let selectedFlowId = localStorage.getItem('autopilot_selected_flow') || flows[0].id;
     if (!flows.some(f => f.id === selectedFlowId)) selectedFlowId = flows[0].id;
+
+    function cleanReadableText(rawText) {
+      if (!rawText) return '';
+      return rawText
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/__(.*?)__/g, '$1')
+        .replace(/^#{1,6}\s*/gm, '')
+        .replace(/^\s*\|?[\s:-]+(?:\|[\s:-]+)+\|?\s*$/gm, '')
+        .split('\n')
+        .map(line => {
+          const trimmed = line.trim();
+          if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+            return trimmed
+              .slice(1, -1)
+              .split('|')
+              .map(cell => cell.trim())
+              .filter(Boolean)
+              .join(' — ');
+          }
+          return line.replace(/\*\*/g, '');
+        })
+        .join('\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+    }
 
     function renderCatalog() {
       const grid = document.getElementById('flows-grid');
@@ -394,10 +413,9 @@
       else localStorage.removeItem('gemini_fallback_key');
       alert('Clé Gemini enregistrée sur cet appareil.');
     }
-
     function buildSimulatedOutput(flow, input) {
       const excerpt = input.length > 180 ? input.slice(0, 180) + '...' : input;
-      return `[REPLI LOCAL — Connexion externe temporairement indisponible]\n\n` +
+      return `Repli local — Connexion externe temporairement indisponible\n\n` +
         `Flux : ${flow.title} (${flow.badge})\n` +
         `Entrée : "${excerpt}"\n\n` +
         `1. Synthèse : ${flow.action}\n` +
@@ -434,7 +452,7 @@
           );
           const geminiData = await geminiRes.json();
           if (geminiRes.ok && geminiData.candidates?.[0]?.content?.parts?.[0]?.text) {
-            outputText = geminiData.candidates[0].content.parts[0].text;
+            outputText = cleanReadableText(geminiData.candidates[0].content.parts[0].text);
             engineLabel = 'Gemini';
           }
         }
@@ -452,7 +470,7 @@
             })
           });
           if (!res.ok) throw new Error('Service IA indisponible');
-          outputText = (await res.text()).trim();
+          outputText = cleanReadableText(await res.text());
           if (!outputText) {
             outputText = buildSimulatedOutput(flow, input);
             engineLabel = 'Repli local';
@@ -483,6 +501,25 @@
       }
     }
 
+    async function shareOutput() {
+      const flowTitle = document.getElementById('studio-flow-select').selectedOptions[0]?.textContent || 'Autopilot-IA';
+      const text = document.getElementById('studio-output').textContent;
+      if (!text) return;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: `Autopilot-IA — ${flowTitle}`,
+            text
+          });
+          return;
+        } catch (e) {
+          if (e && e.name === 'AbortError') return;
+        }
+      }
+      copyOutput();
+    }
+
     function copyOutput() {
       const text = document.getElementById('studio-output').textContent;
       navigator.clipboard.writeText(text);
@@ -507,7 +544,7 @@
             <span class="text-slate-500">${item.date}</span>
           </div>
           <p class="text-xs text-slate-400 line-clamp-2">Entrée : ${item.input}</p>
-          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 whitespace-pre-wrap max-h-48 overflow-y-auto">${item.output}</div>
+          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 whitespace-pre-wrap max-h-48 overflow-y-auto">${cleanReadableText(item.output)}</div>
         </div>
       `).join('');
     }
