@@ -96,7 +96,7 @@
           </span>
           <h2 class="text-xl sm:text-2xl font-extrabold text-white">Qui suis-je et que puis-je faire pour vous ?</h2>
           <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
-            Je suis l'Assistant d'<strong>Autopilot-IA</strong>, une suite multi-agents conçue pour raisonner, structurer vos décisions et produire des livrables professionnels complets : grilles d'entretien RH, écritures et budgets comptables, contrats OHADA, stratégies business, campagnes marketing, architecture logicielle, plans projet, réponses clients et analyses comparatives.
+            Je suis l'Assistant d'<strong>Autopilot-IA</strong>, une suite multi-agents conçue pour raisonner, collaborer entre agents, détecter/traiter les e-mails en veille continue et produire des livrables professionnels complets.
           </p>
         </div>
 
@@ -114,7 +114,7 @@
               <i class="fa-solid fa-wand-magic-sparkles"></i> Ce que je sais faire
             </div>
             <p class="text-slate-300 leading-relaxed">
-              Raisonner étape par étape sur vos demandes, générer des livrables et tableaux précis dans le <strong>Studio</strong>, les retoucher via <strong>Modifier</strong>, les archiver dans le <strong>Classeur</strong>, suivre l'<strong>Historique</strong> et basculer les dates entre <strong>FR</strong> et <strong>EN</strong>.
+              Résoudre directement sans répétition inutile, croiser l'expertise de plusieurs agents, surveiller les e-mails entrants en veille continue, envoyer les réponses, retoucher via <strong>Modifier</strong> et archiver dans le <strong>Classeur</strong>.
             </p>
           </div>
         </div>
@@ -131,8 +131,8 @@
             <button type="button" onclick="sendDemoToStudio('06-juridique', 'Rédiger les clauses essentielles d\'un contrat de prestation de services commerciales dans l\'espace OHADA.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
               Contrat OHADA (Juridique)
             </button>
-            <button type="button" onclick="sendDemoToStudio('01-coordinateur', 'Je lance une offre d\'abonnement B2B à 45 000 FCFA/mois : structurer le modèle commercial, estimer la rentabilité et planifier le lancement sur 30 jours.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
-              Coordinateur (01)
+            <button type="button" onclick="sendDemoToStudio('09-service-client', 'Répondre à client.pro@entreprise.ci mécontent d\'un retard de livraison et proposer un plan de résolution et de fidélisation.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
+              Service client & Mail (09)
             </button>
           </div>
         </div>
@@ -211,7 +211,7 @@
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-microchip text-indigo-400"></i> Studio Multi-Agents
             </h2>
-            <p class="text-xs text-slate-400">Livrables structurés • Édition directe & boîte interne Classeur</p>
+            <p class="text-xs text-slate-400">Collaboration inter-agents • Envoi mail & veille continue • Classeur</p>
           </div>
           <button type="button" onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
             <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé Gemini
@@ -290,6 +290,43 @@
             <button type="button" onclick="applyEditedOutput(true)" class="text-xs px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold">Appliquer & Enregistrer</button>
           </div>
         </div>
+
+        <div id="email-dispatch-box" class="bg-slate-950/90 border border-indigo-500/30 rounded-xl p-4 space-y-3 mt-3">
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <span class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-paper-plane text-emerald-400"></i> Envoi d'e-mail & Collaboration inter-agents
+            </span>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="runInterAgentCollaboration()" class="text-[11px] px-2.5 py-1 rounded-lg bg-violet-600/25 hover:bg-violet-600 text-violet-200 hover:text-white border border-violet-500/30 transition">
+                <i class="fa-solid fa-people-arrows mr-1"></i> Faire collaborer les agents
+              </button>
+              <button type="button" onclick="toggleContinuousMailLoop()" id="mail-watch-btn" class="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-200 hover:text-white border border-emerald-500/30 transition">
+                <i class="fa-solid fa-radar mr-1"></i> Veille mail : OFF
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <input id="mail-to-input" type="email" placeholder="Destinataire (ex: client@exemple.com)" class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <input id="mail-subject-input" type="text" placeholder="Objet de l'e-mail" class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+          </div>
+
+          <input id="mail-webhook-input" type="url" placeholder="Endpoint d'envoi / boîte JSON optionnel (https://...)" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <span id="mail-status-text" class="text-[11px] text-slate-400">Prêt pour envoi direct ou veille continue.</span>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="simulateIncomingEmailTest()" class="text-[11px] px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200">
+                Simuler mail entrant
+              </button>
+              <button type="button" onclick="dispatchEmailNow()" class="text-xs px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold">
+                <i class="fa-solid fa-paper-plane mr-1"></i> Envoyer l'e-mail
+              </button>
+            </div>
+          </div>
+
+          <div id="collaboration-trace-box" class="hidden bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 space-y-1.5"></div>
+        </div>
       </div>
     </section>
 
@@ -344,7 +381,7 @@
         icon: 'fa-compass-drafting',
         role: 'Comprend les demandes et oriente vers le bon agent.',
         action: 'Analyse l\'intention, mobilise l\'agent spécialiste adapté et produit un plan structuré.',
-        systemPrompt: 'Tu es 01 AUTOPILOT, le Coordinateur intelligent d\'une équipe de 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique, Développement, Projets, Service client, Analyste). Réponds en français professionnel, précis et actionnable, sans ** ni ## ni <br>. Indique quel(s) agent(s) interviennent, puis fournis un livrable complet et concret (avec tableau Markdown clair si pertinent).',
+        systemPrompt: 'Tu es 01 AUTOPILOT, le Coordinateur intelligent d\'une équipe de 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique, Développement, Projets, Service client, Analyste). Réponds en français professionnel, précis et actionnable, sans ** ni ## ni <br>, sans répéter inutilement la consigne. Indique l\'agent mobilisé puis fournis un livrable complet avec tableau Markdown si pertinent.',
         sample: 'Je lance une offre d\'abonnement B2B à 45 000 FCFA/mois : structurer le modèle commercial, estimer la rentabilité et planifier le lancement sur 30 jours.'
       },
       {
@@ -355,7 +392,7 @@
         icon: 'fa-briefcase',
         role: 'Stratégie commerciale, création et développement d\'entreprises.',
         action: 'Structure l\'offre, les segments, le modèle économique et la feuille de route.',
-        systemPrompt: 'Tu es l\'Agent Business (02) spécialisé en stratégie commerciale, création et développement d\'entreprise. Réponds en français professionnel sans ** ni ## ni <br>. Livre une structure concrète : proposition de valeur, segments clients, modèle de revenus, risques et plan d\'exécution en tableau.',
+        systemPrompt: 'Tu es l\'Agent Business (02) spécialisé en stratégie commerciale, création et développement d\'entreprise. Réponds en français professionnel sans ** ni ## ni <br>, sans répétition inutile. Livre une structure concrète : proposition de valeur, segments clients, modèle de revenus, risques et plan d\'exécution en tableau.',
         sample: 'Structurer une offre de prestation de sécurité et de contrôle d\'accès pour des PME et résidences.'
       },
       {
@@ -366,7 +403,7 @@
         icon: 'fa-calculator',
         role: 'Budgets, trésorerie, plans/écritures comptables et analyse financière.',
         action: 'Établit des tableaux de comptes, écritures, budgets, prévisions et indicateurs.',
-        systemPrompt: 'Tu es l\'Agent Finance (03) expert en budgets, trésorerie, comptabilité et analyse financière. Réponds en français rigoureux sans ** ni ## ni <br>. Utilise un tableau Markdown clair pour les plans/écritures comptables, budgets ou prévisions et vérifie systématiquement les calculs.',
+        systemPrompt: 'Tu es l\'Agent Finance (03) expert en budgets, trésorerie, comptabilité et analyse financière. Réponds en français rigoureux sans ** ni ## ni <br>. Utilise un tableau Markdown clair pour les écritures, budgets ou prévisions et vérifie systématiquement les calculs.',
         sample: 'Établir un tableau d\'écriture comptable HT / TVA 18% / TTC pour une facture de 450 000 FCFA HT réglée par virement bancaire.'
       },
       {
@@ -377,7 +414,7 @@
         icon: 'fa-bullhorn',
         role: 'Publicité, communication, ventes et stratégie de marque.',
         action: 'Conçoit des messages ciblés, angles de campagne, offres commerciales et plans de diffusion.',
-        systemPrompt: 'Tu es l\'Agent Marketing (04) spécialisé en publicité, communication, ventes et stratégie de marque. Réponds en français clair et percutant sans ** ni ## ni <br>. Fournis un positionnement, des accroches commerciales et un tableau de campagne.',
+        systemPrompt: 'Tu es l\'Agent Marketing (04) spécialisé en publicité, communication, ventes et stratégie de marque. Réponds en français clair et percutant sans ** ni ## ni <br>, sans répétition. Fournis un positionnement, des accroches commerciales et un tableau de campagne.',
         sample: 'Campagne de lancement d\'une solution d\'automatisation pour PME : messages clés, canaux et plan d\'action.'
       },
       {
@@ -388,7 +425,7 @@
         icon: 'fa-users',
         role: 'Recrutement, gestion du personnel et organisation.',
         action: 'Rédige des cadres de recrutement, fiches de poste, critères et grilles d\'entretien.',
-        systemPrompt: 'Tu es l\'Agent RH (05) spécialisé en recrutement, gestion du personnel et organisation. Réponds en français structuré sans ** ni ## ni <br>. Fournis un cadre de poste précis et un tableau de grille d\'entretien.',
+        systemPrompt: 'Tu es l\'Agent RH (05) spécialisé en recrutement, gestion du personnel et organisation. Réponds en français structuré sans ** ni ## ni <br>, sans répétition. Fournis un cadre de poste précis et un tableau de grille d\'entretien.',
         sample: 'Rédiger le cadre de recrutement et la grille d\'entretien pour un responsable administratif et opérationnel polyvalent.'
       },
       {
@@ -399,7 +436,7 @@
         icon: 'fa-scale-balanced',
         role: 'Contrats, droit des affaires et réglementation OHADA.',
         action: 'Structure des trames contractuelles, clauses sensibles et points de vigilance OHADA.',
-        systemPrompt: 'Tu es l\'Agent Juridique (06) spécialisé en contrats, droit des affaires et réglementation OHADA. Réponds en français structuré sans ** ni ## ni <br>. Rédige des clauses opérationnelles complètes (Article 1, Article 2...), les points de vigilance OHADA et une mention rappelant la revue formelle avant signature.',
+        systemPrompt: 'Tu es l\'Agent Juridique (06) spécialisé en contrats, droit des affaires et réglementation OHADA. Réponds en français structuré sans ** ni ## ni <br>. Rédige des clauses opérationnelles complètes (Article 1, Article 2...), les points OHADA et une mention de revue formelle.',
         sample: 'Rédiger les clauses essentielles d\'un contrat de prestation de services commerciales dans l\'espace OHADA.'
       },
       {
@@ -410,7 +447,7 @@
         icon: 'fa-code',
         role: 'Programmation, applications et assistance technique.',
         action: 'Propose des architectures, extraits de code fiables, corrections et bonnes pratiques.',
-        systemPrompt: 'Tu es l\'Agent Développement (07) spécialisé en programmation, applications web et assistance technique. Réponds en français clair sans ** ni ## ni <br>. Donne une architecture structurée, les contrôles de sécurité/qualité et un exemple concret.',
+        systemPrompt: 'Tu es l\'Agent Développement (07) spécialisé en programmation, applications web et assistance technique. Réponds en français clair sans ** ni ## ni <br>. Donne une architecture structurée, les contrôles de fiabilité et un exemple concret.',
         sample: 'Structurer une persistance locale fiable en JavaScript avec gestion des erreurs et contrôle des données.'
       },
       {
@@ -421,7 +458,7 @@
         icon: 'fa-list-check',
         role: 'Planification, suivi des tâches et gestion des objectifs.',
         action: 'Découpe en lots, jalons, responsabilités, échéances et livrables vérifiables.',
-        systemPrompt: 'Tu es l\'Agent Projets (08) spécialisé en planification, suivi des tâches et gestion des objectifs. Réponds en français structuré sans ** ni ## ni <br>. Présente un tableau de pilotage avec phases, livrables, responsables, échéances et risques.',
+        systemPrompt: 'Tu es l\'Agent Projets (08) spécialisé en planification, suivi des tâches et gestion des objectifs. Réponds en français structuré sans ** ni ## ni <br>. Présente un tableau de pilotage avec phases, livrables, responsables, échéances et points de contrôle.',
         sample: 'Planifier le déploiement d\'un processus interne sur 3 semaines avec jalons et livrables.'
       },
       {
@@ -432,8 +469,8 @@
         icon: 'fa-headset',
         role: 'Réponses aux clients, réclamations et fidélisation.',
         action: 'Rédige des réponses professionnelles, traite les réclamations et structure la fidélisation.',
-        systemPrompt: 'Tu es l\'Agent Service client (09) spécialisé en réponses clients, réclamations et fidélisation. Réponds en français clair, courtois et orienté résolution sans ** ni ## ni <br>. Propose une réponse prête à envoyer, une mesure corrective et un suivi client.',
-        sample: 'Répondre à un client mécontent d\'un retard de livraison et proposer un plan de résolution et de fidélisation.'
+        systemPrompt: 'Tu es l\'Agent Service client (09) spécialisé en réponses clients, réclamations et fidélisation. Réponds en français clair, courtois et orienté résolution sans ** ni ## ni <br>. Propose un message prêt à envoyer, un geste/action corrective et un tableau de suivi.',
+        sample: 'Répondre à client.pro@entreprise.ci mécontent d\'un retard de livraison et proposer un plan de résolution et de fidélisation.'
       },
       {
         id: '10-analyste',
@@ -443,7 +480,7 @@
         icon: 'fa-chart-line',
         role: 'Analyse des données, rapports et aide à la décision.',
         action: 'Analyse des éléments fournis, compare les options et formule une recommandation argumentée.',
-        systemPrompt: 'Tu es l\'Agent Analyste (10) spécialisé en analyse de données, rapports et aide à la décision. Réponds en français structuré sans ** ni ## ni <br>. Fournis le diagnostic, un tableau comparatif pondéré et une recommandation argumentée.',
+        systemPrompt: 'Tu es l\'Agent Analyste (10) spécialisé en analyse de données, rapports et aide à la décision. Réponds en français structuré sans ** ni ## ni <br>. Fournis le diagnostic, un tableau comparatif et une recommandation argumentée.',
         sample: 'Comparer deux options d\'organisation (Option A : équipe centralisée ; Option B : pôles autonomes) selon coûts, réactivité et contrôle.'
       }
     ];
@@ -567,7 +604,7 @@
         { id: '06-juridique', keys: ['contrat', 'clause', 'ohada', 'juridique', 'droit', 'résiliation', 'litige', 'statut', 'bail', 'accord'] },
         { id: '05-rh', keys: ['recrut', 'candidat', 'cv', 'entretien', 'personnel', 'employé', 'salaire', 'rh', 'ressources humaines', 'poste', 'fiche de poste'] },
         { id: '04-marketing', keys: ['marketing', 'publicité', 'campagne', 'communication', 'marque', 'promo', 'affiche', 'réseaux sociaux', 'clientèle', 'lancement'] },
-        { id: '09-service-client', keys: ['réclamation', 'plainte', 'support client', 'service client', 'fidélis', 'relance client', 'sav', 'mécontent'] },
+        { id: '09-service-client', keys: ['réclamation', 'plainte', 'support client', 'service client', 'fidélis', 'relance client', 'sav', 'mécontent', 'livraison', 'retard'] },
         { id: '07-developpement', keys: ['code', 'javascript', 'html', 'css', 'python', 'api', 'bug', 'application', 'développ', 'script', 'sql', 'persistance'] },
         { id: '08-projets', keys: ['projet', 'planning', 'jalon', 'tâche', 'échéance', 'objectif', 'suivi', 'livrable', 'sprint', 'déploiement'] },
         { id: '10-analyste', keys: ['analyse', 'rapport', 'données', 'statistique', 'comparer', 'option', 'décision', 'indicateur', 'kpi'] },
@@ -607,9 +644,8 @@
           '2. Raisonnement : Je clarifie mon rôle d\'Assistant, mes capacités concrètes et comment exploiter les 10 agents spécialisés.',
           '3. Réponse structurée :',
           '• Qui je suis : L\'Assistant d\'Autopilot-IA (PRO), couplé à 01 AUTOPILOT — Coordinateur et 9 agents métiers (Business, Finance, Marketing, RH, Juridique/OHADA, Développement, Projets, Service client, Analyste).',
-          '• Ce que je sais faire : Analyser un problème, recommander la démarche adaptée et produire dans le Studio des écritures comptables exactes, contrats OHADA, grilles d\'entretien RH, plans d\'action, campagnes marketing et comparatifs décisionnels.',
-          '• Maîtrise complète : Chaque livrable peut être retouché via Modifier et archivé dans le Classeur.',
-          '4. Prochaine étape : Décrivez votre objectif précis (ex. un montant à comptabiliser, un contrat à cadrer, un poste à recruter ou un projet à planifier).'
+          '• Ce que je sais faire : Résoudre directement sans répétition inutile, croiser les agents, détecter/traiter les e-mails en veille continue, envoyer les réponses et archiver dans le Classeur.',
+          '4. Prochaine étape : Décrivez votre objectif précis ou cliquez sur l\'un des cas concrets ci-dessus.'
         ].join('\n');
       }
 
@@ -624,44 +660,24 @@
         lower.includes('aide')
       ) {
         return [
-          '1. Intention détectée : Demande de présentation et périmètre fonctionnel.',
-          '2. Raisonnement : Je distingue le rôle de l\'Assistant (cadrage et raisonnement), du Coordinateur 01 (routage) et des 9 agents spécialisés (production métier).',
+          '1. Intention détectée : Présentation et périmètre fonctionnel.',
+          '2. Raisonnement : Je détaille la complémentarité entre l\'Assistant, le Coordinateur 01 et les 9 agents spécialisés.',
           '3. Réponse structurée :',
           '• Identité : Suite multi-agents Autopilot-IA PRO avec 10 agents métiers spécialisés.',
-          '• Continuité : Fonctionne avec clé Gemini optionnelle, IA distante ou moteur autonome expert intégré.',
-          '• Outils intégrés : Tableaux structurés, édition directe (Modifier), boîte interne (Classeur), Historique et dates FR/EN.',
-          '4. Prochaine étape : Cliquez sur l\'un des cas concrets ci-dessus ou saisissez votre propre demande dans le Studio.'
-        ].join('\n');
-      }
-
-      if (
-        lower.includes('classeur') ||
-        lower.includes('enregistr') ||
-        lower.includes('modif') ||
-        lower.includes('historique') ||
-        lower.includes('date') ||
-        lower.includes('gemini')
-      ) {
-        return [
-          '1. Intention détectée : Assistance sur les fonctionnalités de gestion et d\'archivage.',
-          '2. Raisonnement : Je détaille la séquence exacte pour produire, corriger et conserver vos documents.',
-          '3. Réponse structurée :',
-          '• Modifier : Dans le Studio, cliquez sur Modifier sous le livrable généré, ajustez le texte puis validez.',
-          '• Classeur : Cliquez sur Enregistrer pour conserver le livrable validé dans l\'onglet Classeur.',
-          '• Dates FR / EN : Utilisez le bouton calendrier FR / EN en haut pour basculer le format des dates.',
-          '4. Prochaine étape : Exécutez un livrable dans le Studio puis enregistrez-le dans le Classeur.'
+          '• Collaboration & Mail : Les agents peuvent croiser leurs analyses et traiter/envoyer des e-mails en veille continue.',
+          '• Continuité : Fonctionne avec clé Gemini facultative, IA distante ou moteur autonome expert.',
+          '4. Prochaine étape : Lancez une demande dans le Studio puis testez « Faire collaborer les agents » ou « Envoyer l\'e-mail ».'
         ].join('\n');
       }
 
       const bestAgent = routeToBestAgent(q);
       return [
-        `1. Intention détectée : Besoin opérationnel relevant de « ${bestAgent.title} » (${bestAgent.badge}).`,
-        `2. Raisonnement : J'analyse les paramètres de votre demande (« ${q.slice(0, 140)}${q.length > 140 ? '...' : ''} ») afin de mobiliser l'expertise la plus pertinente.`,
+        `1. Intention détectée : Besoin relevant de « ${bestAgent.title} » (${bestAgent.badge}).`,
+        `2. Raisonnement : J'isole l'objectif (« ${q.slice(0, 140)}${q.length > 140 ? '...' : ''} ») et l'agent le plus apte à le traiter.`,
         '3. Structure recommandée :',
-        `• Spécialiste désigné : ${bestAgent.title} — ${bestAgent.role}`,
-        `• Livrable produit : ${bestAgent.action}`,
-        '• Contrôle qualité : Vérification de la cohérence des données et mise en forme claire.',
-        `4. Prochaine étape : Ouvrez le Studio avec « ${bestAgent.title} » ou « 01 AUTOPILOT — Coordinateur » pour générer le livrable complet.`
+        `• Agent principal : ${bestAgent.title} — ${bestAgent.role}`,
+        `• Livrable attendu : ${bestAgent.action}`,
+        '4. Prochaine étape : Ouvrez le Studio avec « ${bestAgent.title} » ou « 01 AUTOPILOT — Coordinateur » pour générer le livrable complet.'
       ].join('\n');
     }
 
@@ -683,15 +699,9 @@
         lower.includes('que sais-tu') ||
         lower.includes('capable') ||
         lower.includes('fonctionne') ||
-        lower.includes('aide') ||
-        lower.includes('classeur') ||
-        lower.includes('enregistr') ||
-        lower.includes('modif') ||
-        lower.includes('historique') ||
-        lower.includes('date') ||
-        lower.includes('gemini')
+        lower.includes('aide')
       ) {
-        renderFormattedOutput(structuredFallback, boxEl);
+        renderFormattedOutput(deduplicateLines(structuredFallback), boxEl);
         return;
       }
 
@@ -699,12 +709,8 @@
 
       const assistantSystemPrompt = [
         'Tu es l\'Assistant d\'Autopilot-IA PRO.',
-        'Réponds en français clair, structuré et rigoureux, sans ** ni ## ni <br>.',
-        'Organise systématiquement ta réponse en 4 parties numérotées :',
-        '1. Compréhension du besoin',
-        '2. Raisonnement et critères clés',
-        '3. Structure ou solution actionnable (avec tableau Markdown si utile)',
-        '4. Prochaine étape recommandée'
+        'Réponds en français clair, structuré et rigoureux, sans ** ni ## ni <br>, sans répéter la question.',
+        'Organise ta réponse en 4 points courts et précis : 1. Intention, 2. Raisonnement, 3. Solution/Structure, 4. Prochaine étape.'
       ].join(' ');
 
       try {
@@ -724,7 +730,7 @@
           const data = await res.json();
           const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
           if (res.ok && text) {
-            renderFormattedOutput(text, boxEl);
+            renderFormattedOutput(deduplicateLines(text), boxEl);
             return;
           }
         }
@@ -746,13 +752,502 @@
         clearTimeout(timeoutId);
         const remoteText = remoteRes.ok ? (await remoteRes.text()).trim() : '';
         if (remoteText && !remoteText.toLowerCase().includes('error') && remoteText.length > 40) {
-          renderFormattedOutput(remoteText, boxEl);
+          renderFormattedOutput(deduplicateLines(remoteText), boxEl);
           return;
         }
       } catch (_) {}
 
-      renderFormattedOutput(structuredFallback, boxEl);
+      renderFormattedOutput(deduplicateLines(structuredFallback), boxEl);
     }
+    function deduplicateLines(text) {
+      const seen = new Set();
+      return String(text || '')
+        .split('\n')
+        .filter(line => {
+          const norm = line.trim().toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, '');
+          if (!norm) return true;
+          if (norm.length < 18) return true;
+          if (seen.has(norm)) return false;
+          seen.add(norm);
+          return true;
+        })
+        .join('\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+    }
+
+    function extractAmounts(text) {
+      const cleanedText = String(text || '')
+        .replace(/\d+(?:[.,]\d+)?\s*%/g, ' ')
+        .replace(/\b[a-zA-Z]+\d+\w*|\b\d+[a-zA-Z]+\w*/g, ' ')
+        .replace(/\b\d+\s*(?:jours?|semaines?|mois|ans?)\b/gi, ' ');
+
+      const matches = [...cleanedText.matchAll(/(?<!\w)(\d{1,3}(?:[\s\u00A0]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)(?!\w)/g)];
+      return matches
+        .map(m => Number(m[1].replace(/[\s\u00A0]+/g, '').replace(',', '.')))
+        .filter(n => !Number.isNaN(n) && n > 0);
+    }
+
+    function extractVatRate(text) {
+      const match = String(text || '').match(/tva\s*(?:de\s*|à\s*)?(\d+(?:[.,]\d+)?)\s*%|(\d+(?:[.,]\d+)?)\s*%\s*(?:de\s*)?tva/i);
+      const raw = match ? (match[1] || match[2]) : null;
+      const rate = raw ? Number(raw.replace(',', '.')) : 18;
+      return (!Number.isNaN(rate) && rate >= 0 && rate <= 50) ? rate : 18;
+    }
+
+    function extractDurationDays(text) {
+      const match = String(text || '').match(/(\d+)\s*(jours?|semaines?|mois)/i);
+      if (!match) return 30;
+      const n = Number(match[1]) || 30;
+      const unit = match[2].toLowerCase();
+      if (unit.startsWith('semaine')) return n * 7;
+      if (unit.startsWith('mois')) return n * 30;
+      return n;
+    }
+
+    function extractRoleTitle(input) {
+      const match = String(input || '').match(/(?:pour un|pour une|poste de|recrutement d'un|recrutement d'une)\s+([^\n.:;]+)/i);
+      return match ? match[1].trim() : 'Responsable administratif et opérationnel polyvalent';
+    }
+
+    function buildAutonomousOutput(agent, input, wasCoordinated) {
+      const cleanInput = String(input || '').trim();
+      const lower = cleanInput.toLowerCase();
+      const headerNote = wasCoordinated ? `Routage 01 AUTOPILOT -> ${agent.title}\n\n` : '';
+
+      const extractedEmail = (cleanInput.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i) || [])[0] || '';
+      if (extractedEmail) {
+        const toEl = document.getElementById('mail-to-input');
+        if (toEl && !toEl.value) toEl.value = extractedEmail;
+      }
+
+      if (agent.id === '09-service-client') {
+        const isDeliveryDelay = /retard|livraison|expédition|colis|délai/i.test(lower);
+        const subjEl = document.getElementById('mail-subject-input');
+        if (subjEl) {
+          subjEl.value = isDeliveryDelay
+            ? 'Suivi prioritaire de votre livraison et résolution immédiate'
+            : 'Prise en charge prioritaire de votre demande';
+        }
+
+        return deduplicateLines(headerNote + [
+          isDeliveryDelay
+            ? 'Diagnostic : Retard de livraison impactant l\'activité client ; priorité absolue à la réassurance, à une échéance ferme et au suivi.'
+            : 'Diagnostic : Demande client nécessitant une réponse rapide, une action corrective mesurable et un suivi jusqu\'à résolution.',
+          '',
+          'Message prêt à envoyer :',
+          'Bonjour [Nom du client],',
+          '',
+          isDeliveryDelay
+            ? 'Nous vous prions d\'excuser le retard constaté sur votre livraison. Votre dossier est pris en charge en priorité afin de vous garantir une livraison ferme sous [date/heure exacte], avec suivi d\'acheminement dédié.'
+            : 'Nous avons bien pris en compte votre demande et mettons tout en œuvre pour apporter une solution complète sous [délai précis].',
+          '',
+          'Pour compenser ce contretemps, nous prévoyons [geste commercial / priorité de traitement / avoir] et restons directement mobilisés jusqu\'à confirmation de votre pleine satisfaction.',
+          '',
+          'Cordialement,',
+          'Service Client — Autopilot-IA',
+          '',
+          '| Phase | Action opérationnelle | Responsable | Délai cible | Livrable |',
+          '| --- | --- | --- | --- | --- |',
+          '| 1. Accusé & Cadrage | Confirmer la prise en charge et communiquer un créneau ferme | 09 Service client | Immédiat (< 2h) | Message client envoyé |',
+          '| 2. Traitement racine | Identifier la cause exacte et sécuriser la nouvelle exécution | 08 Projets / Logistique | Sous 24h | Nouvelle échéance validée |',
+          '| 3. Geste & Contrôle | Appliquer l\'ajustement commercial/financier si applicable | 03 Finance / 09 Client | Sous 48h | Dossier conformité |',
+          '| 4. Clôture | Vérifier la réception/satisfaction finale du client | 09 Service client | J+3 | Ticket clôturé |'
+        ].join('\n'));
+      }
+
+      if (agent.id === '03-finance') {
+        const amounts = extractAmounts(cleanInput);
+        const vatRate = extractVatRate(cleanInput);
+        const isTtcOnly = /\bttc\b/i.test(cleanInput) && !/\bht\b/i.test(cleanInput);
+        const isSale = /vente|client|facture client|prestation vendue|encaissement/i.test(lower);
+
+        let htAmount = amounts[0] || 450000;
+        let tvaAmount = Math.round((htAmount * vatRate) / 100);
+        let ttcAmount = htAmount + tvaAmount;
+
+        if (isTtcOnly) {
+          ttcAmount = amounts[0] || 531000;
+          htAmount = Math.round(ttcAmount / (1 + vatRate / 100));
+          tvaAmount = ttcAmount - htAmount;
+        }
+
+        const isBank = /virement|banque|chèque|521/i.test(lower);
+        const isCash = /caisse|espèces|571/i.test(lower);
+        const treasuryCode = isCash ? '571' : '521';
+        const treasuryName = isCash ? 'Caisse' : 'Banques';
+        const paymentMode = isCash ? 'en espèces' : (isBank ? 'par virement bancaire' : 'à terme');
+
+        if (isSale) {
+          return deduplicateLines(headerNote + [
+            `Comptabilisation de vente / prestation (TVA ${vatRate}% — règlement ${paymentMode}) :`,
+            `Base HT : ${htAmount.toLocaleString('fr-FR')} FCFA | TVA collectée (${vatRate}%) : ${tvaAmount.toLocaleString('fr-FR')} FCFA | Total TTC : ${ttcAmount.toLocaleString('fr-FR')} FCFA.`,
+            '',
+            '| Compte | Intitulé du compte | Débit (FCFA) | Crédit (FCFA) | Justification |',
+            '| --- | --- | --- | --- | --- |',
+            `| 411 | Clients | ${ttcAmount.toLocaleString('fr-FR')} | 0 | Créance client TTC |`,
+            `| 706 | Services vendus / Produits | 0 | ${htAmount.toLocaleString('fr-FR')} | Chiffre d'affaires HT |`,
+            `| 4432 | État, TVA facturée sur prestations | 0 | ${tvaAmount.toLocaleString('fr-FR')} | TVA ${vatRate}% collectée |`,
+            ...(isBank || isCash ? [
+              `| ${treasuryCode} | ${treasuryName} | ${ttcAmount.toLocaleString('fr-FR')} | 0 | Encaissement TTC (${paymentMode}) |`,
+              `| 411 | Clients | 0 | ${ttcAmount.toLocaleString('fr-FR')} | Solde de la créance client |`
+            ] : []),
+            '',
+            `Contrôle d'équilibre : Total Débit = Total Crédit (${(isBank || isCash ? ttcAmount * 2 : ttcAmount).toLocaleString('fr-FR')} FCFA).`
+          ].join('\n'));
+        }
+
+        return deduplicateLines(headerNote + [
+          `Comptabilisation de charge / prestation reçue (TVA ${vatRate}% — règlement ${paymentMode}) :`,
+          `Base HT : ${htAmount.toLocaleString('fr-FR')} FCFA | TVA récupérable (${vatRate}%) : ${tvaAmount.toLocaleString('fr-FR')} FCFA | Total TTC : ${ttcAmount.toLocaleString('fr-FR')} FCFA.`,
+          '',
+          '| Compte | Intitulé du compte | Débit (FCFA) | Crédit (FCFA) | Justification |',
+          '| --- | --- | --- | --- | --- |',
+          `| 6265 / 613 | Services extérieurs / Charges d'exploitation | ${htAmount.toLocaleString('fr-FR')} | 0 | Montant HT de la facture |`,
+          `| 4452 | État, TVA récupérable sur charges | ${tvaAmount.toLocaleString('fr-FR')} | 0 | TVA ${vatRate}% déductible |`,
+          `| 401 | Fournisseurs — Factures à payer | 0 | ${ttcAmount.toLocaleString('fr-FR')} | Dette fournisseur TTC |`,
+          ...(isBank || isCash ? [
+            `| 401 | Fournisseurs — Règlement facture | ${ttcAmount.toLocaleString('fr-FR')} | 0 | Apurement dette fournisseur |`,
+            `| ${treasuryCode} | ${treasuryName} | 0 | ${ttcAmount.toLocaleString('fr-FR')} | Décaissement TTC (${paymentMode}) |`
+          ] : []),
+          '',
+          `Contrôle d'équilibre : Total Débit = Total Crédit (${(isBank || isCash ? ttcAmount * 2 : ttcAmount).toLocaleString('fr-FR')} FCFA).`
+        ].join('\n'));
+      }
+
+      if (agent.id === '06-juridique') {
+        const hasOhada = /ohada/i.test(lower);
+        const isService = /prestation|service|commercial|mission|conseil|maintenance/i.test(lower);
+        const title = isService
+          ? 'CONTRAT DE PRESTATION DE SERVICES COMMERCIALES'
+          : `TRAME CONTRACTUELLE : ${cleanInput.slice(0, 95).toUpperCase()}`;
+
+        return deduplicateLines(headerNote + [
+          `${title}${hasOhada ? ' (CADRE JURIDIQUE OHADA)' : ''}`,
+          '',
+          'Entre les soussignés :',
+          '• Le Client : [Dénomination sociale, forme juridique, siège social, RCCM, représenté par ...]',
+          '• Le Prestataire : [Dénomination sociale / Nom, RCCM / immatriculation, siège social, représenté par ...]',
+          '',
+          'Article 1 — Objet du contrat',
+          'Le Prestataire s\'engage à exécuter au profit du Client les prestations commerciales définies dans le cahier des charges annexé (prospection, développement commercial, représentation ou suivi clientèle), en toute indépendance et sans lien de subordination.',
+          '',
+          'Article 2 — Obligations et moyens des parties',
+          '2.1 Le Prestataire exécute sa mission avec diligence, loyauté et conformité aux usages professionnels, et remet un compte rendu périodique d\'activité.',
+          '2.2 Le Client communique en temps utile les tarifs, conditions générales de vente, supports commerciaux et validations nécessaires.',
+          '',
+          'Article 3 — Conditions financières et facturation',
+          'En contrepartie des prestations, le Client verse une rémunération [forfaitaire mensuelle / à la commission selon barème annexé], payable à réception de facture sous [15 / 30] jours par virement bancaire. Tout retard de paiement ouvre droit, après mise en demeure restée sans effet, aux pénalités légales applicables.',
+          '',
+          'Article 4 — Durée, renouvellement et résiliation',
+          'Le présent contrat prend effet à compter de sa signature pour une durée de [12 mois], renouvelable par accord écrit ou tacite reconduction. Chaque partie peut le résilier moyennant un préavis écrit de [30 jours], ou de plein droit en cas de manquement grave non réparé dans un délai de [15 jours] après mise en demeure.',
+          '',
+          'Article 5 — Confidentialité et non-détournement',
+          'Les parties s\'engagent à conserver strictement confidentiels les fichiers clients, grilles tarifaires, données financières et savoir-faire échangés pendant toute la durée du contrat et pendant [2 ans] après son expiration.',
+          '',
+          'Article 6 — Droit applicable et règlement des différends',
+          hasOhada
+            ? 'Le présent contrat est régi par les Actes uniformes de l\'OHADA (notamment l\'Acte uniforme portant sur le droit commercial général) et le droit national du siège du Client. Tout différend fera l\'objet d\'une tentative de règlement amiable sous [15 jours] ; à défaut d\'accord, il sera soumis à la juridiction compétente du ressort convenu.'
+            : 'Le présent contrat est soumis au droit national applicable. À défaut de règlement amiable préalable sous [15 jours], tout litige relèvera de la juridiction compétente.',
+          '',
+          'Vigilance professionnelle : Compléter les mentions entre crochets et faire valider les annexes tarifaires avant signature.'
+        ].join('\n'));
+      }
+
+      if (agent.id === '05-rh') {
+        const poste = extractRoleTitle(cleanInput);
+        return deduplicateLines(headerNote + [
+          `Dossier de recrutement structuré — ${poste}`,
+          '',
+          '1. Positionnement et missions principales :',
+          '• Gestion administrative et conformité : tenue des dossiers du personnel, contrats, courriers, archivage et suivi réglementaire.',
+          '• Coordination opérationnelle : planification des activités, suivi des équipes et résolution des aléas quotidiens.',
+          '• Pilotage et reporting : consolidation des indicateurs d\'activité, suivi des coûts et préparation des comptes rendus de direction.',
+          '',
+          '2. Prérequis et compétences clés :',
+          '• Expérience confirmée sur un poste administratif ou opérationnel polyvalent.',
+          '• Maîtrise des outils bureautiques (tableurs, traitement de texte, suivi documentaire) et rigueur dans le contrôle des chiffres.',
+          '• Sens de l\'organisation, discrétion professionnelle et capacité à prioriser sous contrainte de délai.',
+          '',
+          '3. Grille d\'évaluation en entretien :',
+          '',
+          '| Compétence évaluée | Question structurée | Indicateurs de réussite | Pondération |',
+          '| --- | --- | --- | --- |',
+          '| Organisation & Priorités | Comment gérez-vous simultanément une urgence opérationnelle et une échéance administrative ? | Méthode claire de tri, traçabilité et respect des délais | 25% |',
+          '| Coordination terrain | Racontez une situation où vous avez dû aligner plusieurs interlocuteurs pour débloquer un dossier. | Leadership calme, faits précis et résultat mesurable | 30% |',
+          '| Rigueur & Contrôle | Quelles vérifications effectuez-vous avant de transmettre un tableau chiffré ou un contrat ? | Double contrôle, attention aux détails et confidentialité | 25% |',
+          '| Posture & Fiabilité | Comment réagissez-vous face à une erreur détectée ou une consigne incomplète ? | Responsabilité, transparence et proposition de correctif | 20% |'
+        ].join('\n'));
+      }
+
+      if (agent.id === '02-business' || agent.id === '01-coordinateur') {
+        const amounts = extractAmounts(cleanInput);
+        const days = extractDurationDays(cleanInput);
+        const unitPrice = amounts[0] || 45000;
+        const mrr10 = unitPrice * 10;
+        const mrr25 = unitPrice * 25;
+        const mrr50 = unitPrice * 50;
+
+        return deduplicateLines(headerNote + [
+          `Architecture commerciale & projection financière (Horizon : ${days} jours)`,
+          '',
+          `1. Proposition de valeur & tarification : Offre structurée autour d'un tarif de référence de ${unitPrice.toLocaleString('fr-FR')} FCFA / mois, centrée sur le gain de temps et la fiabilité opérationnelle.`,
+          `2. Simulation de revenus mensuels récurrents (MRR) :`,
+          `• Palier démarrage (10 clients actifs) : ${mrr10.toLocaleString('fr-FR')} FCFA / mois`,
+          `• Palier croissance (25 clients actifs) : ${mrr25.toLocaleString('fr-FR')} FCFA / mois`,
+          `• Palier consolidation (50 clients actifs) : ${mrr50.toLocaleString('fr-FR')} FCFA / mois`,
+          '',
+          `3. Plan d'exécution opérationnel sur ${days} jours :`,
+          '',
+          '| Période | Objectif stratégique | Actions concrètes | Livrable / KPI |',
+          '| --- | --- | --- | --- |',
+          `| J1 à J${Math.max(5, Math.round(days * 0.25))} | Cadrage de l'offre | Définir le périmètre inclus, les conditions d'engagement et le parcours client | Plaquette offre & contrat type |`,
+          `| J${Math.max(6, Math.round(days * 0.25) + 1)} à J${Math.max(15, Math.round(days * 0.6))} | Prospection ciblée | Qualifier 40 décideurs B2B, mener les démonstrations et traiter les objections | 10 premiers entretiens qualifiés |`,
+          `| J${Math.max(16, Math.round(days * 0.6) + 1)} à J${days} | Conversion & Onboarding | Signer les premiers contrats, déployer le service et mesurer la satisfaction | Premiers encaissements récurrents |`
+        ].join('\n'));
+      }
+
+      if (agent.id === '04-marketing') {
+        return deduplicateLines(headerNote + [
+          '1. Angle de positionnement : Mettre en avant le bénéfice mesurable (gain de temps, réduction des erreurs, maîtrise opérationnelle) plutôt que la seule technique.',
+          '2. Accroches commerciales prêtes à l\'emploi :',
+          '• Accroche B2B directe : « Structurez vos opérations et gagnez plusieurs heures par semaine sans alourdir votre équipe. »',
+          '• Accroche preuve & résultat : « Passez d\'une gestion manuelle dispersée à un pilotage clair et immédiatement exploitable. »',
+          '',
+          '| Canal de diffusion | Audience cible | Format & Message clé | Indicateur suivi |',
+          '| --- | --- | --- | --- |',
+          '| Prospection directe (WhatsApp / Email) | Dirigeants & responsables PME | Message court centré sur un problème concret + démonstration | Taux de réponse & RDV |',
+          '| Réseaux professionnels (LinkedIn / Facebook) | Décideurs & entrepreneurs | Étude de cas chiffrée avant / après | Demandes entrantes |',
+          '| Réseau & Recommandation | Clients actuels & partenaires | Offre de parrainage ou audit initial offert | Nombre de recommandations |'
+        ].join('\n'));
+      }
+
+      if (agent.id === '07-developpement') {
+        return deduplicateLines(headerNote + [
+          '1. Principes de conception : Séparer la validation des données, le stockage persistant et l\'affichage afin d\'éviter toute corruption d\'état.',
+          '2. Contrôles indispensables :',
+          '• Validation stricte des entrées et types avant sauvegarde.',
+          '• Gestion explicite des erreurs (try/catch, quota de stockage, repli propre).',
+          '• Versionnement des clés de stockage pour éviter les conflits lors des mises à jour.',
+          '',
+          '| Composant | Responsabilité technique | Sécurité / Fiabilité |',
+          '| --- | --- | --- |',
+          '| Couche Validation | Nettoyer et contrôler les champs avant traitement | Prévention des injections et valeurs nulles |',
+          '| Couche Persistance | Lire/écrire en JSON versionné avec gestion d\'exception | Continuité même en cas de stockage plein |',
+          '| Couche Interface | Rendre les données échappées et offrir un retour visuel clair | Lisibilité mobile et zéro blocage UI |'
+        ].join('\n'));
+      }
+
+      if (agent.id === '08-projets') {
+        const days = extractDurationDays(cleanInput);
+        return deduplicateLines(headerNote + [
+          `Plan de pilotage projet (${days} jours) :`,
+          '',
+          '| Lot / Phase | Livrable attendu | Responsable | Échéance | Point de contrôle |',
+          '| --- | --- | --- | --- | --- |',
+          `| Phase 1 — Cadrage | Périmètre validé, ressources et règles de fonctionnement | Chef de projet | J+${Math.max(3, Math.round(days * 0.2))} | Validation de lancement |`,
+          `| Phase 2 — Déploiement | Mise en place opérationnelle et tests terrain | Équipe projet | J+${Math.max(10, Math.round(days * 0.7))} | Revue d'avancement |`,
+          `| Phase 3 — Clôture | Bilan des résultats, documentation et transfert | Direction / Pilotage | J+${days} | Recette finale |`
+        ].join('\n'));
+      }
+
+      return deduplicateLines(headerNote + [
+        'Analyse décisionnelle structurée :',
+        '',
+        '| Critère d\'évaluation | Option A (Centralisée / Standard) | Option B (Autonome / Déployée) | Observation |',
+        '| --- | --- | --- | --- |',
+        '| Coût initial | Modéré et prévisible | Plus élevé au démarrage | Avantage Option A à court terme |',
+        '| Réactivité terrain | Dépendante de la validation centrale | Forte autonomie d\'exécution | Avantage Option B sur le terrain |',
+        '| Contrôle & Qualité | Homogène et facile à auditer | Nécessite des indicateurs précis | Équilibre selon maturité |',
+        '',
+        'Recommandation : Démarrer avec un cadre centralisé clair sur les règles critiques tout en accordant une autonomie encadrée sur l\'exécution quotidienne.'
+      ].join('\n'));
+    }
+    let mailWatcherTimer = null;
+    let mailWatcherActive = false;
+    const processedMailIds = new Set(JSON.parse(localStorage.getItem('autopilot_seen_mails') || '[]'));
+
+    function getCompanionAgents(primaryAgentId) {
+      const map = {
+        '09-service-client': ['08-projets', '03-finance'],
+        '02-business': ['03-finance', '04-marketing'],
+        '03-finance': ['06-juridique', '10-analyste'],
+        '06-juridique': ['03-finance', '02-business'],
+        '05-rh': ['08-projets', '06-juridique'],
+        '04-marketing': ['02-business', '09-service-client'],
+        '07-developpement': ['08-projets', '10-analyste'],
+        '08-projets': ['10-analyste', '03-finance'],
+        '10-analyste': ['02-business', '08-projets'],
+        '01-coordinateur': ['02-business', '08-projets']
+      };
+      const ids = map[primaryAgentId] || ['08-projets', '10-analyste'];
+      return ids.map(id => flows.find(f => f.id === id)).filter(Boolean);
+    }
+
+    async function runInterAgentCollaboration() {
+      const input = document.getElementById('studio-input').value.trim();
+      const baseText = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
+      if (!input && !baseText) return alert('Exécutez d\'abord un livrable ou saisissez une demande.');
+
+      const selectedId = document.getElementById('studio-flow-select').value;
+      const primaryAgent = flows.find(f => f.id === selectedId) || flows[0];
+      const peers = getCompanionAgents(primaryAgent.id);
+      const traceBox = document.getElementById('collaboration-trace-box');
+      traceBox.classList.remove('hidden');
+      traceBox.innerHTML = '<div class="text-indigo-300"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Coordination entre agents en cours...</div>';
+
+      const peerContributions = peers.map(peer => {
+        const sub = buildAutonomousOutput(peer, `${input || baseText}`, false);
+        const firstLines = sub.split('\n').filter(l => l.trim() && !l.startsWith('|')).slice(0, 2).join(' / ');
+        return `• <strong>${escapeHtml(peer.title)}</strong> : ${escapeHtml(firstLines)}`;
+      });
+
+      const synthesis = [
+        baseText,
+        '',
+        'Synthèse collaborative inter-agents :',
+        ...peers.map(p => `- ${p.title} : contribution intégrée sur le volet « ${p.badge} ».`)
+      ].join('\n');
+
+      rawLastOutputText = deduplicateLines(synthesis);
+      renderFormattedOutput(rawLastOutputText, document.getElementById('studio-output'));
+      traceBox.innerHTML = [
+        `<div class="font-bold text-emerald-400">Collaboration active : ${escapeHtml(primaryAgent.title)} + ${peers.map(p => escapeHtml(p.title)).join(' + ')}</div>`,
+        ...peerContributions
+      ].join('<br>');
+    }
+
+    async function dispatchEmailNow(overridePayload = null) {
+      const to = (overridePayload?.to ?? document.getElementById('mail-to-input')?.value ?? '').trim();
+      const subject = (overridePayload?.subject ?? document.getElementById('mail-subject-input')?.value ?? 'Réponse Autopilot-IA').trim();
+      const body = (overridePayload?.body ?? rawLastOutputText ?? document.getElementById('studio-output')?.innerText ?? '').trim();
+      const webhookUrl = (overridePayload?.webhook ?? document.getElementById('mail-webhook-input')?.value ?? localStorage.getItem('autopilot_mail_webhook') ?? '').trim();
+      const statusEl = document.getElementById('mail-status-text');
+
+      if (!body) return alert('Aucun contenu à envoyer par e-mail.');
+      if (webhookUrl) localStorage.setItem('autopilot_mail_webhook', webhookUrl);
+
+      if (webhookUrl) {
+        try {
+          if (statusEl) statusEl.textContent = 'Envoi de l\'e-mail via passerelle configurée...';
+          const res = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ to, subject, body, sentAt: new Date().toISOString() })
+          });
+          if (res.ok) {
+            if (statusEl) statusEl.innerHTML = `<span class="text-emerald-400">E-mail envoyé à ${escapeHtml(to || 'destinataire')} (${escapeHtml(formatDisplayDate(new Date()))}).</span>`;
+            return;
+          }
+        } catch (_) {}
+      }
+
+      const nowIso = new Date().toISOString();
+      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
+      vault.unshift({
+        id: 'mail-' + Date.now(),
+        isoDate: nowIso,
+        date: formatDisplayDate(nowIso),
+        title: `E-mail préparé (${to || 'brouillon'}) — ${subject}`,
+        content: `À : ${to || '[à compléter]'}\nObjet : ${subject}\n\n${body}`
+      });
+      localStorage.setItem('autopilot_vault', JSON.stringify(vault.slice(0, 50)));
+
+      if (to) {
+        const mailto = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body.slice(0, 1800))}`;
+        window.location.href = mailto;
+        if (statusEl) statusEl.innerHTML = `<span class="text-emerald-400">Client mail ouvert pour ${escapeHtml(to)} et copie archivée dans le Classeur.</span>`;
+      } else {
+        if (statusEl) statusEl.innerHTML = `<span class="text-amber-300">Saisissez une adresse e-mail ou un endpoint d'envoi ; brouillon archivé dans le Classeur.</span>`;
+      }
+    }
+
+    async function processIncomingEmailItem(mail) {
+      if (!mail || !mail.id || processedMailIds.has(mail.id)) return;
+      processedMailIds.add(mail.id);
+      localStorage.setItem('autopilot_seen_mails', JSON.stringify([...processedMailIds].slice(-100)));
+
+      const content = `${mail.subject || ''} ${mail.body || ''}`.trim();
+      const bestAgent = routeToBestAgent(content);
+      const replyText = buildAutonomousOutput(bestAgent, `${mail.from ? `De ${mail.from} : ` : ''}${content}`, true);
+
+      rawLastOutputText = replyText;
+      document.getElementById('routed-agent-badge').textContent = bestAgent.title;
+      document.getElementById('engine-badge').textContent = 'Veille e-mail auto';
+      renderFormattedOutput(replyText, document.getElementById('studio-output'));
+      document.getElementById('result-card').classList.remove('hidden');
+
+      const toInput = document.getElementById('mail-to-input');
+      const subjInput = document.getElementById('mail-subject-input');
+      if (toInput && mail.from) toInput.value = mail.from;
+      if (subjInput) subjInput.value = `Re: ${mail.subject || 'Votre message'}`;
+
+      const statusEl = document.getElementById('mail-status-text');
+      if (statusEl) {
+        statusEl.innerHTML = `<span class="text-emerald-400">Nouveau mail détecté (${escapeHtml(mail.from || 'expéditeur')}) -> traité par ${escapeHtml(bestAgent.title)}.</span>`;
+      }
+    }
+
+    async function pollEmailInboxOnce() {
+      const endpoint = (document.getElementById('mail-webhook-input')?.value || localStorage.getItem('autopilot_mail_webhook') || '').trim();
+      if (!endpoint) return;
+      try {
+        const res = await fetch(endpoint, { method: 'GET' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const messages = Array.isArray(data) ? data : (Array.isArray(data?.messages) ? data.messages : []);
+        for (const msg of messages) {
+          await processIncomingEmailItem(msg);
+        }
+      } catch (_) {}
+    }
+
+    function simulateIncomingEmailTest() {
+      processIncomingEmailItem({
+        id: 'sim-' + Date.now(),
+        from: 'client.pro@entreprise.ci',
+        subject: 'Retard de livraison sur commande prioritaire',
+        body: 'Bonjour, notre commande n\'est toujours pas livrée et nos équipes sont bloquées. Merci de nous donner une solution rapide.'
+      });
+      switchTab('studio');
+    }
+
+    function toggleContinuousMailLoop() {
+      const btn = document.getElementById('mail-watch-btn');
+      const statusEl = document.getElementById('mail-status-text');
+      mailWatcherActive = !mailWatcherActive;
+
+      if (mailWatcherActive) {
+        if (btn) {
+          btn.innerHTML = '<i class="fa-solid fa-radar mr-1"></i> Veille mail : ON';
+          btn.className = 'text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600 text-white border border-emerald-400 transition';
+        }
+        if (statusEl) {
+          statusEl.innerHTML = '<span class="text-emerald-400">Veille continue active (vérification toutes les 20s quand l\'onglet est actif).</span>';
+        }
+        pollEmailInboxOnce();
+        mailWatcherTimer = setInterval(() => {
+          if (!document.hidden) pollEmailInboxOnce();
+        }, 20000);
+      } else {
+        clearInterval(mailWatcherTimer);
+        mailWatcherTimer = null;
+        if (btn) {
+          btn.innerHTML = '<i class="fa-solid fa-radar mr-1"></i> Veille mail : OFF';
+          btn.className = 'text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-200 hover:text-white border border-emerald-500/30 transition';
+        }
+        if (statusEl) {
+          statusEl.textContent = 'Veille continue mise en pause.';
+        }
+      }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && mailWatcherActive) {
+        pollEmailInboxOnce();
+      }
+    });
+
     function renderCatalog() {
       const grid = document.getElementById('flows-grid');
       const filtered = currentFilter === 'all' ? flows : flows.filter(f => f.category === currentFilter);
@@ -901,273 +1396,6 @@
       alert('Clé Gemini enregistrée sur cet appareil.');
     }
 
-    function extractAmounts(text) {
-      const cleanedText = String(text || '')
-        .replace(/\d+(?:[.,]\d+)?\s*%/g, ' ')
-        .replace(/\b[a-zA-Z]+\d+\w*|\b\d+[a-zA-Z]+\w*/g, ' ')
-        .replace(/\b\d+\s*(?:jours?|semaines?|mois|ans?)\b/gi, ' ');
-
-      const matches = [...cleanedText.matchAll(/(?<!\w)(\d{1,3}(?:[\s\u00A0]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)(?!\w)/g)];
-      return matches
-        .map(m => Number(m[1].replace(/[\s\u00A0]+/g, '').replace(',', '.')))
-        .filter(n => !Number.isNaN(n) && n > 0);
-    }
-
-    function extractVatRate(text) {
-      const match = String(text || '').match(/tva\s*(?:de\s*|à\s*)?(\d+(?:[.,]\d+)?)\s*%|(\d+(?:[.,]\d+)?)\s*%\s*(?:de\s*)?tva/i);
-      const raw = match ? (match[1] || match[2]) : null;
-      const rate = raw ? Number(raw.replace(',', '.')) : 18;
-      return (!Number.isNaN(rate) && rate >= 0 && rate <= 50) ? rate : 18;
-    }
-
-    function extractDurationDays(text) {
-      const match = String(text || '').match(/(\d+)\s*(jours?|semaines?|mois)/i);
-      if (!match) return 30;
-      const n = Number(match[1]) || 30;
-      const unit = match[2].toLowerCase();
-      if (unit.startsWith('semaine')) return n * 7;
-      if (unit.startsWith('mois')) return n * 30;
-      return n;
-    }
-
-    function extractRoleTitle(input) {
-      const match = String(input || '').match(/(?:pour un|pour une|poste de|recrutement d'un|recrutement d'une)\s+([^\n.:;]+)/i);
-      return match ? match[1].trim() : 'Responsable administratif et opérationnel polyvalent';
-    }
-
-    function buildAutonomousOutput(agent, input, wasCoordinated) {
-      const cleanInput = String(input || '').trim();
-      const lower = cleanInput.toLowerCase();
-      const headerNote = wasCoordinated
-        ? `01 AUTOPILOT — Coordinateur -> ${agent.title}\n\n`
-        : `${agent.title} — Analyse & Livrable\n\n`;
-
-      if (agent.id === '03-finance') {
-        const amounts = extractAmounts(cleanInput);
-        const vatRate = extractVatRate(cleanInput);
-        const isTtcOnly = /\bttc\b/i.test(cleanInput) && !/\bht\b/i.test(cleanInput);
-        const isSale = /vente|client|facture client|prestation vendue|encaissement/i.test(lower);
-
-        let htAmount = amounts[0] || 450000;
-        let tvaAmount = Math.round((htAmount * vatRate) / 100);
-        let ttcAmount = htAmount + tvaAmount;
-
-        if (isTtcOnly) {
-          ttcAmount = amounts[0] || 531000;
-          htAmount = Math.round(ttcAmount / (1 + vatRate / 100));
-          tvaAmount = ttcAmount - htAmount;
-        }
-
-        const isBank = /virement|banque|chèque|521/i.test(lower);
-        const isCash = /caisse|espèces|571/i.test(lower);
-        const treasuryCode = isCash ? '571' : '521';
-        const treasuryName = isCash ? 'Caisse' : 'Banques';
-        const paymentMode = isCash ? 'en espèces' : (isBank ? 'par virement bancaire' : 'à terme');
-
-        if (isSale) {
-          return headerNote + [
-            `Comptabilisation de vente / prestation (TVA ${vatRate}% — règlement ${paymentMode}) :`,
-            `Base HT : ${htAmount.toLocaleString('fr-FR')} FCFA | TVA collectée (${vatRate}%) : ${tvaAmount.toLocaleString('fr-FR')} FCFA | Total TTC : ${ttcAmount.toLocaleString('fr-FR')} FCFA.`,
-            '',
-            '| Compte | Intitulé du compte | Débit (FCFA) | Crédit (FCFA) | Justification |',
-            '| --- | --- | --- | --- | --- |',
-            `| 411 | Clients | ${ttcAmount.toLocaleString('fr-FR')} | 0 | Créance client TTC |`,
-            `| 706 | Services vendus / Produits | 0 | ${htAmount.toLocaleString('fr-FR')} | Chiffre d'affaires HT |`,
-            `| 4432 | État, TVA facturée sur prestations | 0 | ${tvaAmount.toLocaleString('fr-FR')} | TVA ${vatRate}% collectée |`,
-            ...(isBank || isCash ? [
-              `| ${treasuryCode} | ${treasuryName} | ${ttcAmount.toLocaleString('fr-FR')} | 0 | Encaissement TTC (${paymentMode}) |`,
-              `| 411 | Clients | 0 | ${ttcAmount.toLocaleString('fr-FR')} | Solde de la créance client |`
-            ] : []),
-            '',
-            `Contrôle d'équilibre : Total Débit = Total Crédit (${(isBank || isCash ? ttcAmount * 2 : ttcAmount).toLocaleString('fr-FR')} FCFA).`
-          ].join('\n');
-        }
-
-        return headerNote + [
-          `Comptabilisation de charge / prestation reçue (TVA ${vatRate}% — règlement ${paymentMode}) :`,
-          `Base HT : ${htAmount.toLocaleString('fr-FR')} FCFA | TVA récupérable (${vatRate}%) : ${tvaAmount.toLocaleString('fr-FR')} FCFA | Total TTC : ${ttcAmount.toLocaleString('fr-FR')} FCFA.`,
-          '',
-          '| Compte | Intitulé du compte | Débit (FCFA) | Crédit (FCFA) | Justification |',
-          '| --- | --- | --- | --- | --- |',
-          `| 6265 / 613 | Services extérieurs / Charges d'exploitation | ${htAmount.toLocaleString('fr-FR')} | 0 | Montant HT de la facture |`,
-          `| 4452 | État, TVA récupérable sur charges | ${tvaAmount.toLocaleString('fr-FR')} | 0 | TVA ${vatRate}% déductible |`,
-          `| 401 | Fournisseurs — Factures à payer | 0 | ${ttcAmount.toLocaleString('fr-FR')} | Dette fournisseur TTC |`,
-          ...(isBank || isCash ? [
-            `| 401 | Fournisseurs — Règlement facture | ${ttcAmount.toLocaleString('fr-FR')} | 0 | Apurement dette fournisseur |`,
-            `| ${treasuryCode} | ${treasuryName} | 0 | ${ttcAmount.toLocaleString('fr-FR')} | Décaissement TTC (${paymentMode}) |`
-          ] : []),
-          '',
-          `Contrôle d'équilibre : Total Débit = Total Crédit (${(isBank || isCash ? ttcAmount * 2 : ttcAmount).toLocaleString('fr-FR')} FCFA).`
-        ].join('\n');
-      }
-
-      if (agent.id === '06-juridique') {
-        const hasOhada = /ohada/i.test(lower);
-        const isService = /prestation|service|commercial|mission|conseil|maintenance/i.test(lower);
-        const title = isService
-          ? 'CONTRAT DE PRESTATION DE SERVICES COMMERCIALES'
-          : `TRAME CONTRACTUELLE : ${cleanInput.slice(0, 95).toUpperCase()}`;
-
-        return headerNote + [
-          `${title}${hasOhada ? ' (CADRE JURIDIQUE OHADA)' : ''}`,
-          '',
-          'Entre les soussignés :',
-          '• Le Client : [Dénomination sociale, forme juridique, siège social, RCCM, représenté par ...]',
-          '• Le Prestataire : [Dénomination sociale / Nom, RCCM / immatriculation, siège social, représenté par ...]',
-          '',
-          'Article 1 — Objet du contrat',
-          'Le Prestataire s\'engage à exécuter au profit du Client les prestations commerciales définies dans le cahier des charges annexé (prospection, développement commercial, représentation ou suivi clientèle), en toute indépendance et sans lien de subordination.',
-          '',
-          'Article 2 — Obligations et moyens des parties',
-          '2.1 Le Prestataire exécute sa mission avec diligence, loyauté et conformité aux usages professionnels, et remet un compte rendu périodique d\'activité.',
-          '2.2 Le Client communique en temps utile les tarifs, conditions générales de vente, supports commerciaux et validations nécessaires.',
-          '',
-          'Article 3 — Conditions financières et facturation',
-          'En contrepartie des prestations, le Client verse une rémunération [forfaitaire mensuelle / à la commission selon barème annexé], payable à réception de facture sous [15 / 30] jours par virement bancaire. Tout retard de paiement ouvre droit, après mise en demeure restée sans effet, aux pénalités légales applicables.',
-          '',
-          'Article 4 — Durée, renouvellement et résiliation',
-          'Le présent contrat prend effet à compter de sa signature pour une durée de [12 mois], renouvelable par accord écrit ou tacite reconduction. Chaque partie peut le résilier moyennant un préavis écrit de [30 jours], ou de plein droit en cas de manquement grave non réparé dans un délai de [15 jours] après mise en demeure.',
-          '',
-          'Article 5 — Confidentialité et non-détournement',
-          'Les parties s\'engagent à conserver strictement confidentiels les fichiers clients, grilles tarifaires, données financières et savoir-faire échangés pendant toute la durée du contrat et pendant [2 ans] après son expiration.',
-          '',
-          'Article 6 — Droit applicable et règlement des différends',
-          hasOhada
-            ? 'Le présent contrat est régi par les Actes uniformes de l\'OHADA (notamment l\'Acte uniforme portant sur le droit commercial général) et le droit national du siège du Client. Tout différend fera l\'objet d\'une tentative de règlement amiable sous [15 jours] ; à défaut d\'accord, il sera soumis à la juridiction compétente du ressort convenu.'
-            : 'Le présent contrat est soumis au droit national applicable. À défaut de règlement amiable préalable sous [15 jours], tout litige relèvera de la juridiction compétente.',
-          '',
-          'Vigilance professionnelle : Compléter les mentions entre crochets et faire valider les annexes tarifaires avant signature.'
-        ].join('\n');
-      }
-
-      if (agent.id === '05-rh') {
-        const poste = extractRoleTitle(cleanInput);
-        return headerNote + [
-          `Dossier de recrutement structuré — ${poste}`,
-          '',
-          '1. Positionnement et missions principales :',
-          '• Gestion administrative et conformité : tenue des dossiers du personnel, contrats, courriers, archivage et suivi réglementaire.',
-          '• Coordination opérationnelle : planification des activités, suivi des équipes et résolution des aléas quotidiens.',
-          '• Pilotage et reporting : consolidation des indicateurs d\'activité, suivi des coûts et préparation des comptes rendus de direction.',
-          '',
-          '2. Prérequis et compétences clés :',
-          '• Expérience confirmée sur un poste administratif ou opérationnel polyvalent.',
-          '• Maîtrise des outils bureautiques (tableurs, traitement de texte, suivi documentaire) et rigueur dans le contrôle des chiffres.',
-          '• Sens de l\'organisation, discrétion professionnelle et capacité à prioriser sous contrainte de délai.',
-          '',
-          '3. Grille d\'évaluation en entretien :',
-          '',
-          '| Compétence évaluée | Question structurée | Indicateurs de réussite | Pondération |',
-          '| --- | --- | --- | --- |',
-          '| Organisation & Priorités | Comment gérez-vous simultanément une urgence opérationnelle et une échéance administrative ? | Méthode claire de tri, traçabilité et respect des délais | 25% |',
-          '| Coordination terrain | Racontez une situation où vous avez dû aligner plusieurs interlocuteurs pour débloquer un dossier. | Leadership calme, faits précis et résultat mesurable | 30% |',
-          '| Rigueur & Contrôle | Quelles vérifications effectuez-vous avant de transmettre un tableau chiffré ou un contrat ? | Double contrôle, attention aux détails et confidentialité | 25% |',
-          '| Posture & Fiabilité | Comment réagissez-vous face à une erreur détectée ou une consigne incomplète ? | Responsabilité, transparence et proposition de correctif | 20% |'
-        ].join('\n');
-      }
-
-      if (agent.id === '02-business' || agent.id === '01-coordinateur') {
-        const amounts = extractAmounts(cleanInput);
-        const days = extractDurationDays(cleanInput);
-        const unitPrice = amounts[0] || 45000;
-        const mrr10 = unitPrice * 10;
-        const mrr25 = unitPrice * 25;
-        const mrr50 = unitPrice * 50;
-
-        return headerNote + [
-          `Architecture commerciale & projection financière (Horizon : ${days} jours)`,
-          '',
-          `1. Proposition de valeur & tarification : Offre structurée autour d'un tarif de référence de ${unitPrice.toLocaleString('fr-FR')} FCFA / mois, positionnée sur le gain de temps opérationnel et la fiabilité de service.`,
-          `2. Simulation de revenus mensuels récurrents (MRR) :`,
-          `• Palier démarrage (10 clients actifs) : ${mrr10.toLocaleString('fr-FR')} FCFA / mois`,
-          `• Palier croissance (25 clients actifs) : ${mrr25.toLocaleString('fr-FR')} FCFA / mois`,
-          `• Palier consolidation (50 clients actifs) : ${mrr50.toLocaleString('fr-FR')} FCFA / mois`,
-          '',
-          `3. Plan d'exécution opérationnel sur ${days} jours :`,
-          '',
-          '| Période | Objectif stratégique | Actions concrètes | Livrable / KPI |',
-          '| --- | --- | --- | --- |',
-          `| J1 à J${Math.max(5, Math.round(days * 0.25))} | Cadrage de l'offre | Définir le périmètre inclus, les conditions d'engagement et le parcours client | Plaquette offre & contrat type |`,
-          `| J${Math.max(6, Math.round(days * 0.25) + 1)} à J${Math.max(15, Math.round(days * 0.6))} | Prospection ciblée | Qualifier 40 décideurs B2B, mener les démonstrations et traiter les objections | 10 premiers entretiens qualifiés |`,
-          `| J${Math.max(16, Math.round(days * 0.6) + 1)} à J${days} | Conversion & Onboarding | Signer les premiers contrats, déployer le service et mesurer la satisfaction | Premiers encaissements récurrents |`
-        ].join('\n');
-      }
-
-      if (agent.id === '04-marketing') {
-        return headerNote + [
-          `Stratégie de communication & d'acquisition : ${cleanInput}`,
-          '',
-          '1. Angle de positionnement : Mettre en avant le bénéfice mesurable (gain de temps, réduction des erreurs, maîtrise opérationnelle) plutôt que la seule technique.',
-          '2. Accroches commerciales prêtes à l\'emploi :',
-          '• Accroche B2B directe : « Structurez vos opérations et gagnez plusieurs heures par semaine sans alourdir votre équipe. »',
-          '• Accroche preuve & résultat : « Passez d\'une gestion manuelle dispersée à un pilotage clair et immédiatement exploitable. »',
-          '',
-          '| Canal de diffusion | Audience cible | Format & Message clé | Indicateur suivi |',
-          '| --- | --- | --- | --- |',
-          '| Prospection directe (WhatsApp / Email) | Dirigeants & responsables PME | Message court centré sur un problème concret + démonstration | Taux de réponse & RDV |',
-          '| Réseaux professionnels (LinkedIn / Facebook) | Décideurs & entrepreneurs | Étude de cas chiffrée avant / après | Demandes entrantes |',
-          '| Réseau & Recommandation | Clients actuels & partenaires | Offre de parrainage ou audit initial offert | Nombre de recommandations |'
-        ].join('\n');
-      }
-
-      if (agent.id === '07-developpement') {
-        return headerNote + [
-          `Architecture technique & bonnes pratiques : ${cleanInput}`,
-          '',
-          '1. Principes de conception : Séparer la validation des données, le stockage persistant et l\'affichage afin d\'éviter toute corruption d\'état.',
-          '2. Contrôles indispensables :',
-          '• Validation stricte des entrées et types avant sauvegarde.',
-          '• Gestion explicite des erreurs (try/catch, quota de stockage, repli propre).',
-          '• Versionnement des clés de stockage pour éviter les conflits lors des mises à jour.',
-          '',
-          '| Composant | Responsabilité technique | Sécurité / Fiabilité |',
-          '| --- | --- | --- |',
-          '| Couche Validation | Nettoyer et contrôler les champs avant traitement | Prévention des injections et valeurs nulles |',
-          '| Couche Persistance | Lire/écrire en JSON versionné avec gestion d\'exception | Continuité même en cas de stockage plein |',
-          '| Couche Interface | Rendre les données échappées et offrir un retour visuel clair | Lisibilité mobile et zéro blocage UI |'
-        ].join('\n');
-      }
-
-      if (agent.id === '08-projets') {
-        const days = extractDurationDays(cleanInput);
-        return headerNote + [
-          `Plan de pilotage projet (${days} jours) : ${cleanInput}`,
-          '',
-          '| Lot / Phase | Livrable attendu | Responsable | Échéance | Point de contrôle |',
-          '| --- | --- | --- | --- | --- |',
-          `| Phase 1 — Cadrage | Périmètre validé, ressources et règles de fonctionnement | Chef de projet | J+${Math.max(3, Math.round(days * 0.2))} | Validation de lancement |`,
-          `| Phase 2 — Déploiement | Mise en place opérationnelle et tests terrain | Équipe projet | J+${Math.max(10, Math.round(days * 0.7))} | Revue d'avancement |`,
-          `| Phase 3 — Clôture | Bilan des résultats, documentation et transfert | Direction / Pilotage | J+${days} | Recette finale |`
-        ].join('\n');
-      }
-
-      if (agent.id === '09-service-client') {
-        return headerNote + [
-          `Traitement relation client & fidélisation : ${cleanInput}`,
-          '',
-          '1. Réponse prête à envoyer au client :',
-          '« Bonjour [Nom du client], nous avons bien pris en compte votre retour et vous présentons nos excuses pour ce désagrément. Votre dossier est pris en charge en priorité afin d\'apporter une solution définitive d\'ici [délai précis]. Nous restons votre interlocuteur direct jusqu\'à résolution complète. »',
-          '',
-          '| Action | Objectif | Délai | Résultat attendu |',
-          '| --- | --- | --- | --- |',
-          '| Prise en charge immédiate | Rassurer le client et confirmer le délai exact | Sous 2 heures | Baisse de la tension |',
-          '| Résolution & contrôle | Corriger l\'incident à la source et vérifier la conformité | Sous 24 heures | Problème soldé |',
-          '| Suivi post-résolution | Vérifier la satisfaction et consolider la relation | J+3 | Fidélisation durable |'
-        ].join('\n');
-      }
-
-      return headerNote + [
-        `Analyse décisionnelle structurée : ${cleanInput}`,
-        '',
-        '| Critère d\'évaluation | Option A (Centralisée / Standard) | Option B (Autonome / Déployée) | Observation |',
-        '| --- | --- | --- | --- |',
-        '| Coût initial | Modéré et prévisible | Plus élevé au démarrage | Avantage Option A à court terme |',
-        '| Réactivité terrain | Dépendante de la validation centrale | Forte autonomie d\'exécution | Avantage Option B sur le terrain |',
-        '| Contrôle & Qualité | Homogène et facile à auditer | Nécessite des indicateurs précis | Équilibre selon maturité |',
-        '',
-        'Recommandation : Démarrer avec un cadre centralisé clair sur les règles critiques tout en accordant une autonomie encadrée sur l\'exécution quotidienne.'
-      ].join('\n');
-    }
     async function executeWorkflow() {
       const selectedId = document.getElementById('studio-flow-select').value;
       const selectedFlow = flows.find(f => f.id === selectedId) || flows[0];
@@ -1204,7 +1432,7 @@
           );
           const geminiData = await geminiRes.json();
           if (geminiRes.ok && geminiData.candidates?.[0]?.content?.parts?.[0]?.text) {
-            outputText = geminiData.candidates[0].content.parts[0].text.trim();
+            outputText = deduplicateLines(geminiData.candidates[0].content.parts[0].text.trim());
             engineLabel = 'Gemini';
           }
         }
@@ -1228,9 +1456,11 @@
           if (res.ok) {
             const remoteText = (await res.text()).trim();
             if (remoteText && !remoteText.toLowerCase().includes('error') && remoteText.length > 40) {
-              outputText = isCoordinator
-                ? `01 AUTOPILOT — Coordinateur -> ${activeAgent.title}\n\n` + remoteText
-                : remoteText;
+              outputText = deduplicateLines(
+                isCoordinator
+                  ? `Routage 01 AUTOPILOT -> ${activeAgent.title}\n\n` + remoteText
+                  : remoteText
+              );
               engineLabel = 'IA distante';
             }
           }
@@ -1244,6 +1474,7 @@
 
       rawLastOutputText = outputText;
       document.getElementById('output-editor-box').classList.add('hidden');
+      document.getElementById('collaboration-trace-box').classList.add('hidden');
       document.getElementById('routed-agent-badge').textContent = activeAgent.title;
       document.getElementById('engine-badge').textContent = engineLabel;
       renderFormattedOutput(outputText, document.getElementById('studio-output'));
@@ -1476,6 +1707,11 @@
       localStorage.setItem('autopilot_selected_flow_v3', selectedFlowId);
       closeModal();
       renderCatalog();
+    }
+
+    const savedWebhook = localStorage.getItem('autopilot_mail_webhook');
+    if (savedWebhook && document.getElementById('mail-webhook-input')) {
+      document.getElementById('mail-webhook-input').value = savedWebhook;
     }
 
     syncDateLocaleButton();
