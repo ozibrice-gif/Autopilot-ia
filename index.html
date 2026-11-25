@@ -87,7 +87,7 @@
 
   <main class="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-4 py-5 sm:py-6">
 
-    <!-- ASSISTANT : IDENTITÉ, CAPACITÉS & RAISONNEMENT STRUCTURÉ -->
+    <!-- ASSISTANT -->
     <section id="view-assistant" class="hidden space-y-5">
       <div class="glass rounded-2xl p-5 sm:p-6 space-y-4">
         <div>
@@ -125,11 +125,11 @@
             <button type="button" onclick="sendDemoToStudio('05-rh', 'Rédiger le cadre de recrutement et la grille d\'entretien pour un responsable administratif et opérationnel polyvalent.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
               Cadre & grille RH
             </button>
-            <button type="button" onclick="sendDemoToStudio('03-finance', 'Établir un tableau d\'écriture comptable HT / TVA 18% / TTC pour une facture de 450 000 FCFA HT réglée par virement bancaire.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
-              Écriture comptable (Finance)
+            <button type="button" onclick="sendDemoToStudio('03-finance', 'Fais un bilan comptable avec 2 000 000 FCFA d\'immobilisations et 1 200 000 FCFA de trésorerie, capital 2 500 000 FCFA.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
+              Bilan comptable (Finance)
             </button>
-            <button type="button" onclick="sendDemoToStudio('06-juridique', 'Rédiger les clauses essentielles d\'un contrat de prestation de services commerciales dans l\'espace OHADA.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
-              Contrat OHADA (Juridique)
+            <button type="button" onclick="sendDemoToStudio('06-juridique', 'Rédiger les clauses essentielles d\'un contrat de prestation de services dans l\'espace OHADA pour la sécurité privée sur sites miniers.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
+              Contrat OHADA Minier (Juridique)
             </button>
             <button type="button" onclick="sendDemoToStudio('09-service-client', 'Répondre à client.pro@entreprise.ci mécontent d\'un retard de livraison et proposer un plan de résolution et de fidélisation.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
               Service client & Mail (09)
@@ -404,7 +404,7 @@
         role: 'Budgets, trésorerie, plans/écritures comptables et analyse financière.',
         action: 'Établit des tableaux de comptes, écritures, budgets, prévisions et indicateurs.',
         systemPrompt: 'Tu es l\'Agent Finance (03) expert en budgets, trésorerie, comptabilité et analyse financière. Réponds en français rigoureux sans ** ni ## ni <br>. Utilise un tableau Markdown clair pour les écritures, budgets ou prévisions et vérifie systématiquement les calculs.',
-        sample: 'Établir un tableau d\'écriture comptable HT / TVA 18% / TTC pour une facture de 450 000 FCFA HT réglée par virement bancaire.'
+        sample: 'Fais un bilan comptable avec 2 000 000 FCFA d\'immobilisations et 1 200 000 FCFA de trésorerie, capital 2 500 000 FCFA.'
       },
       {
         id: '04-marketing',
@@ -437,7 +437,7 @@
         role: 'Contrats, droit des affaires et réglementation OHADA.',
         action: 'Structure des trames contractuelles, clauses sensibles et points de vigilance OHADA.',
         systemPrompt: 'Tu es l\'Agent Juridique (06) spécialisé en contrats, droit des affaires et réglementation OHADA. Réponds en français structuré sans ** ni ## ni <br>. Rédige des clauses opérationnelles complètes (Article 1, Article 2...), les points OHADA et une mention de revue formelle.',
-        sample: 'Rédiger les clauses essentielles d\'un contrat de prestation de services commerciales dans l\'espace OHADA.'
+        sample: 'Rédiger les clauses essentielles d\'un contrat de prestation de services dans l\'espace OHADA pour la sécurité privée sur sites miniers.'
       },
       {
         id: '07-developpement',
@@ -620,7 +620,7 @@
       return flows.find(f => f.id === '02-business') || flows[0];
     }
 
-    function sendDemoToStudio(agentId, realtext) {
+    function sendDemoToStudio(agentId, sampleText) {
       selectedFlowId = agentId;
       localStorage.setItem('autopilot_selected_flow_v3', agentId);
       const select = document.getElementById('studio-flow-select');
@@ -716,17 +716,21 @@
       try {
         const localKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
         if (localKey) {
+          const ctrl = new AbortController();
+          const tid = setTimeout(() => ctrl.abort(), 7000);
           const res = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(localKey)}`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
+              signal: ctrl.signal,
               body: JSON.stringify({
                 systemInstruction: { parts: [{ text: assistantSystemPrompt }] },
                 contents: [{ parts: [{ text: rawQuestion }] }]
               })
             }
           );
+          clearTimeout(tid);
           const data = await res.json();
           const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
           if (res.ok && text) {
@@ -736,7 +740,7 @@
         }
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
         const remoteRes = await fetch('https://text.pollinations.ai/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -798,6 +802,34 @@
       }
       return items;
     }
+
+    function extractMeaningfulKeywords(text) {
+      const words = String(text || '')
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}\s'-]/gu, ' ')
+        .split(/\s+/)
+        .filter(w => w.length >= 4);
+
+      const stopWords = new Set([
+        'pour', 'avec', 'dans', 'sur', 'une', 'des', 'les', 'que', 'qui', 'quoi',
+        'comment', 'faire', 'établir', 'rédiger', 'structurer', 'planifier', 'créer',
+        'calculer', 'analyser', 'traiter', 'demande', 'besoin', 'entre', 'leurs',
+        'votre', 'notre', 'cela', 'cette', 'plus', 'moins', 'tout', 'tous',
+        'clauses', 'essentielles', 'contrat', 'prestation', 'services', 'commerciales',
+        'espace', 'domaine', 'bilan', 'comptable', 'lance', 'offre', 'abonnement'
+      ]);
+
+      const counts = new Map();
+      for (const w of words) {
+        if (stopWords.has(w)) continue;
+        counts.set(w, (counts.get(w) || 0) + 1);
+      }
+      return [...counts.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6)
+        .map(([w]) => w);
+    }
+
     function buildAutonomousOutput(agent, input, wasCoordinated) {
       const cleanInput = String(input || '').trim();
       const lower = cleanInput.toLowerCase();
@@ -912,7 +944,7 @@
         return deduplicateLines(prefix + clauses.join('\n'));
       }
 
-      // 02 BUSINESS & 01 COORDINATEUR : Modèle économique, offre & exécution commerciale
+      // 02 BUSINESS & 01 COORDINATEUR
       if (agent.id === '02-business' || agent.id === '01-coordinateur') {
         const moneyItems = nums.filter(n => n.unit !== '%');
         const unitVal = moneyItems[0]?.value || 45000;
@@ -933,7 +965,7 @@
         ].join('\n'));
       }
 
-      // 05 RH : Recrutement, fiche de poste, entretien & organisation d'équipe
+      // 05 RH
       if (agent.id === '05-rh') {
         const isTeamMgmt = /équipe|equipe|planning|affectation|rotation|performance|motivation|conflit/i.test(lower);
         const roleMatch = cleanInput.match(/(?:pour un|pour une|poste de|recrutement d'un|recrutement d'une)\s+([^\n.:;]+)/i);
@@ -955,7 +987,7 @@
         ].join('\n'));
       }
 
-      // 04 MARKETING : Positionnement, canaux, messages & plan de campagne
+      // 04 MARKETING
       if (agent.id === '04-marketing') {
         return deduplicateLines(prefix + [
           `Stratégie Marketing : ${cleanInput}`,
@@ -969,7 +1001,7 @@
         ].join('\n'));
       }
 
-      // 07 DÉVELOPPEMENT : Architecture, fiabilité, code & tests
+      // 07 DÉVELOPPEMENT
       if (agent.id === '07-developpement') {
         return deduplicateLines(prefix + [
           `Spécification Technique : ${cleanInput}`,
@@ -992,7 +1024,7 @@
         ].join('\n'));
       }
 
-      // 08 PROJETS : Découpage par phases, jalons, risques & suivi
+      // 08 PROJETS
       if (agent.id === '08-projets') {
         const durMatch = cleanInput.match(/(\d+)\s*(jours?|semaines?|mois)/i);
         const durationLabel = durMatch ? `${durMatch[1]} ${durMatch[2]}` : '3 semaines';
@@ -1008,7 +1040,7 @@
         ].join('\n'));
       }
 
-      // 09 SERVICE CLIENT : Réponse client, résolution & fidélisation
+      // 09 SERVICE CLIENT
       if (agent.id === '09-service-client') {
         const isDelay = /retard|livraison|expédition|colis|délai/i.test(lower);
         return deduplicateLines(prefix + [
@@ -1029,7 +1061,7 @@
         ].join('\n'));
       }
 
-      // 10 ANALYSTE : Diagnostic, comparaison multicritères & recommandation
+      // 10 ANALYSTE
       const numericSummary = nums.length
         ? nums.map(n => `${n.value.toLocaleString('fr-FR')}${n.unit ? ' ' + n.unit : ''}`).join(' ; ')
         : 'aucun chiffre explicite fourni';
@@ -1045,99 +1077,6 @@
         '| Risques | Limités par les validations intermédiaires | Plus élevés si le cadrage est flou | Nécessite un suivi des écarts |',
         '',
         'Recommandation : Cadrer d\'abord les critères non négociables, tester sur un périmètre maîtrisé, puis étendre selon les résultats observés.'
-      ].join('\n'));
-    }
-
-
-      if (agent.id === '03-finance') {
-        const pctItem = nums.find(n => n.unit === '%');
-        const moneyItems = nums.filter(n => n.unit !== '%');
-        const vatRate = pctItem ? pctItem.value : 18;
-        const baseVal = moneyItems[0] ? moneyItems[0].value : 450000;
-        const isTtc = /\bttc\b/i.test(cleanInput) && !/\bht\b/i.test(cleanInput);
-        const isRevenue = /vente|client|chiffre|facture client|encaisse|abonnement|revenu/i.test(lower);
-
-        const ht = isTtc ? Math.round(baseVal / (1 + vatRate / 100)) : baseVal;
-        const tva = isTtc ? (baseVal - ht) : Math.round((ht * vatRate) / 100);
-        const ttc = ht + tva;
-        const currency = (moneyItems[0]?.unit || 'FCFA').toUpperCase();
-
-        const lines = [
-          `Opération analysée : ${cleanInput}`,
-          `Calculs retenus : Base HT = ${ht.toLocaleString('fr-FR')} ${currency} | TVA (${vatRate}%) = ${tva.toLocaleString('fr-FR')} ${currency} | Total TTC = ${ttc.toLocaleString('fr-FR')} ${currency}.`,
-          ''
-        ];
-
-        if (isRevenue) {
-          lines.push(
-            '| Compte | Intitulé | Débit | Crédit | Logique comptable |',
-            '| --- | --- | --- | --- | --- |',
-            `| 411 | Clients | ${ttc.toLocaleString('fr-FR')} | 0 | Créance client TTC |`,
-            `| 706 / 701 | Prestations / Ventes | 0 | ${ht.toLocaleString('fr-FR')} | Produit hors taxes |`,
-            `| 4432 | État, TVA facturée | 0 | ${tva.toLocaleString('fr-FR')} | TVA ${vatRate}% collectée |`
-          );
-        } else {
-          lines.push(
-            '| Compte | Intitulé | Débit | Crédit | Logique comptable |',
-            '| --- | --- | --- | --- | --- |',
-            `| 626 / 613 | Charges / Services extérieurs | ${ht.toLocaleString('fr-FR')} | 0 | Charge HT (${themes.slice(0, 2).join(', ') || 'opération'}) |`,
-            `| 4452 | État, TVA récupérable | ${tva.toLocaleString('fr-FR')} | 0 | TVA ${vatRate}% déductible |`,
-            `| 401 | Fournisseurs | 0 | ${ttc.toLocaleString('fr-FR')} | Dette TTC à régler |`
-          );
-        }
-
-        if (/virement|banque|chèque|espèce|caisse|réglé|payé/i.test(lower)) {
-          const isCash = /espèce|caisse/i.test(lower);
-          const acctCode = isCash ? '571' : '521';
-          const acctName = isCash ? 'Caisse' : 'Banques';
-          const partyCode = isRevenue ? '411' : '401';
-          const partyName = isRevenue ? 'Clients' : 'Fournisseurs';
-          lines.push(
-            `| ${isRevenue ? acctCode : partyCode} | ${isRevenue ? acctName : partyName} | ${ttc.toLocaleString('fr-FR')} | 0 | Règlement / Encaissement TTC |`,
-            `| ${isRevenue ? partyCode : acctCode} | ${isRevenue ? partyName : acctName} | 0 | ${ttc.toLocaleString('fr-FR')} | Contrepartie de trésorerie |`
-          );
-        }
-
-        return deduplicateLines(prefix + lines.join('\n'));
-      }
-
-      if (agent.id === '06-juridique') {
-        const isOhada = /ohada/i.test(lower);
-        const clauses = [
-          `Objet ciblé : ${cleanInput}`,
-          '',
-          `1. Périmètre et engagements : Encadre les obligations liées à (${themes.join(', ') || 'l\'objet convenu'}), les livrables attendus et les responsabilités de chaque partie.`,
-          '2. Conditions financières et délais : Fixe les montants, modalités de facturation, délais de paiement et conséquences en cas de retard.',
-          '3. Durée, préavis et résiliation : Définit la durée d\'exécution, le renouvellement, le préavis et la résiliation anticipée pour manquement.',
-          '4. Confidentialité et protection des données : Impose la confidentialité des informations sensibles, documents, tarifs et échanges liés à l\'exécution.',
-          `5. Droit applicable et litiges : ${isOhada ? 'Rattaché aux Actes uniformes OHADA et au droit national applicable, avec tentative de règlement amiable préalable avant saisine de la juridiction compétente.' : 'Soumis au droit applicable, avec résolution amiable préalable avant recours contentieux.'}`,
-          '',
-          'Points à vérifier avant signature : Identité complète des parties, montants/délais exacts et annexes techniques.'
-        ];
-        return deduplicateLines(prefix + clauses.join('\n'));
-      }
-
-      const numericSummary = nums.length
-        ? nums.map(n => `${n.value.toLocaleString('fr-FR')}${n.unit ? ' ' + n.unit : ''}`).join(' ; ')
-        : 'aucun chiffre explicite dans la saisie';
-
-      const rows = [
-        '| Axe d\'analyse | Application directe à votre saisie | Action concrète |',
-        '| --- | --- | --- |',
-        `| Cadrage | « ${cleanInput.slice(0, 120)}${cleanInput.length > 120 ? '...' : ''} » | Clarifier le résultat attendu et les contraintes immédiates |`,
-        `| Repères chiffrés | ${numericSummary} | Vérifier la cohérence des montants, délais et volumes |`,
-        `| Axes thématiques | ${themes.join(', ') || 'pilotage général'} | Mettre en œuvre étape par étape avec suivi des écarts |`,
-        '| Validation & Suite | Ajustement via Modifier puis archivage Classeur | Valider la version finale et suivre l\'exécution |'
-      ];
-
-      return deduplicateLines(prefix + [
-        `Analyse ciblée (${agent.badge}) :`,
-        `Saisie traitée : « ${cleanInput} ».`,
-        `Repères relevés : ${numericSummary} | Mots-clés dominants : ${themes.join(', ') || 'aucun mot-clé spécifique'}.`,
-        '',
-        ...rows,
-        '',
-        `Recommandation de ${agent.title} : Précisez le point à approfondir (chiffres, planning, argumentaire, critères ou clauses) pour affiner ce livrable.`
       ].join('\n'));
     }
 
@@ -1472,103 +1411,133 @@
     }
 
     async function executeWorkflow() {
-      const selectedId = document.getElementById('studio-flow-select').value;
-      const selectedFlow = flows.find(f => f.id === selectedId) || flows[0];
-      const input = document.getElementById('studio-input').value.trim();
-      if (!input) return alert('Veuillez saisir des données à traiter.');
-
-      const isCoordinator = selectedFlow.id === '01-coordinateur';
-      const activeAgent = isCoordinator ? routeToBestAgent(input) : selectedFlow;
-
       const btn = document.getElementById('run-btn');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement en cours...';
+      const selectedId = document.getElementById('studio-flow-select')?.value || (flows[0] && flows[0].id);
+      const selectedFlow = flows.find(f => f.id === selectedId) || flows[0];
+      const input = (document.getElementById('studio-input')?.value || '').trim();
 
-      let engineLabel = 'Moteur autonome';
-      let outputText = '';
+      if (!input) {
+        alert('Veuillez saisir des données à traiter.');
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement en cours...';
+      }
 
       try {
+        const isCoordinator = selectedFlow && selectedFlow.id === '01-coordinateur';
+        const activeAgent = isCoordinator ? routeToBestAgent(input) : selectedFlow;
+
+        let engineLabel = 'Moteur autonome';
+        let outputText = '';
+
         const localKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
         const combinedPrompt = isCoordinator
           ? `01 AUTOPILOT — Coordinateur a orienté cette demande vers ${activeAgent.title}. ${activeAgent.systemPrompt}`
           : activeAgent.systemPrompt;
 
         if (localKey) {
-          const geminiRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                systemInstruction: { parts: [{ text: combinedPrompt }] },
-                contents: [{ parts: [{ text: input }] }]
-              })
+          try {
+            const ctrl = new AbortController();
+            const tid = setTimeout(() => ctrl.abort(), 7000);
+            const geminiRes = await fetch(
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(localKey)}`,
+              {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                signal: ctrl.signal,
+                body: JSON.stringify({
+                  systemInstruction: { parts: [{ text: combinedPrompt }] },
+                  contents: [{ parts: [{ text: input }] }]
+                })
+              }
+            );
+            clearTimeout(tid);
+            const geminiData = await geminiRes.json();
+            if (geminiRes.ok && geminiData?.candidates?.[0]?.content?.parts?.[0]?.text) {
+              outputText = deduplicateLines(geminiData.candidates[0].content.parts[0].text.trim());
+              engineLabel = 'Gemini';
             }
-          );
-          const geminiData = await geminiRes.json();
-          if (geminiRes.ok && geminiData.candidates?.[0]?.content?.parts?.[0]?.text) {
-            outputText = deduplicateLines(geminiData.candidates[0].content.parts[0].text.trim());
-            engineLabel = 'Gemini';
-          }
+          } catch (_) {}
         }
 
         if (!outputText) {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000);
-          const res = await fetch('https://text.pollinations.ai/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
-            body: JSON.stringify({
-              messages: [
-                { role: 'system', content: combinedPrompt },
-                { role: 'user', content: input }
-              ],
-              model: 'openai'
-            })
-          });
-          clearTimeout(timeoutId);
-          if (res.ok) {
-            const remoteText = (await res.text()).trim();
-            if (remoteText && !remoteText.toLowerCase().includes('error') && remoteText.length > 40) {
-              outputText = deduplicateLines(
-                isCoordinator
-                  ? `Routage 01 AUTOPILOT -> ${activeAgent.title}\n\n` + remoteText
-                  : remoteText
-              );
-              engineLabel = 'IA distante';
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2500);
+            const res = await fetch('https://text.pollinations.ai/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              signal: controller.signal,
+              body: JSON.stringify({
+                messages: [
+                  { role: 'system', content: combinedPrompt },
+                  { role: 'user', content: input }
+                ],
+                model: 'openai'
+              })
+            });
+            clearTimeout(timeoutId);
+            if (res.ok) {
+              const remoteText = (await res.text()).trim();
+              if (remoteText && !remoteText.toLowerCase().includes('error') && remoteText.length > 40) {
+                outputText = deduplicateLines(
+                  isCoordinator
+                    ? `Routage 01 AUTOPILOT -> ${activeAgent.title}\n\n` + remoteText
+                    : remoteText
+                );
+                engineLabel = 'IA distante';
+              }
             }
-          }
+          } catch (_) {}
         }
-      } catch (_) {}
 
-      if (!outputText) {
-        outputText = buildAutonomousOutput(activeAgent, input, isCoordinator);
-        engineLabel = 'Moteur autonome';
+        if (!outputText) {
+          outputText = buildAutonomousOutput(activeAgent, input, isCoordinator);
+          engineLabel = 'Moteur autonome';
+        }
+
+        rawLastOutputText = outputText;
+        document.getElementById('output-editor-box')?.classList.add('hidden');
+        document.getElementById('collaboration-trace-box')?.classList.add('hidden');
+        const badgeEl = document.getElementById('routed-agent-badge');
+        const engEl = document.getElementById('engine-badge');
+        const outEl = document.getElementById('studio-output');
+        const cardEl = document.getElementById('result-card');
+
+        if (badgeEl) badgeEl.textContent = activeAgent.title;
+        if (engEl) engEl.textContent = engineLabel;
+        if (outEl) renderFormattedOutput(outputText, outEl);
+        if (cardEl) cardEl.classList.remove('hidden');
+
+        const nowIso = new Date().toISOString();
+        const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
+        history.unshift({
+          isoDate: nowIso,
+          date: formatDisplayDate(nowIso),
+          title: isCoordinator ? `01 Coordinateur -> ${activeAgent.title}` : activeAgent.title,
+          engine: engineLabel,
+          input,
+          output: outputText
+        });
+        localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 25)));
+      } catch (err) {
+        const fallbackAgent = selectedFlow || flows[0];
+        const msg = buildAutonomousOutput(fallbackAgent, input, false);
+        rawLastOutputText = msg;
+        const outEl = document.getElementById('studio-output');
+        const cardEl = document.getElementById('result-card');
+        if (outEl) renderFormattedOutput(msg, outEl);
+        if (cardEl) cardEl.classList.remove('hidden');
+        console.error(err);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-play"></i> Exécuter avec l\'agent';
+        }
       }
-
-      rawLastOutputText = outputText;
-      document.getElementById('output-editor-box').classList.add('hidden');
-      document.getElementById('collaboration-trace-box').classList.add('hidden');
-      document.getElementById('routed-agent-badge').textContent = activeAgent.title;
-      document.getElementById('engine-badge').textContent = engineLabel;
-      renderFormattedOutput(outputText, document.getElementById('studio-output'));
-      document.getElementById('result-card').classList.remove('hidden');
-
-      const nowIso = new Date().toISOString();
-      const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
-      history.unshift({
-        isoDate: nowIso,
-        date: formatDisplayDate(nowIso),
-        title: isCoordinator ? `01 Coordinateur -> ${activeAgent.title}` : activeAgent.title,
-        engine: engineLabel,
-        input,
-        output: outputText
-      });
-      localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 25)));
-
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-play"></i> Exécuter avec l\'agent';
     }
 
     function toggleEditOutput() {
@@ -1783,14 +1752,17 @@
       closeModal();
       renderCatalog();
     }
+  </script>
+  <script>
+    (function initAutopilotPro() {
+      const savedWebhook = localStorage.getItem('autopilot_mail_webhook');
+      if (savedWebhook && document.getElementById('mail-webhook-input')) {
+        document.getElementById('mail-webhook-input').value = savedWebhook;
+      }
 
-    const savedWebhook = localStorage.getItem('autopilot_mail_webhook');
-    if (savedWebhook && document.getElementById('mail-webhook-input')) {
-      document.getElementById('mail-webhook-input').value = savedWebhook;
-    }
-
-    syncDateLocaleButton();
-    renderCatalog();
+      syncDateLocaleButton();
+      renderCatalog();
+    })();
   </script>
 </body>
 </html>
