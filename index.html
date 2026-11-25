@@ -620,7 +620,7 @@
       return flows.find(f => f.id === '02-business') || flows[0];
     }
 
-    function sendDemoToStudio(agentId, sampleText) {
+    function sendDemoToStudio(agentId, realtext) {
       selectedFlowId = agentId;
       localStorage.setItem('autopilot_selected_flow_v3', agentId);
       const select = document.getElementById('studio-flow-select');
@@ -798,43 +798,256 @@
       }
       return items;
     }
-
-    function extractKeyThemes(text) {
-      const words = String(text || '')
-        .toLowerCase()
-        .replace(/[^\p{L}\p{N}\s'-]/gu, ' ')
-        .split(/\s+/)
-        .filter(w => w.length >= 4);
-
-      const stopWords = new Set([
-        'pour', 'avec', 'dans', 'sur', 'une', 'des', 'les', 'que', 'qui', 'quoi',
-        'comment', 'faire', 'établir', 'rédiger', 'structurer', 'planifier', 'créer',
-        'calculer', 'analyser', 'traiter', 'demande', 'besoin', 'entre', 'leurs',
-        'votre', 'notre', 'cela', 'cette', 'plus', 'moins', 'tout', 'tous'
-      ]);
-
-      const counts = new Map();
-      for (const w of words) {
-        if (stopWords.has(w)) continue;
-        counts.set(w, (counts.get(w) || 0) + 1);
-      }
-      return [...counts.entries()]
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 6)
-        .map(([w]) => w);
-    }
-
     function buildAutonomousOutput(agent, input, wasCoordinated) {
       const cleanInput = String(input || '').trim();
       const lower = cleanInput.toLowerCase();
       const nums = extractContextualNumbers(cleanInput);
-      const themes = extractKeyThemes(cleanInput);
+      const themes = extractMeaningfulKeywords(cleanInput);
       const prefix = wasCoordinated ? `Routage 01 AUTOPILOT -> ${agent.title}\n\n` : '';
 
       const emailMatch = cleanInput.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
       if (emailMatch && document.getElementById('mail-to-input') && !document.getElementById('mail-to-input').value) {
         document.getElementById('mail-to-input').value = emailMatch[0];
       }
+
+      // 03 FINANCE : Bilan comptable vs Écritures / Facture
+      if (agent.id === '03-finance') {
+        const isBalanceSheet = /\bbilan\b/i.test(lower);
+        const moneyItems = nums.filter(n => n.unit !== '%');
+        const currency = (moneyItems[0]?.unit || 'FCFA').toUpperCase();
+
+        if (isBalanceSheet) {
+          const immo = moneyItems[0]?.value ?? 1500000;
+          const treso = moneyItems[1]?.value ?? 950000;
+          const totalActif = immo + treso;
+          const capital = moneyItems[2]?.value ?? 1800000;
+          const dettes = Math.max(0, totalActif - capital);
+
+          return deduplicateLines(prefix + [
+            `Structure de Bilan Comptable (repères en ${currency}) :`,
+            `Contrôle d'équilibre : Total Actif = ${totalActif.toLocaleString('fr-FR')} ${currency} | Total Passif = ${(capital + dettes).toLocaleString('fr-FR')} ${currency}.`,
+            '',
+            '| Actif (Emplois) | Montant (' + currency + ') | Passif (Ressources) | Montant (' + currency + ') |',
+            '| --- | --- | --- | --- |',
+            `| Immobilisations (matériel, équipements) | ${immo.toLocaleString('fr-FR')} | Capitaux propres / Capital | ${capital.toLocaleString('fr-FR')} |`,
+            `| Trésorerie / Créances | ${treso.toLocaleString('fr-FR')} | Dettes fournisseurs / Emprunts | ${dettes.toLocaleString('fr-FR')} |`,
+            `| TOTAL ACTIF | ${totalActif.toLocaleString('fr-FR')} | TOTAL PASSIF | ${(capital + dettes).toLocaleString('fr-FR')} |`,
+            '',
+            'Pour affiner : indiquez vos montants exacts d\'immobilisations, stocks, créances clients, trésorerie, capital et dettes afin de remplacer ces valeurs de travail.'
+          ].join('\n'));
+        }
+
+        const pctItem = nums.find(n => n.unit === '%');
+        const vatRate = pctItem ? pctItem.value : 18;
+        const baseVal = moneyItems[0] ? moneyItems[0].value : 450000;
+        const isTtc = /\bttc\b/i.test(cleanInput) && !/\bht\b/i.test(cleanInput);
+        const isRevenue = /vente|client|chiffre|facture client|encaisse|abonnement|revenu/i.test(lower);
+
+        const ht = isTtc ? Math.round(baseVal / (1 + vatRate / 100)) : baseVal;
+        const tva = isTtc ? (baseVal - ht) : Math.round((ht * vatRate) / 100);
+        const ttc = ht + tva;
+
+        const lines = [
+          `Opération analysée : ${cleanInput}`,
+          `Calculs retenus : Base HT = ${ht.toLocaleString('fr-FR')} ${currency} | TVA (${vatRate}%) = ${tva.toLocaleString('fr-FR')} ${currency} | Total TTC = ${ttc.toLocaleString('fr-FR')} ${currency}.`,
+          ''
+        ];
+
+        if (isRevenue) {
+          lines.push(
+            '| Compte | Intitulé | Débit | Crédit | Logique comptable |',
+            '| --- | --- | --- | --- | --- |',
+            `| 411 | Clients | ${ttc.toLocaleString('fr-FR')} | 0 | Créance client TTC |`,
+            `| 706 / 701 | Prestations / Ventes | 0 | ${ht.toLocaleString('fr-FR')} | Produit hors taxes |`,
+            `| 4432 | État, TVA facturée | 0 | ${tva.toLocaleString('fr-FR')} | TVA ${vatRate}% collectée |`
+          );
+        } else {
+          lines.push(
+            '| Compte | Intitulé | Débit | Crédit | Logique comptable |',
+            '| --- | --- | --- | --- | --- |',
+            `| 626 / 613 | Charges / Services extérieurs | ${ht.toLocaleString('fr-FR')} | 0 | Charge HT (${themes.slice(0, 2).join(', ') || 'opération'}) |`,
+            `| 4452 | État, TVA récupérable | ${tva.toLocaleString('fr-FR')} | 0 | TVA ${vatRate}% déductible |`,
+            `| 401 | Fournisseurs | 0 | ${ttc.toLocaleString('fr-FR')} | Dette TTC à régler |`
+          );
+        }
+
+        if (/virement|banque|chèque|espèce|caisse|réglé|payé/i.test(lower)) {
+          const isCash = /espèce|caisse/i.test(lower);
+          const acctCode = isCash ? '571' : '521';
+          const acctName = isCash ? 'Caisse' : 'Banques';
+          const partyCode = isRevenue ? '411' : '401';
+          const partyName = isRevenue ? 'Clients' : 'Fournisseurs';
+          lines.push(
+            `| ${isRevenue ? acctCode : partyCode} | ${isRevenue ? acctName : partyName} | ${ttc.toLocaleString('fr-FR')} | 0 | Règlement / Encaissement TTC |`,
+            `| ${isRevenue ? partyCode : acctCode} | ${isRevenue ? partyName : acctName} | 0 | ${ttc.toLocaleString('fr-FR')} | Contrepartie de trésorerie |`
+          );
+        }
+
+        return deduplicateLines(prefix + lines.join('\n'));
+      }
+
+      // 06 JURIDIQUE : Clauses adaptées au contexte (dont sécurité / sites miniers + OHADA)
+      if (agent.id === '06-juridique') {
+        const isOhada = /ohada/i.test(lower);
+        const isMiningOrSecurity = /minier|mine|sécurité|securite|gardiennage|accès|acces/i.test(lower);
+
+        const clauses = [
+          `Objet ciblé : ${cleanInput}`,
+          '',
+          isMiningOrSecurity
+            ? '1. Périmètre, contrôle d\'accès et consignes de site minier : Définit les zones surveillées, les postes de garde, le contrôle des entrées/sorties (personnel, engins, visiteurs), les rondes et le respect des consignes de sécurité et d\'EPI sur le site.'
+            : `1. Périmètre et engagements : Encadre les obligations liées à (${themes.join(', ') || 'l\'objet convenu'}), les livrables attendus et les responsabilités de chaque partie.`,
+          isMiningOrSecurity
+            ? '2. Moyens, habilitations et responsabilité opérationnelle : Précise les effectifs affectés, les qualifications/habilitations exigées, la distinction entre obligation de moyens et règles d\'intervention en cas d\'incident, ainsi que la couverture d\'assurance responsabilité civile.'
+            : '2. Conditions financières et délais : Fixe les montants, modalités de facturation, délais de paiement et conséquences en cas de retard.',
+          '3. Rémunération, facturation et pénalités : Précise les barèmes (tarif horaire/mensuel/forfait), les modalités de règlement, les frais liés aux déplacements ou contraintes de site et les pénalités en cas de retard de paiement.',
+          '4. Durée, préavis et résiliation : Définit la durée du contrat, les conditions de renouvellement, le préavis écrit et la résiliation anticipée en cas de manquement grave non régularisé après mise en demeure.',
+          isMiningOrSecurity
+            ? '5. Confidentialité et sûreté des informations : Interdit la divulgation des plans de site, volumes de production, itinéraires, dispositifs de sûreté et données sensibles pendant l\'exécution et après la fin du contrat.'
+            : '5. Confidentialité : Protège les informations sensibles, documents, tarifs et échanges liés à l\'exécution du contrat.',
+          `6. Droit applicable et règlement des litiges : ${isOhada ? 'Soumis aux Actes uniformes de l\'OHADA et au droit national applicable, avec recherche de règlement amiable préalable avant saisine de la juridiction compétente.' : 'Soumis au droit applicable, avec règlement amiable préalable avant recours contentieux.'}`,
+          '',
+          'Points à compléter avant signature : Identités complètes des parties, périmètre exact du site/mission, barème financier, assurances et annexes techniques.'
+        ];
+        return deduplicateLines(prefix + clauses.join('\n'));
+      }
+
+      // 02 BUSINESS & 01 COORDINATEUR : Modèle économique, offre & exécution commerciale
+      if (agent.id === '02-business' || agent.id === '01-coordinateur') {
+        const moneyItems = nums.filter(n => n.unit !== '%');
+        const unitVal = moneyItems[0]?.value || 45000;
+        const unitLabel = (moneyItems[0]?.unit || 'FCFA').toUpperCase();
+        const horizonItem = nums.find(n => /jour|semaine|mois|an/i.test(n.unit));
+        const horizonText = horizonItem ? `${horizonItem.value} ${horizonItem.unit}` : '30 jours';
+
+        return deduplicateLines(prefix + [
+          `Cadrage Business : ${cleanInput}`,
+          `Repère de valeur / tarif : ${unitVal.toLocaleString('fr-FR')} ${unitLabel} | Horizon de déploiement : ${horizonText}.`,
+          '',
+          '| Pilier stratégique | Application à votre demande | Résultat attendu |',
+          '| --- | --- | --- |',
+          `| Offre & Cible | Structurer l\'offre autour de : ${themes.slice(0, 4).join(', ') || 'votre activité'} | Proposition claire et différenciante |`,
+          `| Modèle de revenus | Base de calcul ${unitVal.toLocaleString('fr-FR')} ${unitLabel} (10 clients = ${(unitVal * 10).toLocaleString('fr-FR')} ; 25 clients = ${(unitVal * 25).toLocaleString('fr-FR')}) | Visibilité sur la marge et le seuil de rentabilité |`,
+          `| Acquisition & Vente | Cibler les décideurs prioritaires, qualifier les besoins et sécuriser les contrats | Pipeline actif et conversions régulières |`,
+          `| Pilotage (${horizonText}) | Suivre les livrables, la trésorerie et les retours terrain chaque semaine | Exécution maîtrisée et ajustements rapides |`
+        ].join('\n'));
+      }
+
+      // 05 RH : Recrutement, fiche de poste, entretien & organisation d'équipe
+      if (agent.id === '05-rh') {
+        const isTeamMgmt = /équipe|equipe|planning|affectation|rotation|performance|motivation|conflit/i.test(lower);
+        const roleMatch = cleanInput.match(/(?:pour un|pour une|poste de|recrutement d'un|recrutement d'une)\s+([^\n.:;]+)/i);
+        const targetLabel = roleMatch ? roleMatch[1].trim() : (themes.join(', ') || 'périmètre RH demandé');
+
+        return deduplicateLines(prefix + [
+          `Cadre RH : ${cleanInput}`,
+          `Périmètre ciblé : ${targetLabel}.`,
+          '',
+          '| Axe RH | Action structurée | Critère de réussite |',
+          '| --- | --- | --- |',
+          isTeamMgmt
+            ? '| Organisation & Rôles | Clarifier les responsabilités, les binômes/équipes et les règles de présence | Zéro zone d\'ombre sur qui fait quoi |'
+            : '| Fiche de poste | Définir les missions principales, compétences requises et conditions d\'emploi | Profil aligné sur le besoin réel |',
+          isTeamMgmt
+            ? '| Suivi & Discipline | Mettre en place des points réguliers, règles claires et accompagnement | Stabilité et engagement de l\'équipe |'
+            : '| Grille d\'entretien | Évaluer cas pratiques, rigueur, autonomie et fiabilité sur des faits concrets | Décision objective et comparable |',
+          '| Intégration (Onboarding) | Prévoir un parcours d\'accueil, consignes écrites et bilan à 30 jours | Montée en compétence rapide |'
+        ].join('\n'));
+      }
+
+      // 04 MARKETING : Positionnement, canaux, messages & plan de campagne
+      if (agent.id === '04-marketing') {
+        return deduplicateLines(prefix + [
+          `Stratégie Marketing : ${cleanInput}`,
+          `Thèmes clés : ${themes.join(', ') || 'communication & acquisition'}.`,
+          '',
+          '| Canal / Levier | Message & Angle | Objectif & Mesure |',
+          '| --- | --- | --- |',
+          '| Message central | Mettre en avant le bénéfice concret et la preuve de valeur pour la cible | Clarté immédiate de l\'offre |',
+          '| Prospection / Direct | Approche ciblée avec un exemple concret lié au problème traité | Prise de contact et réponses qualifiées |',
+          '| Contenus & Preuves | Cas d\'usage, retours d\'expérience et démonstrations pratiques | Crédibilité et confiance de la cible |'
+        ].join('\n'));
+      }
+
+      // 07 DÉVELOPPEMENT : Architecture, fiabilité, code & tests
+      if (agent.id === '07-developpement') {
+        return deduplicateLines(prefix + [
+          `Spécification Technique : ${cleanInput}`,
+          `Composants clés : ${themes.join(', ') || 'architecture logicielle'}.`,
+          '',
+          '```javascript',
+          'function executeTask(payload) {',
+          '  if (!payload || typeof payload !== "object") {',
+          '    return { ok: false, error: "Paramètres invalides" };',
+          '  }',
+          '  return { ok: true, receivedAt: new Date().toISOString(), data: payload };',
+          '}',
+          '```',
+          '',
+          '| Couche technique | Responsabilité | Point de contrôle |',
+          '| --- | --- | --- |',
+          '| Entrées & Validation | Vérifier les formats, valeurs obligatoires et cas limites | Rejet propre des données corrompues |',
+          '| Traitement métier | Exécuter la logique principale de façon prévisible | Gestion explicite des erreurs et délais |',
+          '| Restitution / Stockage | Retourner un résultat clair et persister l\'état sans perte | Cohérence de l\'affichage et des données |'
+        ].join('\n'));
+      }
+
+      // 08 PROJETS : Découpage par phases, jalons, risques & suivi
+      if (agent.id === '08-projets') {
+        const durMatch = cleanInput.match(/(\d+)\s*(jours?|semaines?|mois)/i);
+        const durationLabel = durMatch ? `${durMatch[1]} ${durMatch[2]}` : '3 semaines';
+
+        return deduplicateLines(prefix + [
+          `Plan de Projet (${durationLabel}) : ${cleanInput}`,
+          '',
+          '| Phase | Livrables & Actions | Responsable & Contrôle |',
+          '| --- | --- | --- |',
+          '| 1. Cadrage & Périmètre | Valider les objectifs, ressources, règles et priorités | Chef de projet — Validation initiale |',
+          '| 2. Déploiement | Réaliser les tâches clés et suivre l\'avancement réel vs prévu | Équipe — Point d\'étape régulier |',
+          '| 3. Contrôle & Clôture | Vérifier la conformité, corriger les écarts et archiver le bilan | Pilotage — Recette finale |'
+        ].join('\n'));
+      }
+
+      // 09 SERVICE CLIENT : Réponse client, résolution & fidélisation
+      if (agent.id === '09-service-client') {
+        const isDelay = /retard|livraison|expédition|colis|délai/i.test(lower);
+        return deduplicateLines(prefix + [
+          `Traitement Relation Client : ${cleanInput}`,
+          '',
+          'Message prêt à envoyer :',
+          'Bonjour [Nom du client],',
+          isDelay
+            ? 'Nous vous prions d\'excuser le retard constaté sur votre livraison. Votre dossier est suivi en priorité avec une échéance ferme fixée à [date/heure] et un point de suivi dédié.'
+            : 'Nous avons bien pris en compte votre demande et mettons tout en œuvre pour vous apporter une solution claire et rapide sous [délai].',
+          'Nous restons à votre disposition jusqu\'à résolution complète et confirmation de votre satisfaction.',
+          '',
+          '| Étape | Action | Objectif |',
+          '| --- | --- | --- |',
+          '| 1. Réponse rapide | Accuser réception avec transparence et un délai précis | Apaiser et rétablir la confiance |',
+          '| 2. Action corrective | Corriger la cause ou proposer une compensation adaptée | Résoudre durablement le problème |',
+          '| 3. Suivi final | Confirmer la résolution effective auprès du client | Fidéliser sur le long terme |'
+        ].join('\n'));
+      }
+
+      // 10 ANALYSTE : Diagnostic, comparaison multicritères & recommandation
+      const numericSummary = nums.length
+        ? nums.map(n => `${n.value.toLocaleString('fr-FR')}${n.unit ? ' ' + n.unit : ''}`).join(' ; ')
+        : 'aucun chiffre explicite fourni';
+
+      return deduplicateLines(prefix + [
+        `Analyse & Aide à la Décision : ${cleanInput}`,
+        `Repères relevés : ${numericSummary} | Axes : ${themes.join(', ') || 'évaluation comparative'}.`,
+        '',
+        '| Critère | Scénario A (Progressif) | Scénario B (Direct / Rapide) | Impact décisionnel |',
+        '| --- | --- | --- | --- |',
+        '| Coût & Ressources | Étalé, maîtrise progressive des dépenses | Plus soutenu à court terme | Dépend de la capacité financière |',
+        '| Délai d\'effet | Étape par étape | Mise en place plus rapide | À croiser avec l\'urgence |',
+        '| Risques | Limités par les validations intermédiaires | Plus élevés si le cadrage est flou | Nécessite un suivi des écarts |',
+        '',
+        'Recommandation : Cadrer d\'abord les critères non négociables, tester sur un périmètre maîtrisé, puis étendre selon les résultats observés.'
+      ].join('\n'));
+    }
+
 
       if (agent.id === '03-finance') {
         const pctItem = nums.find(n => n.unit === '%');
