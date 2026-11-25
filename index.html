@@ -3,18 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Autopilot-IA PRO | Suite Multi-Agents</title>
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#090d16">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Autopilot-IA">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712035.png">
-
+  <title>Nexus AI — Studio Conversationnel & Raisonnement</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -23,493 +15,283 @@
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace']
-          },
-          colors: {
-            slate: {
-              850: '#151e32',
-              900: '#0f172a',
-              950: '#090d16'
-            }
           }
         }
       }
     }
   </script>
   <style>
-    body { background-color: #090d16; color: #f8fafc; -webkit-tap-highlight-color: transparent; }
-    .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(99, 102, 241, 0.22); }
+    body { background-color: #090d16; color: #f8fafc; }
+    .glass { background: rgba(15, 23, 42, 0.86); backdrop-filter: blur(14px); border: 1px solid rgba(99, 102, 241, 0.22); }
     .no-scrollbar::-webkit-scrollbar { display: none; }
+    pre code { font-family: 'JetBrains Mono', monospace; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
-  <header class="sticky top-0 z-40 glass border-b border-slate-800/80 px-2.5 sm:px-4 py-2.5">
-    <div class="max-w-5xl mx-auto flex items-center justify-between gap-1.5">
-      <div class="flex items-center gap-2 shrink-0">
-        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-600 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-          <i class="fa-solid fa-robot text-white text-xs sm:text-sm"></i>
+  <!-- EN-TÊTE -->
+  <header class="sticky top-0 z-30 glass border-b border-slate-800 px-3 sm:px-5 py-3">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-600 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+          <i class="fa-solid fa-brain text-white text-sm"></i>
         </div>
         <div>
-          <div class="flex items-center gap-1">
-            <h1 class="font-extrabold text-xs sm:text-base tracking-tight text-white">Autopilot-IA</h1>
-            <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">PRO</span>
+          <div class="flex items-center gap-1.5">
+            <h1 class="font-extrabold text-sm sm:text-base tracking-tight text-white">Nexus AI</h1>
+            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">Omni-Mode</span>
           </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block">Assistant + Coordinateur + 10 Agents Spécialisés</p>
+          <p id="status-subtitle" class="text-[11px] text-slate-400 hidden sm:block">Raisonnement multi-tours • Code • Analyse • Rédaction • Outils</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-1 min-w-0">
-        <button type="button" onclick="toggleDateLocale()" id="date-locale-btn" title="Langue des dates" class="px-2 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900 text-indigo-300 border border-indigo-500/35 hover:border-indigo-400 transition whitespace-nowrap flex items-center gap-1 shrink-0">
-          <i class="fa-regular fa-calendar text-amber-400"></i>
-          <span id="date-locale-label">FR</span>
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <select id="mode-select" onchange="changeMode(this.value)" class="bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-indigo-200 focus:outline-none focus:border-indigo-500">
+          <option value="omni">Mode : Omni (Tout-en-un)</option>
+          <option value="reasoning">Mode : Raisonnement profond</option>
+          <option value="code">Mode : Ingénieur Code</option>
+          <option value="analyst">Mode : Analyste & Chiffres</option>
+          <option value="writer">Mode : Rédaction & Stratégie</option>
+        </select>
+
+        <button type="button" onclick="toggleSettings()" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 transition">
+          <i class="fa-solid fa-sliders text-amber-400"></i><span class="hidden sm:inline ml-1">Réglages</span>
         </button>
 
-        <nav class="flex items-center bg-slate-900/95 p-1 rounded-xl border border-slate-800 overflow-x-auto no-scrollbar">
-          <button type="button" onclick="switchTab('assistant')" id="tab-assistant" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
-            <i class="fa-solid fa-comment-dots mr-1"></i>Assistant
-          </button>
-          <button type="button" onclick="switchTab('catalog')" id="tab-catalog" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all bg-indigo-600 text-white shadow whitespace-nowrap">
-            <i class="fa-solid fa-layer-group mr-1"></i>Agents
-          </button>
-          <button type="button" onclick="switchTab('studio')" id="tab-studio" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
-            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Studio
-          </button>
-          <button type="button" onclick="switchTab('vault')" id="tab-vault" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
-            <i class="fa-solid fa-box-archive mr-1"></i>Classeur
-          </button>
-          <button type="button" onclick="switchTab('history')" id="tab-history" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">
-            <i class="fa-solid fa-clock-rotate-left mr-1"></i>Historique
-          </button>
-        </nav>
+        <button type="button" onclick="newConversation()" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition">
+          <i class="fa-solid fa-plus"></i><span class="hidden sm:inline ml-1">Nouveau</span>
+        </button>
       </div>
     </div>
   </header>
 
-  <main class="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-4 py-5 sm:py-6">
-
-    <!-- ASSISTANT : IDENTITÉ, CAPACITÉS & RAISONNEMENT STRUCTURÉ -->
-    <section id="view-assistant" class="hidden space-y-5">
-      <div class="glass rounded-2xl p-5 sm:p-6 space-y-4">
-        <div>
-          <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 mb-2">
-            <i class="fa-solid fa-sparkles text-amber-400"></i> Assistant IA Autopilot
-          </span>
-          <h2 class="text-xl sm:text-2xl font-extrabold text-white">Qui suis-je et que puis-je faire pour vous ?</h2>
-          <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
-            Je suis l'Assistant d'<strong>Autopilot-IA</strong>, une suite multi-agents conçue pour raisonner, collaborer entre agents, détecter/traiter les e-mails en veille continue et produire des livrables professionnels complets.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-          <div class="bg-slate-950/85 border border-slate-800 rounded-xl p-4 space-y-1.5">
-            <div class="font-bold text-indigo-300 flex items-center gap-1.5">
-              <i class="fa-solid fa-id-badge"></i> Qui je suis
-            </div>
-            <p class="text-slate-300 leading-relaxed">
-              Un assistant d'analyse piloté avec <strong>01 AUTOPILOT — Coordinateur</strong> et 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique/OHADA, Développement, Projets, Service client, Analyste), avec moteur à 3 niveaux (Gemini facultatif, IA distante ou moteur autonome expert).
-            </p>
-          </div>
-          <div class="bg-slate-950/85 border border-slate-800 rounded-xl p-4 space-y-1.5">
-            <div class="font-bold text-emerald-300 flex items-center gap-1.5">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> Ce que je sais faire
-            </div>
-            <p class="text-slate-300 leading-relaxed">
-              Résoudre directement sans répétition inutile, croiser l'expertise de plusieurs agents, surveiller les e-mails entrants en veille continue, envoyer les réponses, retoucher via <strong>Modifier</strong> et archiver dans le <strong>Classeur</strong>.
-            </p>
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <div class="text-xs font-bold text-slate-200">Lancer un cas concret dans le Studio :</div>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" onclick="sendDemoToStudio('05-rh', 'Rédiger le cadre de recrutement et la grille d\'entretien pour un responsable administratif et opérationnel polyvalent.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
-              Cadre & grille RH
-            </button>
-            <button type="button" onclick="sendDemoToStudio('03-finance', 'Établir un tableau d\'écriture comptable HT / TVA 18% / TTC pour une facture de 450 000 FCFA HT réglée par virement bancaire.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
-              Écriture comptable (Finance)
-            </button>
-            <button type="button" onclick="sendDemoToStudio('06-juridique', 'Rédiger les clauses essentielles d\'un contrat de prestation de services commerciales dans l\'espace OHADA.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
-              Contrat OHADA (Juridique)
-            </button>
-            <button type="button" onclick="sendDemoToStudio('09-service-client', 'Répondre à client.pro@entreprise.ci mécontent d\'un retard de livraison et proposer un plan de résolution et de fidélisation.')" class="text-xs px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition">
-              Service client & Mail (09)
-            </button>
-          </div>
-        </div>
-
-        <div class="border-t border-slate-800/80 pt-4 space-y-3">
-          <label for="assistant-question-input" class="block text-xs font-semibold text-slate-300">Poser une question à l'Assistant</label>
-          <div class="flex gap-2">
-            <input id="assistant-question-input" type="text" placeholder="Ex : Bonjour, Qui es-tu ? Comment structurer un budget ou recruter ?" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500" onkeydown="if(event.key==='Enter') askAssistant()">
-            <button type="button" onclick="askAssistant()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold whitespace-nowrap">
-              Demander
-            </button>
-          </div>
-          <div id="assistant-reply-box" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs sm:text-sm text-slate-200 leading-relaxed">
-            Bonjour ! Je suis l'Assistant d'Autopilot-IA. Posez-moi une question ou décrivez un problème à analyser et structurer.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ONGLET 1 : CATALOGUE DES 10 AGENTS -->
-    <section id="view-catalog" class="space-y-6">
-      <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/50 border border-indigo-500/20 p-5 sm:p-7">
-        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/25 px-3 py-1 rounded-full mb-3">
-          <i class="fa-solid fa-network-wired text-amber-400"></i> Architecture Multi-Agents Professionnelle
-        </span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
-          10 agents spécialisés pilotés par un coordinateur intelligent
-        </h2>
-        <p class="text-sm text-slate-300 leading-relaxed mb-5">
-          Utilisez <strong class="text-indigo-300">01 AUTOPILOT — Coordinateur</strong> pour l'orientation automatique ou sélectionnez directement un agent métier dans le <strong class="text-emerald-300">Studio</strong>.
-        </p>
-
-        <div class="grid grid-cols-3 gap-2.5 text-center">
-          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
-            <div id="flow-count-badge" class="text-lg sm:text-xl font-extrabold text-emerald-400">10 Agents</div>
-            <div class="text-[11px] text-slate-400">Métiers</div>
-          </div>
-          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
-            <div class="text-lg sm:text-xl font-extrabold text-indigo-400">Auto-Route</div>
-            <div class="text-[11px] text-slate-400">Coordinateur 01</div>
-          </div>
-          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
-            <div class="text-lg sm:text-xl font-extrabold text-violet-400">3 Niveaux</div>
-            <div class="text-[11px] text-slate-400">Continuité IA</div>
-          </div>
+  <!-- PANNEAU RÉGLAGES (CLÉ API, TEMPÉRATURE, AUTOMATISATION / WEBHOOK) -->
+  <div id="settings-panel" class="hidden max-w-6xl w-full mx-auto px-3 sm:px-5 pt-3">
+    <div class="glass rounded-2xl p-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+      <div class="space-y-1">
+        <label class="block font-semibold text-slate-300">Clé API Gemini (optionnelle)</label>
+        <div class="flex gap-1.5">
+          <input id="api-key-input" type="password" placeholder="AIzaSy..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-white focus:outline-none focus:border-indigo-500">
+          <button type="button" onclick="saveSettings()" class="px-3 py-2 rounded-lg bg-indigo-600 text-white font-semibold">OK</button>
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="category-filters">
-          <button type="button" onclick="filterFlows('all')" data-cat="all" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap">Tous (10)</button>
-          <button type="button" onclick="filterFlows('pilotage')" data-cat="pilotage" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Pilotage & Projets</button>
-          <button type="button" onclick="filterFlows('business')" data-cat="business" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Business, Marketing & Client</button>
-          <button type="button" onclick="filterFlows('finance-juridique')" data-cat="finance-juridique" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Finance, RH & Juridique</button>
-          <button type="button" onclick="filterFlows('tech-data')" data-cat="tech-data" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap">Développement & Analyse</button>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="resetDefaultFlows()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 border border-slate-800 hover:text-white transition">
-            Réinitialiser
-          </button>
-          <button type="button" onclick="openModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition">
-            <i class="fa-solid fa-plus mr-1"></i> Ajouter
-          </button>
-        </div>
+      <div class="space-y-1">
+        <label class="block font-semibold text-slate-300">Style de réponse</label>
+        <select id="style-select" onchange="saveSettings()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-white focus:outline-none focus:border-indigo-500">
+          <option value="balanced">Équilibré (clair, structuré, complet)</option>
+          <option value="concise">Direct & synthétique</option>
+          <option value="deep">Très approfondi & méthodique</option>
+        </select>
       </div>
 
-      <div id="flows-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </section>
-
-    <!-- ONGLET 2 : STUDIO MULTI-AGENTS -->
-    <section id="view-studio" class="hidden space-y-5">
-      <div class="glass rounded-2xl p-5 space-y-4">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-          <div>
-            <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-microchip text-indigo-400"></i> Studio Multi-Agents
-            </h2>
-            <p class="text-xs text-slate-400">Collaboration inter-agents • Envoi mail & veille continue • Classeur</p>
-          </div>
-          <button type="button" onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
-            <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé Gemini
-          </button>
-        </div>
-
-        <div id="fallback-key-box" class="hidden bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
-          <label class="block text-xs font-semibold text-slate-300">Clé API Gemini facultative</label>
-          <div class="flex gap-2">
-            <input type="password" id="local-api-key" placeholder="AIzaSy... (facultatif)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-            <button type="button" onclick="saveLocalKey()" class="px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Sauver</button>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">1. Choisir l'agent ou laisser 01 AUTOPILOT orienter</label>
-          <select id="studio-flow-select" onchange="loadFlowTemplate()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"></select>
-        </div>
-
-        <div>
-          <div class="flex items-center justify-between mb-1.5 gap-2 flex-wrap">
-            <label class="text-xs font-semibold text-slate-300">2. Données entrantes (demande, consigne, fichier texte)</label>
-            <div class="flex items-center gap-3">
-              <label for="doc-file-input" class="text-[11px] text-emerald-400 hover:underline cursor-pointer">
-                <i class="fa-solid fa-file-import mr-1"></i>Importer (.txt/.csv)
-              </label>
-              <input type="file" id="doc-file-input" accept=".txt,.md,.csv,.json,.log,text/*" onchange="handleFileImport(event)" class="hidden">
-              <button type="button" onclick="fillSampleData()" class="text-[11px] text-indigo-400 hover:underline">Exemple</button>
-              <button type="button" onclick="clearInput()" class="text-[11px] text-rose-400 hover:underline">Effacer</button>
-            </div>
-          </div>
-          <div id="imported-file-banner" class="hidden mb-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-[11px] text-emerald-300 flex items-center justify-between gap-2">
-            <span id="imported-file-name" class="truncate"></span>
-            <button type="button" onclick="hideFileBanner()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-          </div>
-          <textarea id="studio-input" rows="5" placeholder="Décrivez votre besoin précis (montants, contexte, objectif, contraintes, secteur...)." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
-        </div>
-
-        <button type="button" id="run-btn" onclick="executeWorkflow()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition">
-          <i class="fa-solid fa-play"></i> Exécuter avec l'agent
-        </button>
+      <div class="space-y-1">
+        <label class="block font-semibold text-slate-300">Endpoint Action / Mail (optionnel)</label>
+        <input id="action-webhook-input" onchange="saveSettings()" type="url" placeholder="https://votre-api-ou-webhook.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-white focus:outline-none focus:border-indigo-500">
       </div>
-
-      <div id="result-card" class="hidden glass rounded-2xl p-5 space-y-3 border-emerald-500/30">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-              <i class="fa-solid fa-circle-check"></i> Livrable généré
-            </span>
-            <span id="routed-agent-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/25">Agent actif</span>
-            <span id="engine-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">Moteur autonome</span>
-          </div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <button type="button" onclick="toggleEditOutput()" id="edit-btn" class="text-xs px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-200 hover:text-slate-950 border border-amber-500/30 transition">
-              <i class="fa-solid fa-pen mr-1"></i>Modifier
-            </button>
-            <button type="button" onclick="saveOutputToVault()" id="save-vault-btn" class="text-xs px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500 text-emerald-200 hover:text-slate-950 border border-emerald-500/30 transition">
-              <i class="fa-solid fa-box-archive mr-1"></i>Enregistrer
-            </button>
-            <button type="button" onclick="shareOutput()" id="share-btn" class="text-xs px-3 py-1 rounded-lg bg-indigo-600/25 hover:bg-indigo-600 text-indigo-200 hover:text-white border border-indigo-500/30 transition">
-              <i class="fa-solid fa-share-nodes mr-1"></i> Partager
-            </button>
-            <button type="button" onclick="copyOutput()" id="copy-btn" class="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
-              <i class="fa-regular fa-copy mr-1"></i> Copier
-            </button>
-          </div>
-        </div>
-
-        <div id="studio-output" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 leading-relaxed font-sans"></div>
-
-        <div id="output-editor-box" class="hidden space-y-2 pt-2">
-          <label class="block text-xs font-semibold text-amber-300">Modification directe du livrable</label>
-          <textarea id="studio-output-editor" rows="10" class="w-full bg-slate-950 border border-amber-500/40 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-amber-400"></textarea>
-          <div class="flex items-center justify-end gap-2">
-            <button type="button" onclick="cancelEditOutput()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300">Annuler</button>
-            <button type="button" onclick="applyEditedOutput(true)" class="text-xs px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold">Appliquer & Enregistrer</button>
-          </div>
-        </div>
-
-        <div id="email-dispatch-box" class="bg-slate-950/90 border border-indigo-500/30 rounded-xl p-4 space-y-3 mt-3">
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <span class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
-              <i class="fa-solid fa-paper-plane text-emerald-400"></i> Envoi d'e-mail & Collaboration inter-agents
-            </span>
-            <div class="flex items-center gap-2">
-              <button type="button" onclick="runInterAgentCollaboration()" class="text-[11px] px-2.5 py-1 rounded-lg bg-violet-600/25 hover:bg-violet-600 text-violet-200 hover:text-white border border-violet-500/30 transition">
-                <i class="fa-solid fa-people-arrows mr-1"></i> Faire collaborer les agents
-              </button>
-              <button type="button" onclick="toggleContinuousMailLoop()" id="mail-watch-btn" class="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-200 hover:text-white border border-emerald-500/30 transition">
-                <i class="fa-solid fa-radar mr-1"></i> Veille mail : OFF
-              </button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <input id="mail-to-input" type="email" placeholder="Destinataire (ex: client@exemple.com)" class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-            <input id="mail-subject-input" type="text" placeholder="Objet de l'e-mail" class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-          </div>
-
-          <input id="mail-webhook-input" type="url" placeholder="Endpoint d'envoi / boîte JSON optionnel (https://...)" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <span id="mail-status-text" class="text-[11px] text-slate-400">Prêt pour envoi direct ou veille continue.</span>
-            <div class="flex items-center gap-2">
-              <button type="button" onclick="simulateIncomingEmailTest()" class="text-[11px] px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200">
-                Simuler mail entrant
-              </button>
-              <button type="button" onclick="dispatchEmailNow()" class="text-xs px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold">
-                <i class="fa-solid fa-paper-plane mr-1"></i> Envoyer l'e-mail
-              </button>
-            </div>
-          </div>
-
-          <div id="collaboration-trace-box" class="hidden bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 space-y-1.5"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ONGLET 3 : BOÎTE INTERNE (CLASSEUR) -->
-    <section id="view-vault" class="hidden space-y-4">
-      <div class="flex items-center justify-between gap-2">
-        <div>
-          <h2 class="text-lg font-bold text-white">Boîte interne — Livrables enregistrés</h2>
-          <p class="text-xs text-slate-400">Vos documents modifiés et archivés localement sur l'appareil</p>
-        </div>
-        <button type="button" onclick="clearVault()" class="text-xs text-rose-400 hover:underline">Tout vider</button>
-      </div>
-      <div id="vault-list" class="space-y-3"></div>
-    </section>
-
-    <!-- ONGLET 4 : HISTORIQUE -->
-    <section id="view-history" class="hidden space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 class="text-lg font-bold text-white">Exécutions sauvegardées</h2>
-        <button type="button" onclick="clearHistory()" class="text-xs text-rose-400 hover:underline">Tout effacer</button>
-      </div>
-      <div id="history-list" class="space-y-3"></div>
-    </section>
-
-  </main>
-
-  <!-- MODAL AJOUT AGENT / FLUX -->
-  <div id="create-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="font-bold text-base text-white">Nouvel agent / flux personnalisé</h3>
-        <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <input id="new-title" type="text" placeholder="Nom de l'agent (ex: 11 Agent Logistique)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-      <select id="new-cat" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <option value="pilotage">Pilotage & Projets</option>
-        <option value="business">Business, Marketing & Client</option>
-        <option value="finance-juridique">Finance, RH & Juridique</option>
-        <option value="tech-data">Développement & Analyse</option>
-      </select>
-      <textarea id="new-prompt" rows="3" placeholder="Instruction système pour l'agent..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white"></textarea>
-      <button type="button" onclick="addCustomFlow()" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm">Enregistrer</button>
     </div>
   </div>
+
+  <!-- CORPS PRINCIPAL : HISTORIQUE LATÉRAL + ZONE DE CONVERSATION -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-5 py-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+    <!-- COLONNE GAUCHE : SESSIONS & RACCOURCIS -->
+    <aside class="lg:col-span-3 space-y-3">
+      <div class="glass rounded-2xl p-3.5 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-200 uppercase tracking-wider">Conversations</span>
+          <button type="button" onclick="clearAllSessions()" class="text-[11px] text-rose-400 hover:underline">Vider</button>
+        </div>
+        <div id="sessions-list" class="space-y-1.5 max-h-48 lg:max-h-72 overflow-y-auto no-scrollbar"></div>
+      </div>
+
+      <div class="glass rounded-2xl p-3.5 space-y-2">
+        <span class="text-xs font-bold text-slate-200 uppercase tracking-wider block">Capacités rapides</span>
+        <button type="button" onclick="usePromptPreset('Explique le problème étape par étape, identifie les hypothèses cachées et propose un plan d\'action concret pour : ')" class="w-full text-left text-xs px-2.5 py-2 rounded-xl bg-slate-900/90 hover:bg-indigo-600/25 border border-slate-800 text-slate-300 transition">
+          <i class="fa-solid fa-sitemap text-indigo-400 mr-1.5"></i> Raisonner & structurer
+        </button>
+        <button type="button" onclick="usePromptPreset('Écris une solution de code propre, commentée et prête à l\'emploi pour : ')" class="w-full text-left text-xs px-2.5 py-2 rounded-xl bg-slate-900/90 hover:bg-indigo-600/25 border border-slate-800 text-slate-300 transition">
+          <i class="fa-solid fa-code text-emerald-400 mr-1.5"></i> Générer / corriger du code
+        </button>
+        <button type="button" onclick="usePromptPreset('Analyse les chiffres, compare les options dans un tableau clair et donne une recommandation argumentée sur : ')" class="w-full text-left text-xs px-2.5 py-2 rounded-xl bg-slate-900/90 hover:bg-indigo-600/25 border border-slate-800 text-slate-300 transition">
+          <i class="fa-solid fa-chart-column text-amber-400 mr-1.5"></i> Analyser & comparer
+        </button>
+      </div>
+    </aside>
+
+    <!-- COLONNE DROITE : FIL DE DISCUSSION & SAISIE -->
+    <section class="lg:col-span-9 flex flex-col glass rounded-2xl overflow-hidden min-h-[72vh]">
+      <div id="chat-messages" class="flex-1 p-4 sm:p-5 space-y-4 overflow-y-auto max-h-[62vh]"></div>
+
+      <!-- ZONE DE SAISIE -->
+      <div class="border-t border-slate-800 bg-slate-950/90 p-3 sm:p-4 space-y-2">
+        <div class="flex items-center justify-between gap-2 text-[11px] text-slate-400 flex-wrap">
+          <div class="flex items-center gap-3">
+            <label for="file-attach-input" class="text-emerald-400 hover:underline cursor-pointer">
+              <i class="fa-solid fa-paperclip mr-1"></i>Joindre fichier texte
+            </label>
+            <input type="file" id="file-attach-input" accept=".txt,.md,.csv,.json,.js,.py,.html,.log,text/*" onchange="attachTextFile(event)" class="hidden">
+            <button type="button" onclick="openMailDraftModal()" class="text-indigo-300 hover:underline">
+              <i class="fa-solid fa-envelope mr-1"></i>Préparer / Envoyer mail
+            </button>
+          </div>
+          <span id="attached-file-label" class="text-emerald-300 truncate max-w-[220px]"></span>
+        </div>
+
+        <div class="flex items-end gap-2">
+          <textarea id="user-prompt" rows="2" placeholder="Demandez n'importe quoi : raisonnement, code, analyse, stratégie, rédaction, calcul..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 resize-none" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
+          <button type="button" id="send-btn" onclick="sendMessage()" class="px-4 sm:px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 transition shrink-0">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- MODAL ENVOI D'E-MAIL / ACTION EXTERNE -->
+  <div id="mail-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-5 space-y-3.5">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-white flex items-center gap-2">
+          <i class="fa-solid fa-envelope-circle-check text-indigo-400"></i> Envoyer / Préparer un e-mail
+        </h3>
+        <button type="button" onclick="closeMailDraftModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <input id="draft-mail-to" type="email" placeholder="Destinataire (ex: contact@entreprise.com)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+      <input id="draft-mail-subject" type="text" placeholder="Objet de l'e-mail" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+      <textarea id="draft-mail-body" rows="6" placeholder="Contenu de l'e-mail..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500"></textarea>
+      <div id="draft-mail-feedback" class="text-[11px] text-slate-400"></div>
+      <div class="flex items-center justify-end gap-2">
+        <button type="button" onclick="closeMailDraftModal()" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold">Fermer</button>
+        <button type="button" onclick="submitMailDraft()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">
+          <i class="fa-solid fa-paper-plane mr-1"></i> Envoyer / Ouvrir Mail
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const defaultFlows = [
-      {
-        id: '01-coordinateur',
-        title: '01 AUTOPILOT — Coordinateur',
-        category: 'pilotage',
-        badge: 'Coordinateur Intelligent',
-        icon: 'fa-compass-drafting',
-        role: 'Comprend les demandes et oriente vers le bon agent.',
-        action: 'Analyse l\'intention, mobilise l\'agent spécialiste adapté et produit un plan structuré.',
-        systemPrompt: 'Tu es 01 AUTOPILOT, le Coordinateur intelligent d\'une équipe de 9 agents spécialisés (Business, Finance, Marketing, RH, Juridique, Développement, Projets, Service client, Analyste). Réponds en français professionnel, précis et actionnable, sans ** ni ## ni <br>, sans répéter inutilement la consigne. Indique l\'agent mobilisé puis fournis un livrable complet avec tableau Markdown si pertinent.',
-        sample: 'Je lance une offre d\'abonnement B2B à 45 000 FCFA/mois : structurer le modèle commercial, estimer la rentabilité et planifier le lancement sur 30 jours.'
-      },
-      {
-        id: '02-business',
-        title: '02 Agent Business',
-        category: 'business',
-        badge: 'Stratégie & Développement',
-        icon: 'fa-briefcase',
-        role: 'Stratégie commerciale, création et développement d\'entreprises.',
-        action: 'Structure l\'offre, les segments, le modèle économique et la feuille de route.',
-        systemPrompt: 'Tu es l\'Agent Business (02) spécialisé en stratégie commerciale, création et développement d\'entreprise. Réponds en français professionnel sans ** ni ## ni <br>, sans répétition inutile. Livre une structure concrète : proposition de valeur, segments clients, modèle de revenus, risques et plan d\'exécution en tableau.',
-        sample: 'Structurer une offre de prestation de sécurité et de contrôle d\'accès pour des PME et résidences.'
-      },
-      {
-        id: '03-finance',
-        title: '03 Agent Finance',
-        category: 'finance-juridique',
-        badge: 'Finance & Comptabilité',
-        icon: 'fa-calculator',
-        role: 'Budgets, trésorerie, plans/écritures comptables et analyse financière.',
-        action: 'Établit des tableaux de comptes, écritures, budgets, prévisions et indicateurs.',
-        systemPrompt: 'Tu es l\'Agent Finance (03) expert en budgets, trésorerie, comptabilité et analyse financière. Réponds en français rigoureux sans ** ni ## ni <br>. Utilise un tableau Markdown clair pour les écritures, budgets ou prévisions et vérifie systématiquement les calculs.',
-        sample: 'Établir un tableau d\'écriture comptable HT / TVA 18% / TTC pour une facture de 450 000 FCFA HT réglée par virement bancaire.'
-      },
-      {
-        id: '04-marketing',
-        title: '04 Agent Marketing',
-        category: 'business',
-        badge: 'Marketing & Ventes',
-        icon: 'fa-bullhorn',
-        role: 'Publicité, communication, ventes et stratégie de marque.',
-        action: 'Conçoit des messages ciblés, angles de campagne, offres commerciales et plans de diffusion.',
-        systemPrompt: 'Tu es l\'Agent Marketing (04) spécialisé en publicité, communication, ventes et stratégie de marque. Réponds en français clair et percutant sans ** ni ## ni <br>, sans répétition. Fournis un positionnement, des accroches commerciales et un tableau de campagne.',
-        sample: 'Campagne de lancement d\'une solution d\'automatisation pour PME : messages clés, canaux et plan d\'action.'
-      },
-      {
-        id: '05-rh',
-        title: '05 Agent RH',
-        category: 'finance-juridique',
-        badge: 'Ressources Humaines',
-        icon: 'fa-users',
-        role: 'Recrutement, gestion du personnel et organisation.',
-        action: 'Rédige des cadres de recrutement, fiches de poste, critères et grilles d\'entretien.',
-        systemPrompt: 'Tu es l\'Agent RH (05) spécialisé en recrutement, gestion du personnel et organisation. Réponds en français structuré sans ** ni ## ni <br>, sans répétition. Fournis un cadre de poste précis et un tableau de grille d\'entretien.',
-        sample: 'Rédiger le cadre de recrutement et la grille d\'entretien pour un responsable administratif et opérationnel polyvalent.'
-      },
-      {
-        id: '06-juridique',
-        title: '06 Agent Juridique',
-        category: 'finance-juridique',
-        badge: 'Contrats & Droit OHADA',
-        icon: 'fa-scale-balanced',
-        role: 'Contrats, droit des affaires et réglementation OHADA.',
-        action: 'Structure des trames contractuelles, clauses sensibles et points de vigilance OHADA.',
-        systemPrompt: 'Tu es l\'Agent Juridique (06) spécialisé en contrats, droit des affaires et réglementation OHADA. Réponds en français structuré sans ** ni ## ni <br>. Rédige des clauses opérationnelles complètes (Article 1, Article 2...), les points OHADA et une mention de revue formelle.',
-        sample: 'Rédiger les clauses essentielles d\'un contrat de prestation de services commerciales dans l\'espace OHADA.'
-      },
-      {
-        id: '07-developpement',
-        title: '07 Agent Développement',
-        category: 'tech-data',
-        badge: 'Tech & Programmation',
-        icon: 'fa-code',
-        role: 'Programmation, applications et assistance technique.',
-        action: 'Propose des architectures, extraits de code fiables, corrections et bonnes pratiques.',
-        systemPrompt: 'Tu es l\'Agent Développement (07) spécialisé en programmation, applications web et assistance technique. Réponds en français clair sans ** ni ## ni <br>. Donne une architecture structurée, les contrôles de fiabilité et un exemple concret.',
-        sample: 'Structurer une persistance locale fiable en JavaScript avec gestion des erreurs et contrôle des données.'
-      },
-      {
-        id: '08-projets',
-        title: '08 Agent Projets',
-        category: 'pilotage',
-        badge: 'Gestion de Projet',
-        icon: 'fa-list-check',
-        role: 'Planification, suivi des tâches et gestion des objectifs.',
-        action: 'Découpe en lots, jalons, responsabilités, échéances et livrables vérifiables.',
-        systemPrompt: 'Tu es l\'Agent Projets (08) spécialisé en planification, suivi des tâches et gestion des objectifs. Réponds en français structuré sans ** ni ## ni <br>. Présente un tableau de pilotage avec phases, livrables, responsables, échéances et points de contrôle.',
-        sample: 'Planifier le déploiement d\'un processus interne sur 3 semaines avec jalons et livrables.'
-      },
-      {
-        id: '09-service-client',
-        title: '09 Agent Service client',
-        category: 'business',
-        badge: 'Relation & Fidélisation',
-        icon: 'fa-headset',
-        role: 'Réponses aux clients, réclamations et fidélisation.',
-        action: 'Rédige des réponses professionnelles, traite les réclamations et structure la fidélisation.',
-        systemPrompt: 'Tu es l\'Agent Service client (09) spécialisé en réponses clients, réclamations et fidélisation. Réponds en français clair, courtois et orienté résolution sans ** ni ## ni <br>. Propose un message prêt à envoyer, un geste/action corrective et un tableau de suivi.',
-        sample: 'Répondre à client.pro@entreprise.ci mécontent d\'un retard de livraison et proposer un plan de résolution et de fidélisation.'
-      },
-      {
-        id: '10-analyste',
-        title: '10 Agent Analyste',
-        category: 'tech-data',
-        badge: 'Données & Décision',
-        icon: 'fa-chart-line',
-        role: 'Analyse des données, rapports et aide à la décision.',
-        action: 'Analyse des éléments fournis, compare les options et formule une recommandation argumentée.',
-        systemPrompt: 'Tu es l\'Agent Analyste (10) spécialisé en analyse de données, rapports et aide à la décision. Réponds en français structuré sans ** ni ## ni <br>. Fournis le diagnostic, un tableau comparatif et une recommandation argumentée.',
-        sample: 'Comparer deux options d\'organisation (Option A : équipe centralisée ; Option B : pôles autonomes) selon coûts, réactivité et contrôle.'
+    const STORAGE_KEY = 'nexus_ai_sessions_v1';
+    const SETTINGS_KEY = 'nexus_ai_settings_v1';
+
+    const defaultSettings = {
+      apiKey: '',
+      mode: 'omni',
+      style: 'balanced',
+      webhookUrl: ''
+    };
+
+    let settings = { ...defaultSettings, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') };
+    let sessions = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    let activeSessionId = null;
+    let attachedFileText = '';
+    let attachedFileName = '';
+
+    function createNewSession(initialTitle = 'Nouvelle conversation') {
+      const id = 'sess-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+      const session = {
+        id,
+        title: initialTitle,
+        mode: settings.mode,
+        updatedAt: new Date().toISOString(),
+        messages: [
+          {
+            role: 'assistant',
+            content: [
+              'Bonjour. Je suis Nexus AI, configuré pour raisonner de manière structurée, écrire et analyser du code, croiser des chiffres ou des options, et garder le fil de nos échanges.',
+              '',
+              'Comment puis-je vous aider aujourd\'hui ? Indiquez votre objectif, vos contraintes et le format souhaité.'
+            ].join('\n'),
+            timestamp: new Date().toISOString()
+          }
+        ]
+      };
+      sessions.unshift(session);
+      activeSessionId = id;
+      persistSessions();
+      return session;
+    }
+
+    function ensureActiveSession() {
+      if (!Array.isArray(sessions) || sessions.length === 0) {
+        sessions = [];
+        return createNewSession();
       }
-    ];
-
-    let flows = JSON.parse(localStorage.getItem('autopilot_flows_v3')) || defaultFlows;
-    let currentFilter = 'all';
-    let selectedFlowId = localStorage.getItem('autopilot_selected_flow_v3') || flows[0].id;
-    if (!flows.some(f => f.id === selectedFlowId)) selectedFlowId = flows[0].id;
-    let rawLastOutputText = '';
-    let dateLocale = localStorage.getItem('autopilot_date_locale') || 'fr-FR';
-
-    function syncDateLocaleButton() {
-      const label = document.getElementById('date-locale-label');
-      if (!label) return;
-      label.textContent = dateLocale.startsWith('en') ? 'EN' : 'FR';
+      let current = sessions.find(s => s.id === activeSessionId);
+      if (!current) {
+        current = sessions[0];
+        activeSessionId = current.id;
+      }
+      return current;
     }
 
-    function formatDisplayDate(dateInput = new Date()) {
-      const d = dateInput instanceof Date ? dateInput : new Date(dateInput);
-      if (Number.isNaN(d.getTime())) return String(dateInput || '');
-      return d.toLocaleString(dateLocale);
+    function persistSessions() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions.slice(0, 30)));
     }
 
-    function toggleDateLocale() {
-      dateLocale = dateLocale.startsWith('fr') ? 'en-US' : 'fr-FR';
-      localStorage.setItem('autopilot_date_locale', dateLocale);
-      syncDateLocaleButton();
-      if (!document.getElementById('view-history').classList.contains('hidden')) renderHistory();
-      if (!document.getElementById('view-vault').classList.contains('hidden')) renderVault();
+    function saveSettings() {
+      settings.apiKey = (document.getElementById('api-key-input')?.value || '').trim();
+      settings.mode = document.getElementById('mode-select')?.value || 'omni';
+      settings.style = document.getElementById('style-select')?.value || 'balanced';
+      settings.webhookUrl = (document.getElementById('action-webhook-input')?.value || '').trim();
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      updateSubtitle();
+    }
+
+    function syncSettingsUI() {
+      if (document.getElementById('api-key-input')) document.getElementById('api-key-input').value = settings.apiKey || '';
+      if (document.getElementById('mode-select')) document.getElementById('mode-select').value = settings.mode || 'omni';
+      if (document.getElementById('style-select')) document.getElementById('style-select').value = settings.style || 'balanced';
+      if (document.getElementById('action-webhook-input')) document.getElementById('action-webhook-input').value = settings.webhookUrl || '';
+      updateSubtitle();
+    }
+
+    function updateSubtitle() {
+      const modeLabels = {
+        omni: 'Mode Omni',
+        reasoning: 'Raisonnement profond',
+        code: 'Ingénieur Code',
+        analyst: 'Analyste & Chiffres',
+        writer: 'Rédaction & Stratégie'
+      };
+      const engineLabel = settings.apiKey ? 'Gemini connecté' : 'Moteur raisonné local + API';
+      const el = document.getElementById('status-subtitle');
+      if (el) el.textContent = `${modeLabels[settings.mode] || 'Mode Omni'} • ${engineLabel}`;
+    }
+
+    function toggleSettings() {
+      document.getElementById('settings-panel').classList.toggle('hidden');
+    }
+
+    function changeMode(newMode) {
+      settings.mode = newMode;
+      const session = ensureActiveSession();
+      session.mode = newMode;
+      saveSettings();
+      persistSessions();
+    }
+
+    function newConversation() {
+      createNewSession();
+      renderSessions();
+      renderMessages();
+    }
+
+    function selectSession(id) {
+      activeSessionId = id;
+      const s = ensureActiveSession();
+      settings.mode = s.mode || settings.mode;
+      syncSettingsUI();
+      renderSessions();
+      renderMessages();
+    }
+
+    function clearAllSessions() {
+      if (!confirm('Supprimer toutes les conversations enregistrées ?')) return;
+      sessions = [];
+      localStorage.removeItem(STORAGE_KEY);
+      createNewSession();
+      renderSessions();
+      renderMessages();
     }
 
     function escapeHtml(str) {
@@ -520,1202 +302,507 @@
         .replace(/"/g, '&quot;');
     }
 
-    function formatInlineMarkdown(str) {
-      return String(str || '')
-        .replace(/<br\s*\/?>/gi, ' ')
-        .replace(/\*\*(.*?)\*\*/g, '$1')
-        .replace(/__(.*?)__/g, '$1')
-        .replace(/\*\*/g, '')
-        .trim();
+    function formatInline(text) {
+      return escapeHtml(text)
+        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
+        .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 text-xs font-mono">$1</code>');
     }
 
-    function buildFormattedHtml(rawText) {
-      const cleaned = String(rawText || '')
-        .replace(/<br\s*\/?>/gi, '\n')
-        .replace(/\*\*(.*?)\*\*/g, '$1')
-        .replace(/__(.*?)__/g, '$1')
-        .replace(/\*\*/g, '')
-        .replace(/^#{1,6}\s*/gm, '')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim();
-
-      if (!cleaned) return '';
-
-      const lines = cleaned.split('\n');
+    function renderRichContent(rawText) {
+      const text = String(rawText || '');
+      const parts = text.split(/(```[\s\S]*?```)/g);
       let html = '';
-      let tableRows = [];
 
-      const flushTable = () => {
-        if (!tableRows.length) return;
-        const parsedRows = tableRows
-          .filter(row => !/^\s*\|?[\s:-]+(?:\|[\s:-]+)+\|?\s*$/.test(row.trim()))
-          .map(row =>
-            row
-              .trim()
-              .replace(/^\||\|$/g, '')
-              .split('|')
-              .map(cell => formatInlineMarkdown(cell))
-          )
-          .filter(cells => cells.some(c => c.length > 0));
-
-        if (parsedRows.length > 0) {
-          const [header, ...body] = parsedRows;
-          html += '<div class="my-3 overflow-x-auto rounded-xl border border-slate-700/80 bg-slate-900/90">';
-          html += '<table class="min-w-[540px] w-full text-left border-collapse text-xs">';
-          html += '<thead class="bg-slate-800/90 text-indigo-300 border-b border-slate-700">';
-          html += '<tr>' + header.map(h => `<th class="px-3 py-2.5 font-bold whitespace-nowrap">${escapeHtml(h)}</th>`).join('') + '</tr>';
-          html += '</thead><tbody class="divide-y divide-slate-800/80">';
-          body.forEach(r => {
-            html += '<tr class="hover:bg-slate-800/40">' +
-              r.map(c => `<td class="px-3 py-2 text-slate-200 align-top">${escapeHtml(c)}</td>`).join('') +
-              '</tr>';
-          });
-          html += '</tbody></table></div>';
+      for (const part of parts) {
+        if (!part) continue;
+        if (part.startsWith('```') && part.endsWith('```')) {
+          const inner = part.slice(3, -3);
+          const firstBreak = inner.indexOf('\n');
+          const lang = firstBreak > -1 ? inner.slice(0, firstBreak).trim() : '';
+          const code = firstBreak > -1 ? inner.slice(firstBreak + 1) : inner;
+          html += `
+            <div class="my-2.5 rounded-xl overflow-hidden border border-slate-700 bg-slate-950">
+              <div class="flex items-center justify-between px-3 py-1.5 bg-slate-900 border-b border-slate-800 text-[11px] text-slate-400">
+                <span class="font-mono text-indigo-300">${escapeHtml(lang || 'code')}</span>
+                <button type="button" onclick="copyRawText(decodeURIComponent('${encodeURIComponent(code)}'))" class="hover:text-white">
+                  <i class="fa-regular fa-copy mr-1"></i>Copier
+                </button>
+              </div>
+              <pre class="p-3 overflow-x-auto text-xs text-emerald-200 leading-relaxed"><code>${escapeHtml(code.trim())}</code></pre>
+            </div>
+          `;
+          continue;
         }
-        tableRows = [];
-      };
 
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.includes('|') && (trimmed.startsWith('|') || trimmed.split('|').length >= 3)) {
-          tableRows.push(trimmed);
-        } else {
-          flushTable();
-          if (!trimmed) {
-            html += '<div class="h-2"></div>';
+        const lines = part.split('\n');
+        let tableBuffer = [];
+
+        const flushTable = () => {
+          if (!tableBuffer.length) return;
+          const rows = tableBuffer
+            .filter(r => !/^\s*\|?[\s:-]+(?:\|[\s:-]+)+\|?\s*$/.test(r.trim()))
+            .map(r => r.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim()));
+          if (rows.length) {
+            const [head, ...body] = rows;
+            html += '<div class="my-2.5 overflow-x-auto rounded-xl border border-slate-700/80 bg-slate-900/90">';
+            html += '<table class="min-w-[480px] w-full text-left border-collapse text-xs">';
+            html += '<thead class="bg-slate-800 text-indigo-300 border-b border-slate-700"><tr>' +
+              head.map(h => `<th class="px-3 py-2 font-bold">${formatInline(h)}</th>`).join('') +
+              '</tr></thead><tbody class="divide-y divide-slate-800/80">';
+            body.forEach(row => {
+              html += '<tr>' + row.map(cell => `<td class="px-3 py-2 text-slate-200 align-top">${formatInline(cell)}</td>`).join('') + '</tr>';
+            });
+            html += '</tbody></table></div>';
+          }
+          tableBuffer = [];
+        };
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (trimmed.includes('|') && (trimmed.startsWith('|') || trimmed.split('|').length >= 3)) {
+            tableBuffer.push(trimmed);
           } else {
-            html += `<p class="text-sm text-slate-200 leading-relaxed my-1">${escapeHtml(trimmed)}</p>`;
+            flushTable();
+            if (!trimmed) {
+              html += '<div class="h-2"></div>';
+            } else if (/^#{1,4}\s+/.test(trimmed)) {
+              const heading = trimmed.replace(/^#{1,4}\s+/, '');
+              html += `<h4 class="font-bold text-white text-sm mt-2.5 mb-1">${formatInline(heading)}</h4>`;
+            } else if (/^[-*•]\s+/.test(trimmed)) {
+              const item = trimmed.replace(/^[-*•]\s+/, '');
+              html += `<div class="flex items-start gap-2 my-1 text-xs sm:text-sm text-slate-200"><span class="text-indigo-400 mt-0.5">•</span><span>${formatInline(item)}</span></div>`;
+            } else {
+              html += `<p class="text-xs sm:text-sm text-slate-200 leading-relaxed my-1">${formatInline(trimmed)}</p>`;
+            }
           }
         }
+        flushTable();
       }
-      flushTable();
 
       return html;
     }
 
-    function renderFormattedOutput(rawText, containerEl) {
-      containerEl.innerHTML = buildFormattedHtml(rawText);
+    function renderSessions() {
+      const container = document.getElementById('sessions-list');
+      if (!container) return;
+      container.innerHTML = sessions.map(s => {
+        const isActive = s.id === activeSessionId;
+        return `
+          <button type="button" onclick="selectSession('${s.id}')" class="w-full text-left px-2.5 py-2 rounded-xl text-xs truncate transition ${
+            isActive
+              ? 'bg-indigo-600 text-white font-semibold shadow'
+              : 'bg-slate-900/80 text-slate-300 hover:bg-slate-800'
+          }">
+            ${escapeHtml(s.title || 'Conversation')}
+          </button>
+        `;
+      }).join('');
     }
 
-    function routeToBestAgent(inputText) {
-      const t = String(inputText || '').toLowerCase();
-      const rules = [
-        { id: '03-finance', keys: ['comptab', 'plan de comptes', 'écriture', 'bilan', 'trésorerie', 'budget', 'tva', 'facture', 'ht', 'ttc', 'débit', 'crédit', 'finance'] },
-        { id: '06-juridique', keys: ['contrat', 'clause', 'ohada', 'juridique', 'droit', 'résiliation', 'litige', 'statut', 'bail', 'accord'] },
-        { id: '05-rh', keys: ['recrut', 'candidat', 'cv', 'entretien', 'personnel', 'employé', 'salaire', 'rh', 'ressources humaines', 'poste', 'fiche de poste'] },
-        { id: '04-marketing', keys: ['marketing', 'publicité', 'campagne', 'communication', 'marque', 'promo', 'affiche', 'réseaux sociaux', 'clientèle', 'lancement'] },
-        { id: '09-service-client', keys: ['réclamation', 'plainte', 'support client', 'service client', 'fidélis', 'relance client', 'sav', 'mécontent', 'livraison', 'retard'] },
-        { id: '07-developpement', keys: ['code', 'javascript', 'html', 'css', 'python', 'api', 'bug', 'application', 'développ', 'script', 'sql', 'persistance'] },
-        { id: '08-projets', keys: ['projet', 'planning', 'jalon', 'tâche', 'échéance', 'objectif', 'suivi', 'livrable', 'sprint', 'déploiement'] },
-        { id: '10-analyste', keys: ['analyse', 'rapport', 'données', 'statistique', 'comparer', 'option', 'décision', 'indicateur', 'kpi'] },
-        { id: '02-business', keys: ['business', 'entreprise', 'stratégie commerciale', 'modèle économique', 'création', 'développement', 'offre', 'abonnement'] }
-      ];
+    function renderMessages() {
+      const session = ensureActiveSession();
+      const box = document.getElementById('chat-messages');
+      if (!box) return;
 
-      for (const rule of rules) {
-        if (rule.keys.some(k => t.includes(k))) {
-          const found = flows.find(f => f.id === rule.id);
-          if (found) return found;
-        }
-      }
-      return flows.find(f => f.id === '02-business') || flows[0];
+      box.innerHTML = session.messages.map((msg, index) => {
+        const isUser = msg.role === 'user';
+        return `
+          <div class="flex ${isUser ? 'justify-end' : 'justify-start'}">
+            <div class="max-w-[92%] sm:max-w-[82%] rounded-2xl p-3.5 sm:p-4 space-y-2 ${
+              isUser
+                ? 'bg-indigo-600/25 border border-indigo-500/40 text-white'
+                : 'bg-slate-900/95 border border-slate-800 text-slate-100'
+            }">
+              <div class="flex items-center justify-between gap-3 text-[11px] ${isUser ? 'text-indigo-200' : 'text-slate-400'}">
+                <span class="font-bold">${isUser ? 'Vous' : 'Nexus AI'}</span>
+                <div class="flex items-center gap-2">
+                  ${!isUser ? `<button type="button" onclick="copyMessageAt(${index})" class="hover:text-white" title="Copier"><i class="fa-regular fa-copy"></i></button>` : ''}
+                  ${!isUser ? `<button type="button" onclick="prepareMailFromMessageAt(${index})" class="hover:text-indigo-300" title="Envoyer par mail"><i class="fa-solid fa-envelope"></i></button>` : ''}
+                </div>
+              </div>
+              <div>${isUser ? `<p class="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">${escapeHtml(msg.content)}</p>` : renderRichContent(msg.content)}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      box.scrollTop = box.scrollHeight;
     }
 
-    function sendDemoToStudio(agentId, sampleText) {
-      selectedFlowId = agentId;
-      localStorage.setItem('autopilot_selected_flow_v3', agentId);
-      const select = document.getElementById('studio-flow-select');
-      if (select) select.value = agentId;
-      document.getElementById('studio-input').value = sampleText;
-      switchTab('studio');
+    function copyRawText(text) {
+      navigator.clipboard?.writeText(String(text || ''));
     }
 
-    function isGreetingText(text) {
-      const cleaned = String(text || '').toLowerCase().trim();
-      return /^(bonjour|bonsoir|salut|hello|hi|coucou|hey|yo|ça va|ca va|comment ça va|comment ca va)[!.?\s]*$/i.test(cleaned);
+    function copyMessageAt(index) {
+      const session = ensureActiveSession();
+      const msg = session.messages[index];
+      if (msg) copyRawText(msg.content);
     }
 
-    function buildStructuredAssistantReasoning(rawQuestion) {
-      const q = String(rawQuestion || '').trim();
-      const lower = q.toLowerCase();
-
-      if (!q || isGreetingText(q)) {
-        return [
-          '1. Intention détectée : Accueil et prise de contact.',
-          '2. Raisonnement : Je clarifie mon rôle d\'Assistant, mes capacités concrètes et comment exploiter les 10 agents spécialisés.',
-          '3. Réponse structurée :',
-          '• Qui je suis : L\'Assistant d\'Autopilot-IA (PRO), couplé à 01 AUTOPILOT — Coordinateur et 9 agents métiers (Business, Finance, Marketing, RH, Juridique/OHADA, Développement, Projets, Service client, Analyste).',
-          '• Ce que je sais faire : Résoudre directement sans répétition inutile, croiser les agents, détecter/traiter les e-mails en veille continue, envoyer les réponses et archiver dans le Classeur.',
-          '4. Prochaine étape : Décrivez votre objectif précis ou cliquez sur l\'un des cas concrets ci-dessus.'
-        ].join('\n');
-      }
-
-      if (
-        lower.includes('qui es-tu') ||
-        lower.includes('qui est') ||
-        lower.includes('présente') ||
-        lower.includes('que peux-tu') ||
-        lower.includes('que sais-tu') ||
-        lower.includes('capable') ||
-        lower.includes('fonctionne') ||
-        lower.includes('aide')
-      ) {
-        return [
-          '1. Intention détectée : Présentation et périmètre fonctionnel.',
-          '2. Raisonnement : Je détaille la complémentarité entre l\'Assistant, le Coordinateur 01 et les 9 agents spécialisés.',
-          '3. Réponse structurée :',
-          '• Identité : Suite multi-agents Autopilot-IA PRO avec 10 agents métiers spécialisés.',
-          '• Collaboration & Mail : Les agents peuvent croiser leurs analyses et traiter/envoyer des e-mails en veille continue.',
-          '• Continuité : Fonctionne avec clé Gemini facultative, IA distante ou moteur autonome expert.',
-          '4. Prochaine étape : Lancez une demande dans le Studio puis testez « Faire collaborer les agents » ou « Envoyer l\'e-mail ».'
-        ].join('\n');
-      }
-
-      const bestAgent = routeToBestAgent(q);
-      return [
-        `1. Intention détectée : Besoin relevant de « ${bestAgent.title} » (${bestAgent.badge}).`,
-        `2. Raisonnement : J'isole l'objectif (« ${q.slice(0, 140)}${q.length > 140 ? '...' : ''} ») et l'agent le plus apte à le traiter.`,
-        '3. Structure recommandée :',
-        `• Agent principal : ${bestAgent.title} — ${bestAgent.role}`,
-        `• Livrable attendu : ${bestAgent.action}`,
-        '4. Prochaine étape : Ouvrez le Studio avec « ${bestAgent.title} » ou « 01 AUTOPILOT — Coordinateur » pour générer le livrable complet.'
-      ].join('\n');
+    function usePromptPreset(prefix) {
+      const input = document.getElementById('user-prompt');
+      if (!input) return;
+      input.value = prefix + input.value;
+      input.focus();
     }
 
-    async function askAssistant() {
-      const inputEl = document.getElementById('assistant-question-input');
-      const boxEl = document.getElementById('assistant-reply-box');
-      const rawQuestion = (inputEl.value || '').trim();
-      const lower = rawQuestion.toLowerCase();
-
-      const structuredFallback = buildStructuredAssistantReasoning(rawQuestion);
-
-      if (
-        !rawQuestion ||
-        isGreetingText(rawQuestion) ||
-        lower.includes('qui es-tu') ||
-        lower.includes('qui est') ||
-        lower.includes('présente') ||
-        lower.includes('que peux-tu') ||
-        lower.includes('que sais-tu') ||
-        lower.includes('capable') ||
-        lower.includes('fonctionne') ||
-        lower.includes('aide')
-      ) {
-        renderFormattedOutput(deduplicateLines(structuredFallback), boxEl);
+    function attachTextFile(event) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+      if (file.size > 250 * 1024) {
+        alert('Fichier texte trop volumineux (max 250 Ko).');
+        event.target.value = '';
         return;
       }
-
-      boxEl.innerHTML = '<span class="text-indigo-300"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Raisonnement et structuration en cours...</span>';
-
-      const assistantSystemPrompt = [
-        'Tu es l\'Assistant d\'Autopilot-IA PRO.',
-        'Réponds en français clair, structuré et rigoureux, sans ** ni ## ni <br>, sans répéter la question.',
-        'Organise ta réponse en 4 points courts et précis : 1. Intention, 2. Raisonnement, 3. Solution/Structure, 4. Prochaine étape.'
-      ].join(' ');
-
-      try {
-        const localKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
-        if (localKey) {
-          const res = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                systemInstruction: { parts: [{ text: assistantSystemPrompt }] },
-                contents: [{ parts: [{ text: rawQuestion }] }]
-              })
-            }
-          );
-          const data = await res.json();
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-          if (res.ok && text) {
-            renderFormattedOutput(deduplicateLines(text), boxEl);
-            return;
-          }
-        }
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-        const remoteRes = await fetch('https://text.pollinations.ai/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          signal: controller.signal,
-          body: JSON.stringify({
-            messages: [
-              { role: 'system', content: assistantSystemPrompt },
-              { role: 'user', content: rawQuestion }
-            ],
-            model: 'openai'
-          })
-        });
-        clearTimeout(timeoutId);
-        const remoteText = remoteRes.ok ? (await remoteRes.text()).trim() : '';
-        if (remoteText && !remoteText.toLowerCase().includes('error') && remoteText.length > 40) {
-          renderFormattedOutput(deduplicateLines(remoteText), boxEl);
-          return;
-        }
-      } catch (_) {}
-
-      renderFormattedOutput(deduplicateLines(structuredFallback), boxEl);
-    }
-    function deduplicateLines(text) {
-      const seen = new Set();
-      return String(text || '')
-        .split('\n')
-        .filter(line => {
-          const norm = line.trim().toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, '');
-          if (!norm) return true;
-          if (norm.length < 18) return true;
-          if (seen.has(norm)) return false;
-          seen.add(norm);
-          return true;
-        })
-        .join('\n')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim();
-    }
-
-    function extractAmounts(text) {
-      const cleanedText = String(text || '')
-        .replace(/\d+(?:[.,]\d+)?\s*%/g, ' ')
-        .replace(/\b[a-zA-Z]+\d+\w*|\b\d+[a-zA-Z]+\w*/g, ' ')
-        .replace(/\b\d+\s*(?:jours?|semaines?|mois|ans?)\b/gi, ' ');
-
-      const matches = [...cleanedText.matchAll(/(?<!\w)(\d{1,3}(?:[\s\u00A0]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)(?!\w)/g)];
-      return matches
-        .map(m => Number(m[1].replace(/[\s\u00A0]+/g, '').replace(',', '.')))
-        .filter(n => !Number.isNaN(n) && n > 0);
-    }
-
-    function extractVatRate(text) {
-      const match = String(text || '').match(/tva\s*(?:de\s*|à\s*)?(\d+(?:[.,]\d+)?)\s*%|(\d+(?:[.,]\d+)?)\s*%\s*(?:de\s*)?tva/i);
-      const raw = match ? (match[1] || match[2]) : null;
-      const rate = raw ? Number(raw.replace(',', '.')) : 18;
-      return (!Number.isNaN(rate) && rate >= 0 && rate <= 50) ? rate : 18;
-    }
-
-    function extractDurationDays(text) {
-      const match = String(text || '').match(/(\d+)\s*(jours?|semaines?|mois)/i);
-      if (!match) return 30;
-      const n = Number(match[1]) || 30;
-      const unit = match[2].toLowerCase();
-      if (unit.startsWith('semaine')) return n * 7;
-      if (unit.startsWith('mois')) return n * 30;
-      return n;
-    }
-
-    function extractRoleTitle(input) {
-      const match = String(input || '').match(/(?:pour un|pour une|poste de|recrutement d'un|recrutement d'une)\s+([^\n.:;]+)/i);
-      return match ? match[1].trim() : 'Responsable administratif et opérationnel polyvalent';
-    }
-
-    function buildAutonomousOutput(agent, input, wasCoordinated) {
-      const cleanInput = String(input || '').trim();
-      const lower = cleanInput.toLowerCase();
-      const headerNote = wasCoordinated ? `Routage 01 AUTOPILOT -> ${agent.title}\n\n` : '';
-
-      const extractedEmail = (cleanInput.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i) || [])[0] || '';
-      if (extractedEmail) {
-        const toEl = document.getElementById('mail-to-input');
-        if (toEl && !toEl.value) toEl.value = extractedEmail;
-      }
-
-      if (agent.id === '09-service-client') {
-        const isDeliveryDelay = /retard|livraison|expédition|colis|délai/i.test(lower);
-        const subjEl = document.getElementById('mail-subject-input');
-        if (subjEl) {
-          subjEl.value = isDeliveryDelay
-            ? 'Suivi prioritaire de votre livraison et résolution immédiate'
-            : 'Prise en charge prioritaire de votre demande';
-        }
-
-        return deduplicateLines(headerNote + [
-          isDeliveryDelay
-            ? 'Diagnostic : Retard de livraison impactant l\'activité client ; priorité absolue à la réassurance, à une échéance ferme et au suivi.'
-            : 'Diagnostic : Demande client nécessitant une réponse rapide, une action corrective mesurable et un suivi jusqu\'à résolution.',
-          '',
-          'Message prêt à envoyer :',
-          'Bonjour [Nom du client],',
-          '',
-          isDeliveryDelay
-            ? 'Nous vous prions d\'excuser le retard constaté sur votre livraison. Votre dossier est pris en charge en priorité afin de vous garantir une livraison ferme sous [date/heure exacte], avec suivi d\'acheminement dédié.'
-            : 'Nous avons bien pris en compte votre demande et mettons tout en œuvre pour apporter une solution complète sous [délai précis].',
-          '',
-          'Pour compenser ce contretemps, nous prévoyons [geste commercial / priorité de traitement / avoir] et restons directement mobilisés jusqu\'à confirmation de votre pleine satisfaction.',
-          '',
-          'Cordialement,',
-          'Service Client — Autopilot-IA',
-          '',
-          '| Phase | Action opérationnelle | Responsable | Délai cible | Livrable |',
-          '| --- | --- | --- | --- | --- |',
-          '| 1. Accusé & Cadrage | Confirmer la prise en charge et communiquer un créneau ferme | 09 Service client | Immédiat (< 2h) | Message client envoyé |',
-          '| 2. Traitement racine | Identifier la cause exacte et sécuriser la nouvelle exécution | 08 Projets / Logistique | Sous 24h | Nouvelle échéance validée |',
-          '| 3. Geste & Contrôle | Appliquer l\'ajustement commercial/financier si applicable | 03 Finance / 09 Client | Sous 48h | Dossier conformité |',
-          '| 4. Clôture | Vérifier la réception/satisfaction finale du client | 09 Service client | J+3 | Ticket clôturé |'
-        ].join('\n'));
-      }
-
-      if (agent.id === '03-finance') {
-        const amounts = extractAmounts(cleanInput);
-        const vatRate = extractVatRate(cleanInput);
-        const isTtcOnly = /\bttc\b/i.test(cleanInput) && !/\bht\b/i.test(cleanInput);
-        const isSale = /vente|client|facture client|prestation vendue|encaissement/i.test(lower);
-
-        let htAmount = amounts[0] || 450000;
-        let tvaAmount = Math.round((htAmount * vatRate) / 100);
-        let ttcAmount = htAmount + tvaAmount;
-
-        if (isTtcOnly) {
-          ttcAmount = amounts[0] || 531000;
-          htAmount = Math.round(ttcAmount / (1 + vatRate / 100));
-          tvaAmount = ttcAmount - htAmount;
-        }
-
-        const isBank = /virement|banque|chèque|521/i.test(lower);
-        const isCash = /caisse|espèces|571/i.test(lower);
-        const treasuryCode = isCash ? '571' : '521';
-        const treasuryName = isCash ? 'Caisse' : 'Banques';
-        const paymentMode = isCash ? 'en espèces' : (isBank ? 'par virement bancaire' : 'à terme');
-
-        if (isSale) {
-          return deduplicateLines(headerNote + [
-            `Comptabilisation de vente / prestation (TVA ${vatRate}% — règlement ${paymentMode}) :`,
-            `Base HT : ${htAmount.toLocaleString('fr-FR')} FCFA | TVA collectée (${vatRate}%) : ${tvaAmount.toLocaleString('fr-FR')} FCFA | Total TTC : ${ttcAmount.toLocaleString('fr-FR')} FCFA.`,
-            '',
-            '| Compte | Intitulé du compte | Débit (FCFA) | Crédit (FCFA) | Justification |',
-            '| --- | --- | --- | --- | --- |',
-            `| 411 | Clients | ${ttcAmount.toLocaleString('fr-FR')} | 0 | Créance client TTC |`,
-            `| 706 | Services vendus / Produits | 0 | ${htAmount.toLocaleString('fr-FR')} | Chiffre d'affaires HT |`,
-            `| 4432 | État, TVA facturée sur prestations | 0 | ${tvaAmount.toLocaleString('fr-FR')} | TVA ${vatRate}% collectée |`,
-            ...(isBank || isCash ? [
-              `| ${treasuryCode} | ${treasuryName} | ${ttcAmount.toLocaleString('fr-FR')} | 0 | Encaissement TTC (${paymentMode}) |`,
-              `| 411 | Clients | 0 | ${ttcAmount.toLocaleString('fr-FR')} | Solde de la créance client |`
-            ] : []),
-            '',
-            `Contrôle d'équilibre : Total Débit = Total Crédit (${(isBank || isCash ? ttcAmount * 2 : ttcAmount).toLocaleString('fr-FR')} FCFA).`
-          ].join('\n'));
-        }
-
-        return deduplicateLines(headerNote + [
-          `Comptabilisation de charge / prestation reçue (TVA ${vatRate}% — règlement ${paymentMode}) :`,
-          `Base HT : ${htAmount.toLocaleString('fr-FR')} FCFA | TVA récupérable (${vatRate}%) : ${tvaAmount.toLocaleString('fr-FR')} FCFA | Total TTC : ${ttcAmount.toLocaleString('fr-FR')} FCFA.`,
-          '',
-          '| Compte | Intitulé du compte | Débit (FCFA) | Crédit (FCFA) | Justification |',
-          '| --- | --- | --- | --- | --- |',
-          `| 6265 / 613 | Services extérieurs / Charges d'exploitation | ${htAmount.toLocaleString('fr-FR')} | 0 | Montant HT de la facture |`,
-          `| 4452 | État, TVA récupérable sur charges | ${tvaAmount.toLocaleString('fr-FR')} | 0 | TVA ${vatRate}% déductible |`,
-          `| 401 | Fournisseurs — Factures à payer | 0 | ${ttcAmount.toLocaleString('fr-FR')} | Dette fournisseur TTC |`,
-          ...(isBank || isCash ? [
-            `| 401 | Fournisseurs — Règlement facture | ${ttcAmount.toLocaleString('fr-FR')} | 0 | Apurement dette fournisseur |`,
-            `| ${treasuryCode} | ${treasuryName} | 0 | ${ttcAmount.toLocaleString('fr-FR')} | Décaissement TTC (${paymentMode}) |`
-          ] : []),
-          '',
-          `Contrôle d'équilibre : Total Débit = Total Crédit (${(isBank || isCash ? ttcAmount * 2 : ttcAmount).toLocaleString('fr-FR')} FCFA).`
-        ].join('\n'));
-      }
-
-      if (agent.id === '06-juridique') {
-        const hasOhada = /ohada/i.test(lower);
-        const isService = /prestation|service|commercial|mission|conseil|maintenance/i.test(lower);
-        const title = isService
-          ? 'CONTRAT DE PRESTATION DE SERVICES COMMERCIALES'
-          : `TRAME CONTRACTUELLE : ${cleanInput.slice(0, 95).toUpperCase()}`;
-
-        return deduplicateLines(headerNote + [
-          `${title}${hasOhada ? ' (CADRE JURIDIQUE OHADA)' : ''}`,
-          '',
-          'Entre les soussignés :',
-          '• Le Client : [Dénomination sociale, forme juridique, siège social, RCCM, représenté par ...]',
-          '• Le Prestataire : [Dénomination sociale / Nom, RCCM / immatriculation, siège social, représenté par ...]',
-          '',
-          'Article 1 — Objet du contrat',
-          'Le Prestataire s\'engage à exécuter au profit du Client les prestations commerciales définies dans le cahier des charges annexé (prospection, développement commercial, représentation ou suivi clientèle), en toute indépendance et sans lien de subordination.',
-          '',
-          'Article 2 — Obligations et moyens des parties',
-          '2.1 Le Prestataire exécute sa mission avec diligence, loyauté et conformité aux usages professionnels, et remet un compte rendu périodique d\'activité.',
-          '2.2 Le Client communique en temps utile les tarifs, conditions générales de vente, supports commerciaux et validations nécessaires.',
-          '',
-          'Article 3 — Conditions financières et facturation',
-          'En contrepartie des prestations, le Client verse une rémunération [forfaitaire mensuelle / à la commission selon barème annexé], payable à réception de facture sous [15 / 30] jours par virement bancaire. Tout retard de paiement ouvre droit, après mise en demeure restée sans effet, aux pénalités légales applicables.',
-          '',
-          'Article 4 — Durée, renouvellement et résiliation',
-          'Le présent contrat prend effet à compter de sa signature pour une durée de [12 mois], renouvelable par accord écrit ou tacite reconduction. Chaque partie peut le résilier moyennant un préavis écrit de [30 jours], ou de plein droit en cas de manquement grave non réparé dans un délai de [15 jours] après mise en demeure.',
-          '',
-          'Article 5 — Confidentialité et non-détournement',
-          'Les parties s\'engagent à conserver strictement confidentiels les fichiers clients, grilles tarifaires, données financières et savoir-faire échangés pendant toute la durée du contrat et pendant [2 ans] après son expiration.',
-          '',
-          'Article 6 — Droit applicable et règlement des différends',
-          hasOhada
-            ? 'Le présent contrat est régi par les Actes uniformes de l\'OHADA (notamment l\'Acte uniforme portant sur le droit commercial général) et le droit national du siège du Client. Tout différend fera l\'objet d\'une tentative de règlement amiable sous [15 jours] ; à défaut d\'accord, il sera soumis à la juridiction compétente du ressort convenu.'
-            : 'Le présent contrat est soumis au droit national applicable. À défaut de règlement amiable préalable sous [15 jours], tout litige relèvera de la juridiction compétente.',
-          '',
-          'Vigilance professionnelle : Compléter les mentions entre crochets et faire valider les annexes tarifaires avant signature.'
-        ].join('\n'));
-      }
-
-      if (agent.id === '05-rh') {
-        const poste = extractRoleTitle(cleanInput);
-        return deduplicateLines(headerNote + [
-          `Dossier de recrutement structuré — ${poste}`,
-          '',
-          '1. Positionnement et missions principales :',
-          '• Gestion administrative et conformité : tenue des dossiers du personnel, contrats, courriers, archivage et suivi réglementaire.',
-          '• Coordination opérationnelle : planification des activités, suivi des équipes et résolution des aléas quotidiens.',
-          '• Pilotage et reporting : consolidation des indicateurs d\'activité, suivi des coûts et préparation des comptes rendus de direction.',
-          '',
-          '2. Prérequis et compétences clés :',
-          '• Expérience confirmée sur un poste administratif ou opérationnel polyvalent.',
-          '• Maîtrise des outils bureautiques (tableurs, traitement de texte, suivi documentaire) et rigueur dans le contrôle des chiffres.',
-          '• Sens de l\'organisation, discrétion professionnelle et capacité à prioriser sous contrainte de délai.',
-          '',
-          '3. Grille d\'évaluation en entretien :',
-          '',
-          '| Compétence évaluée | Question structurée | Indicateurs de réussite | Pondération |',
-          '| --- | --- | --- | --- |',
-          '| Organisation & Priorités | Comment gérez-vous simultanément une urgence opérationnelle et une échéance administrative ? | Méthode claire de tri, traçabilité et respect des délais | 25% |',
-          '| Coordination terrain | Racontez une situation où vous avez dû aligner plusieurs interlocuteurs pour débloquer un dossier. | Leadership calme, faits précis et résultat mesurable | 30% |',
-          '| Rigueur & Contrôle | Quelles vérifications effectuez-vous avant de transmettre un tableau chiffré ou un contrat ? | Double contrôle, attention aux détails et confidentialité | 25% |',
-          '| Posture & Fiabilité | Comment réagissez-vous face à une erreur détectée ou une consigne incomplète ? | Responsabilité, transparence et proposition de correctif | 20% |'
-        ].join('\n'));
-      }
-
-      if (agent.id === '02-business' || agent.id === '01-coordinateur') {
-        const amounts = extractAmounts(cleanInput);
-        const days = extractDurationDays(cleanInput);
-        const unitPrice = amounts[0] || 45000;
-        const mrr10 = unitPrice * 10;
-        const mrr25 = unitPrice * 25;
-        const mrr50 = unitPrice * 50;
-
-        return deduplicateLines(headerNote + [
-          `Architecture commerciale & projection financière (Horizon : ${days} jours)`,
-          '',
-          `1. Proposition de valeur & tarification : Offre structurée autour d'un tarif de référence de ${unitPrice.toLocaleString('fr-FR')} FCFA / mois, centrée sur le gain de temps et la fiabilité opérationnelle.`,
-          `2. Simulation de revenus mensuels récurrents (MRR) :`,
-          `• Palier démarrage (10 clients actifs) : ${mrr10.toLocaleString('fr-FR')} FCFA / mois`,
-          `• Palier croissance (25 clients actifs) : ${mrr25.toLocaleString('fr-FR')} FCFA / mois`,
-          `• Palier consolidation (50 clients actifs) : ${mrr50.toLocaleString('fr-FR')} FCFA / mois`,
-          '',
-          `3. Plan d'exécution opérationnel sur ${days} jours :`,
-          '',
-          '| Période | Objectif stratégique | Actions concrètes | Livrable / KPI |',
-          '| --- | --- | --- | --- |',
-          `| J1 à J${Math.max(5, Math.round(days * 0.25))} | Cadrage de l'offre | Définir le périmètre inclus, les conditions d'engagement et le parcours client | Plaquette offre & contrat type |`,
-          `| J${Math.max(6, Math.round(days * 0.25) + 1)} à J${Math.max(15, Math.round(days * 0.6))} | Prospection ciblée | Qualifier 40 décideurs B2B, mener les démonstrations et traiter les objections | 10 premiers entretiens qualifiés |`,
-          `| J${Math.max(16, Math.round(days * 0.6) + 1)} à J${days} | Conversion & Onboarding | Signer les premiers contrats, déployer le service et mesurer la satisfaction | Premiers encaissements récurrents |`
-        ].join('\n'));
-      }
-
-      if (agent.id === '04-marketing') {
-        return deduplicateLines(headerNote + [
-          '1. Angle de positionnement : Mettre en avant le bénéfice mesurable (gain de temps, réduction des erreurs, maîtrise opérationnelle) plutôt que la seule technique.',
-          '2. Accroches commerciales prêtes à l\'emploi :',
-          '• Accroche B2B directe : « Structurez vos opérations et gagnez plusieurs heures par semaine sans alourdir votre équipe. »',
-          '• Accroche preuve & résultat : « Passez d\'une gestion manuelle dispersée à un pilotage clair et immédiatement exploitable. »',
-          '',
-          '| Canal de diffusion | Audience cible | Format & Message clé | Indicateur suivi |',
-          '| --- | --- | --- | --- |',
-          '| Prospection directe (WhatsApp / Email) | Dirigeants & responsables PME | Message court centré sur un problème concret + démonstration | Taux de réponse & RDV |',
-          '| Réseaux professionnels (LinkedIn / Facebook) | Décideurs & entrepreneurs | Étude de cas chiffrée avant / après | Demandes entrantes |',
-          '| Réseau & Recommandation | Clients actuels & partenaires | Offre de parrainage ou audit initial offert | Nombre de recommandations |'
-        ].join('\n'));
-      }
-
-      if (agent.id === '07-developpement') {
-        return deduplicateLines(headerNote + [
-          '1. Principes de conception : Séparer la validation des données, le stockage persistant et l\'affichage afin d\'éviter toute corruption d\'état.',
-          '2. Contrôles indispensables :',
-          '• Validation stricte des entrées et types avant sauvegarde.',
-          '• Gestion explicite des erreurs (try/catch, quota de stockage, repli propre).',
-          '• Versionnement des clés de stockage pour éviter les conflits lors des mises à jour.',
-          '',
-          '| Composant | Responsabilité technique | Sécurité / Fiabilité |',
-          '| --- | --- | --- |',
-          '| Couche Validation | Nettoyer et contrôler les champs avant traitement | Prévention des injections et valeurs nulles |',
-          '| Couche Persistance | Lire/écrire en JSON versionné avec gestion d\'exception | Continuité même en cas de stockage plein |',
-          '| Couche Interface | Rendre les données échappées et offrir un retour visuel clair | Lisibilité mobile et zéro blocage UI |'
-        ].join('\n'));
-      }
-
-      if (agent.id === '08-projets') {
-        const days = extractDurationDays(cleanInput);
-        return deduplicateLines(headerNote + [
-          `Plan de pilotage projet (${days} jours) :`,
-          '',
-          '| Lot / Phase | Livrable attendu | Responsable | Échéance | Point de contrôle |',
-          '| --- | --- | --- | --- | --- |',
-          `| Phase 1 — Cadrage | Périmètre validé, ressources et règles de fonctionnement | Chef de projet | J+${Math.max(3, Math.round(days * 0.2))} | Validation de lancement |`,
-          `| Phase 2 — Déploiement | Mise en place opérationnelle et tests terrain | Équipe projet | J+${Math.max(10, Math.round(days * 0.7))} | Revue d'avancement |`,
-          `| Phase 3 — Clôture | Bilan des résultats, documentation et transfert | Direction / Pilotage | J+${days} | Recette finale |`
-        ].join('\n'));
-      }
-
-      return deduplicateLines(headerNote + [
-        'Analyse décisionnelle structurée :',
-        '',
-        '| Critère d\'évaluation | Option A (Centralisée / Standard) | Option B (Autonome / Déployée) | Observation |',
-        '| --- | --- | --- | --- |',
-        '| Coût initial | Modéré et prévisible | Plus élevé au démarrage | Avantage Option A à court terme |',
-        '| Réactivité terrain | Dépendante de la validation centrale | Forte autonomie d\'exécution | Avantage Option B sur le terrain |',
-        '| Contrôle & Qualité | Homogène et facile à auditer | Nécessite des indicateurs précis | Équilibre selon maturité |',
-        '',
-        'Recommandation : Démarrer avec un cadre centralisé clair sur les règles critiques tout en accordant une autonomie encadrée sur l\'exécution quotidienne.'
-      ].join('\n'));
-    }
-    let mailWatcherTimer = null;
-    let mailWatcherActive = false;
-    const processedMailIds = new Set(JSON.parse(localStorage.getItem('autopilot_seen_mails') || '[]'));
-
-    function getCompanionAgents(primaryAgentId) {
-      const map = {
-        '09-service-client': ['08-projets', '03-finance'],
-        '02-business': ['03-finance', '04-marketing'],
-        '03-finance': ['06-juridique', '10-analyste'],
-        '06-juridique': ['03-finance', '02-business'],
-        '05-rh': ['08-projets', '06-juridique'],
-        '04-marketing': ['02-business', '09-service-client'],
-        '07-developpement': ['08-projets', '10-analyste'],
-        '08-projets': ['10-analyste', '03-finance'],
-        '10-analyste': ['02-business', '08-projets'],
-        '01-coordinateur': ['02-business', '08-projets']
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        attachedFileText = String(e.target?.result || '').replace(/\u0000/g, '').trim().slice(0, 12000);
+        attachedFileName = file.name;
+        const label = document.getElementById('attached-file-label');
+        if (label) label.textContent = attachedFileText ? `Joint : ${file.name}` : '';
       };
-      const ids = map[primaryAgentId] || ['08-projets', '10-analyste'];
-      return ids.map(id => flows.find(f => f.id === id)).filter(Boolean);
+      reader.readAsText(file);
+      event.target.value = '';
     }
 
-    async function runInterAgentCollaboration() {
-      const input = document.getElementById('studio-input').value.trim();
-      const baseText = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-      if (!input && !baseText) return alert('Exécutez d\'abord un livrable ou saisissez une demande.');
-
-      const selectedId = document.getElementById('studio-flow-select').value;
-      const primaryAgent = flows.find(f => f.id === selectedId) || flows[0];
-      const peers = getCompanionAgents(primaryAgent.id);
-      const traceBox = document.getElementById('collaboration-trace-box');
-      traceBox.classList.remove('hidden');
-      traceBox.innerHTML = '<div class="text-indigo-300"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Coordination entre agents en cours...</div>';
-
-      const peerContributions = peers.map(peer => {
-        const sub = buildAutonomousOutput(peer, `${input || baseText}`, false);
-        const firstLines = sub.split('\n').filter(l => l.trim() && !l.startsWith('|')).slice(0, 2).join(' / ');
-        return `• <strong>${escapeHtml(peer.title)}</strong> : ${escapeHtml(firstLines)}`;
-      });
-
-      const synthesis = [
-        baseText,
-        '',
-        'Synthèse collaborative inter-agents :',
-        ...peers.map(p => `- ${p.title} : contribution intégrée sur le volet « ${p.badge} ».`)
-      ].join('\n');
-
-      rawLastOutputText = deduplicateLines(synthesis);
-      renderFormattedOutput(rawLastOutputText, document.getElementById('studio-output'));
-      traceBox.innerHTML = [
-        `<div class="font-bold text-emerald-400">Collaboration active : ${escapeHtml(primaryAgent.title)} + ${peers.map(p => escapeHtml(p.title)).join(' + ')}</div>`,
-        ...peerContributions
-      ].join('<br>');
+    function openMailDraftModal(prefillBody = '') {
+      const session = ensureActiveSession();
+      const lastAssistant = [...session.messages].reverse().find(m => m.role === 'assistant');
+      const bodyEl = document.getElementById('draft-mail-body');
+      const subjEl = document.getElementById('draft-mail-subject');
+      if (bodyEl) bodyEl.value = prefillBody || lastAssistant?.content || '';
+      if (subjEl && !subjEl.value) subjEl.value = session.title || 'Message Nexus AI';
+      document.getElementById('mail-modal').classList.remove('hidden');
     }
 
-    async function dispatchEmailNow(overridePayload = null) {
-      const to = (overridePayload?.to ?? document.getElementById('mail-to-input')?.value ?? '').trim();
-      const subject = (overridePayload?.subject ?? document.getElementById('mail-subject-input')?.value ?? 'Réponse Autopilot-IA').trim();
-      const body = (overridePayload?.body ?? rawLastOutputText ?? document.getElementById('studio-output')?.innerText ?? '').trim();
-      const webhookUrl = (overridePayload?.webhook ?? document.getElementById('mail-webhook-input')?.value ?? localStorage.getItem('autopilot_mail_webhook') ?? '').trim();
-      const statusEl = document.getElementById('mail-status-text');
+    function prepareMailFromMessageAt(index) {
+      const session = ensureActiveSession();
+      const msg = session.messages[index];
+      openMailDraftModal(msg?.content || '');
+    }
 
-      if (!body) return alert('Aucun contenu à envoyer par e-mail.');
-      if (webhookUrl) localStorage.setItem('autopilot_mail_webhook', webhookUrl);
+    function closeMailDraftModal() {
+      document.getElementById('mail-modal').classList.add('hidden');
+    }
 
-      if (webhookUrl) {
+    async function submitMailDraft() {
+      const to = (document.getElementById('draft-mail-to')?.value || '').trim();
+      const subject = (document.getElementById('draft-mail-subject')?.value || 'Message Nexus AI').trim();
+      const body = (document.getElementById('draft-mail-body')?.value || '').trim();
+      const feedback = document.getElementById('draft-mail-feedback');
+      if (!body) return alert('Le contenu du message est vide.');
+
+      if (settings.webhookUrl) {
         try {
-          if (statusEl) statusEl.textContent = 'Envoi de l\'e-mail via passerelle configurée...';
-          const res = await fetch(webhookUrl, {
+          if (feedback) feedback.textContent = 'Envoi en cours via endpoint configuré...';
+          const res = await fetch(settings.webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ to, subject, body, sentAt: new Date().toISOString() })
+            body: JSON.stringify({ type: 'email', to, subject, body, sentAt: new Date().toISOString() })
           });
           if (res.ok) {
-            if (statusEl) statusEl.innerHTML = `<span class="text-emerald-400">E-mail envoyé à ${escapeHtml(to || 'destinataire')} (${escapeHtml(formatDisplayDate(new Date()))}).</span>`;
+            if (feedback) feedback.innerHTML = `<span class="text-emerald-400">Message transmis à ${escapeHtml(to || 'destinataire')}.</span>`;
             return;
           }
         } catch (_) {}
       }
 
-      const nowIso = new Date().toISOString();
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      vault.unshift({
-        id: 'mail-' + Date.now(),
-        isoDate: nowIso,
-        date: formatDisplayDate(nowIso),
-        title: `E-mail préparé (${to || 'brouillon'}) — ${subject}`,
-        content: `À : ${to || '[à compléter]'}\nObjet : ${subject}\n\n${body}`
-      });
-      localStorage.setItem('autopilot_vault', JSON.stringify(vault.slice(0, 50)));
-
       if (to) {
-        const mailto = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body.slice(0, 1800))}`;
-        window.location.href = mailto;
-        if (statusEl) statusEl.innerHTML = `<span class="text-emerald-400">Client mail ouvert pour ${escapeHtml(to)} et copie archivée dans le Classeur.</span>`;
+        window.location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body.slice(0, 1800))}`;
+        if (feedback) feedback.innerHTML = `<span class="text-emerald-400">Client mail ouvert pour ${escapeHtml(to)}.</span>`;
       } else {
-        if (statusEl) statusEl.innerHTML = `<span class="text-amber-300">Saisissez une adresse e-mail ou un endpoint d'envoi ; brouillon archivé dans le Classeur.</span>`;
+        copyRawText(`Objet : ${subject}\n\n${body}`);
+        if (feedback) feedback.innerHTML = `<span class="text-amber-300">Aucune adresse saisie : brouillon copié dans le presse-papiers.</span>`;
       }
     }
-
-    async function processIncomingEmailItem(mail) {
-      if (!mail || !mail.id || processedMailIds.has(mail.id)) return;
-      processedMailIds.add(mail.id);
-      localStorage.setItem('autopilot_seen_mails', JSON.stringify([...processedMailIds].slice(-100)));
-
-      const content = `${mail.subject || ''} ${mail.body || ''}`.trim();
-      const bestAgent = routeToBestAgent(content);
-      const replyText = buildAutonomousOutput(bestAgent, `${mail.from ? `De ${mail.from} : ` : ''}${content}`, true);
-
-      rawLastOutputText = replyText;
-      document.getElementById('routed-agent-badge').textContent = bestAgent.title;
-      document.getElementById('engine-badge').textContent = 'Veille e-mail auto';
-      renderFormattedOutput(replyText, document.getElementById('studio-output'));
-      document.getElementById('result-card').classList.remove('hidden');
-
-      const toInput = document.getElementById('mail-to-input');
-      const subjInput = document.getElementById('mail-subject-input');
-      if (toInput && mail.from) toInput.value = mail.from;
-      if (subjInput) subjInput.value = `Re: ${mail.subject || 'Votre message'}`;
-
-      const statusEl = document.getElementById('mail-status-text');
-      if (statusEl) {
-        statusEl.innerHTML = `<span class="text-emerald-400">Nouveau mail détecté (${escapeHtml(mail.from || 'expéditeur')}) -> traité par ${escapeHtml(bestAgent.title)}.</span>`;
-      }
-    }
-
-    async function pollEmailInboxOnce() {
-      const endpoint = (document.getElementById('mail-webhook-input')?.value || localStorage.getItem('autopilot_mail_webhook') || '').trim();
-      if (!endpoint) return;
-      try {
-        const res = await fetch(endpoint, { method: 'GET' });
-        if (!res.ok) return;
-        const data = await res.json();
-        const messages = Array.isArray(data) ? data : (Array.isArray(data?.messages) ? data.messages : []);
-        for (const msg of messages) {
-          await processIncomingEmailItem(msg);
-        }
-      } catch (_) {}
-    }
-
-    function simulateIncomingEmailTest() {
-      processIncomingEmailItem({
-        id: 'sim-' + Date.now(),
-        from: 'client.pro@entreprise.ci',
-        subject: 'Retard de livraison sur commande prioritaire',
-        body: 'Bonjour, notre commande n\'est toujours pas livrée et nos équipes sont bloquées. Merci de nous donner une solution rapide.'
-      });
-      switchTab('studio');
-    }
-
-    function toggleContinuousMailLoop() {
-      const btn = document.getElementById('mail-watch-btn');
-      const statusEl = document.getElementById('mail-status-text');
-      mailWatcherActive = !mailWatcherActive;
-
-      if (mailWatcherActive) {
-        if (btn) {
-          btn.innerHTML = '<i class="fa-solid fa-radar mr-1"></i> Veille mail : ON';
-          btn.className = 'text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600 text-white border border-emerald-400 transition';
-        }
-        if (statusEl) {
-          statusEl.innerHTML = '<span class="text-emerald-400">Veille continue active (vérification toutes les 20s quand l\'onglet est actif).</span>';
-        }
-        pollEmailInboxOnce();
-        mailWatcherTimer = setInterval(() => {
-          if (!document.hidden) pollEmailInboxOnce();
-        }, 20000);
-      } else {
-        clearInterval(mailWatcherTimer);
-        mailWatcherTimer = null;
-        if (btn) {
-          btn.innerHTML = '<i class="fa-solid fa-radar mr-1"></i> Veille mail : OFF';
-          btn.className = 'text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-200 hover:text-white border border-emerald-500/30 transition';
-        }
-        if (statusEl) {
-          statusEl.textContent = 'Veille continue mise en pause.';
-        }
-      }
-    }
-
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && mailWatcherActive) {
-        pollEmailInboxOnce();
-      }
-    });
-
-    function renderCatalog() {
-      const grid = document.getElementById('flows-grid');
-      const filtered = currentFilter === 'all' ? flows : flows.filter(f => f.category === currentFilter);
-      document.getElementById('flow-count-badge').textContent = `${flows.length} Agents`;
-
-      grid.innerHTML = filtered.map(f => `
-        <div class="glass rounded-2xl p-5 flex flex-col justify-between gap-4 hover:border-indigo-500/50 transition">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between gap-2">
-              <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-                <i class="fa-solid ${f.icon || 'fa-robot'}"></i>
-              </div>
-              <span class="inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                ${escapeHtml(f.badge)}
-              </span>
-            </div>
-            <h3 class="font-bold text-base text-white">${escapeHtml(f.title)}</h3>
-            <p class="text-xs text-slate-300 leading-relaxed"><strong class="text-amber-400">Rôle :</strong> ${escapeHtml(f.role)}</p>
-            <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-indigo-300">Mission :</strong> ${escapeHtml(f.action)}</p>
-          </div>
-          <button type="button" onclick="launchInStudio('${f.id}')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-bold transition flex items-center justify-center gap-2">
-            Ouvrir dans le Studio <i class="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
-      `).join('');
-
-      const select = document.getElementById('studio-flow-select');
-      select.innerHTML = flows.map(f => `<option value="${f.id}">${escapeHtml(f.title)}</option>`).join('');
-      select.value = selectedFlowId;
-    }
-
-    function filterFlows(cat) {
-      currentFilter = cat;
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        const active = btn.dataset.cat === cat;
-        btn.className = active
-          ? 'filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white whitespace-nowrap'
-          : 'filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap';
-      });
-      renderCatalog();
-    }
-
-    function switchTab(tab) {
-      ['assistant', 'catalog', 'studio', 'vault', 'history'].forEach(t => {
-        document.getElementById(`view-${t}`).classList.toggle('hidden', t !== tab);
-        const btn = document.getElementById(`tab-${t}`);
-        btn.className = t === tab
-          ? 'px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all bg-indigo-600 text-white shadow whitespace-nowrap'
-          : 'px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap';
-      });
-      if (tab === 'vault') renderVault();
-      if (tab === 'history') renderHistory();
-    }
-
-    function launchInStudio(id) {
-      selectedFlowId = id;
-      localStorage.setItem('autopilot_selected_flow_v3', id);
-      document.getElementById('studio-flow-select').value = id;
-      fillSampleData();
-      switchTab('studio');
-    }
-
-    function loadFlowTemplate() {
-      selectedFlowId = document.getElementById('studio-flow-select').value;
-      localStorage.setItem('autopilot_selected_flow_v3', selectedFlowId);
-    }
-
-    function fillSampleData() {
-      const flow = flows.find(f => f.id === document.getElementById('studio-flow-select').value);
-      if (flow && flow.sample) {
-        document.getElementById('studio-input').value = flow.sample;
-      }
-    }
-
-    function clearInput() {
-      document.getElementById('studio-input').value = '';
-      hideFileBanner();
-      document.getElementById('studio-input').focus();
-    }
-
-    function hideFileBanner() {
-      const banner = document.getElementById('imported-file-banner');
-      const input = document.getElementById('doc-file-input');
-      if (banner) banner.classList.add('hidden');
-      if (input) input.value = '';
-    }
-
-    function handleFileImport(event) {
-      const inputEl = event.target;
-      const file = inputEl && inputEl.files ? inputEl.files[0] : null;
-      if (!file) return;
-
-      const lowerName = file.name.toLowerCase();
-      const isPlainText =
-        /\.(txt|md|csv|json|log)$/i.test(lowerName) ||
-        (file.type && file.type.startsWith('text/'));
-
-      if (!isPlainText) {
-        alert(
-          `Le fichier "${file.name}" n'est pas un fichier texte brut.\n` +
-          `Pour éviter tout texte binaire, ouvrez le document, copiez son contenu, puis collez-le directement dans la zone de texte.`
-        );
-        inputEl.value = '';
-        return;
-      }
-
-      if (file.size > 300 * 1024) {
-        alert('Fichier texte trop volumineux (maximum 300 Ko).');
-        inputEl.value = '';
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const raw = (e.target && typeof e.target.result === 'string') ? e.target.result : '';
-        const cleaned = raw.replace(/\u0000/g, '').trim();
-        if (!cleaned) {
-          alert('Le fichier sélectionné est vide.');
-          inputEl.value = '';
-          return;
-        }
-
-        const textarea = document.getElementById('studio-input');
-        const existing = textarea.value.trim();
-        const block = `--- ${file.name} ---\n${cleaned.slice(0, 15000)}`;
-        textarea.value = existing ? `${existing}\n\n${block}` : block;
-
-        document.getElementById('imported-file-name').textContent =
-          `Fichier texte chargé : ${file.name} (${Math.max(1, Math.round(file.size / 1024))} Ko)`;
-        document.getElementById('imported-file-banner').classList.remove('hidden');
-        textarea.focus();
-        inputEl.value = '';
+  </script>
+  <script>
+    function buildSystemPrompt(mode, style) {
+      const modeInstructions = {
+        omni: 'Tu es Nexus AI, un assistant polyvalent capable de raisonner, analyser, calculer, rédiger, comparer des options et produire du code propre et utile.',
+        reasoning: 'Tu es en mode Raisonnement profond : décompose le problème étape par étape, explicite les hypothèses, vérifie la logique et les calculs, puis conclus clairement.',
+        code: 'Tu es en mode Ingénieur Code : fournis des solutions techniques claires, structurées, sécurisées et commentées dans des blocs de code ```langage ... ```.',
+        analyst: 'Tu es en mode Analyste & Chiffres : structure les données, vérifie les calculs, compare les options dans un tableau Markdown et donne une recommandation argumentée.',
+        writer: 'Tu es en mode Rédaction & Stratégie : rédige des textes clairs, percutants et bien organisés, adaptés au public visé et sans formules creuses.'
       };
-      reader.readAsText(file);
+
+      const styleInstructions = {
+        concise: 'Sois concis, direct et va droit à l\'essentiel.',
+        balanced: 'Sois clair, structuré et complet, avec une prochaine étape concrète.',
+        deep: 'Approfondis chaque aspect important, anticipe les risques/limites et propose un plan détaillé.'
+      };
+
+      return [
+        modeInstructions[mode] || modeInstructions.omni,
+        styleInstructions[style] || styleInstructions.balanced,
+        'Tiens compte de l\'historique de la conversation pour répondre avec cohérence.',
+        'Si des informations manquent, indique brièvement ce qui est supposé plutôt que de bloquer.'
+      ].join(' ');
     }
 
-    function toggleKeyBox() {
-      document.getElementById('fallback-key-box').classList.toggle('hidden');
-      document.getElementById('local-api-key').value = localStorage.getItem('gemini_fallback_key') || '';
+    function extractNumbersWithContext(text) {
+      const matches = [...String(text || '').matchAll(/(?<!\w)(\d{1,3}(?:[\s\u00A0]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)\s*(%|fcfa|cfa|xof|eur|€|\$|usd|jours?|semaines?|mois|ans?)?/gi)];
+      return matches
+        .map(m => ({
+          val: Number(m[1].replace(/[\s\u00A0]+/g, '').replace(',', '.')),
+          unit: (m[2] || '').trim()
+        }))
+        .filter(x => !Number.isNaN(x.val) && x.val > 0);
     }
 
-    function saveLocalKey() {
-      const val = document.getElementById('local-api-key').value.trim();
-      if (val) localStorage.setItem('gemini_fallback_key', val);
-      else localStorage.removeItem('gemini_fallback_key');
-      alert('Clé Gemini enregistrée sur cet appareil.');
+    function buildLocalReasonedFallback(prompt, session, mode, style) {
+      const cleanPrompt = String(prompt || '').trim();
+      const lower = cleanPrompt.toLowerCase();
+      const nums = extractNumbersWithContext(cleanPrompt);
+      const turnCount = session.messages.filter(m => m.role === 'user').length;
+
+      if (/\b(code|fonction|script|javascript|python|html|css|sql|bug|erreur|api)\b/i.test(lower) || mode === 'code') {
+        return [
+          `**Analyse technique (${turnCount > 1 ? 'suite de conversation' : 'nouvelle demande'}) :**`,
+          `Objectif identifié : ${cleanPrompt}`,
+          '',
+          '```javascript',
+          'function processTask(input) {',
+          '  if (!input || typeof input !== "string") {',
+          '    return { ok: false, error: "Entrée invalide ou vide" };',
+          '  }',
+          '  const normalized = input.trim();',
+          '  return { ok: true, length: normalized.length, summary: normalized.slice(0, 120) };',
+          '}',
+          '```',
+          '',
+          '**Points de contrôle :** valider les entrées, gérer les erreurs explicitement et tester les cas limites. Précisez le langage ou le framework souhaité pour adapter cet extrait.'
+        ].join('\n');
+      }
+
+      if (/\b(compar|option|budget|calcul|tva|coût|cout|rentab|chiffre|analyse)\b/i.test(lower) || mode === 'analyst' || nums.length >= 2) {
+        const numText = nums.length
+          ? nums.map(n => `${n.val.toLocaleString('fr-FR')}${n.unit ? ' ' + n.unit : ''}`).join(' | ')
+          : 'Aucun chiffre explicite fourni';
+
+        return [
+          `**Analyse structurée :**`,
+          `Sujet : ${cleanPrompt}`,
+          `Repères numériques détectés : ${numText}`,
+          '',
+          '| Dimension | Approche A (Progressive) | Approche B (Accélérée) | Critère clé |',
+          '| --- | --- | --- | --- |',
+          '| Mise en œuvre | Contrôlée, étapes validées | Rapide, fort engagement | Tolérance au risque |',
+          '| Ressources | Étalées dans le temps | Concentrées au départ | Trésorerie / capacité |',
+          '| Suivi | Ajustements fréquents | Objectifs à fort impact | Pilotage des écarts |',
+          '',
+          '**Recommandation :** Valider d\'abord les hypothèses chiffrées clés avant d\'engager les ressources principales.'
+        ].join('\n');
+      }
+
+      const depthNote = style === 'deep'
+        ? ' inclut une décomposition des étapes, les risques principaux et les critères de réussite.'
+        : (style === 'concise'
+          ? ' va directement à l\'essentiel.'
+          : ' structure la réponse en étapes claires et actionnables.');
+
+      return [
+        `**Raisonnement et réponse${depthNote.replace(/\.$/, '')} :**`,
+        `Demande traitée : ${cleanPrompt}`,
+        '',
+        `- **Compréhension de l'intention :** Clarifier l'objectif concret et le résultat attendu${turnCount > 1 ? ' en continuité avec nos échanges précédents' : ''}.`,
+        `- **Hypothèses & cadre :** Les paramètres non précisés sont traités comme ajustables afin de produire une base exploitable immédiatement.`,
+        `- **Plan d'action :** 1) Cadrer le périmètre exact ; 2) Exécuter la première étape vérifiable ; 3) Vérifier le résultat et ajuster.`,
+        '',
+        '**Prochaine étape :** Ajoutez vos contraintes spécifiques (délais, budget, public ou exemple) pour affiner cette réponse.'
+      ].join('\n');
     }
 
-    async function executeWorkflow() {
-      const selectedId = document.getElementById('studio-flow-select').value;
-      const selectedFlow = flows.find(f => f.id === selectedId) || flows[0];
-      const input = document.getElementById('studio-input').value.trim();
-      if (!input) return alert('Veuillez saisir des données à traiter.');
+    async function sendMessage() {
+      const inputEl = document.getElementById('user-prompt');
+      const sendBtn = document.getElementById('send-btn');
+      const rawInput = (inputEl?.value || '').trim();
 
-      const isCoordinator = selectedFlow.id === '01-coordinateur';
-      const activeAgent = isCoordinator ? routeToBestAgent(input) : selectedFlow;
+      const combinedPrompt = attachedFileText
+        ? `${rawInput || 'Analyse ce document joint.'}\n\n[Fichier : ${attachedFileName}]\n${attachedFileText}`
+        : rawInput;
 
-      const btn = document.getElementById('run-btn');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement en cours...';
+      if (!combinedPrompt) return;
 
-      let engineLabel = 'Moteur autonome';
-      let outputText = '';
+      const session = ensureActiveSession();
+      if (session.messages.filter(m => m.role === 'user').length === 0) {
+        session.title = (rawInput || attachedFileName || 'Conversation').slice(0, 42);
+      }
+
+      session.messages.push({
+        role: 'user',
+        content: combinedPrompt,
+        timestamp: new Date().toISOString()
+      });
+      session.updatedAt = new Date().toISOString();
+
+      inputEl.value = '';
+      attachedFileText = '';
+      attachedFileName = '';
+      const fileLabel = document.getElementById('attached-file-label');
+      if (fileLabel) fileLabel.textContent = '';
+
+      persistSessions();
+      renderSessions();
+      renderMessages();
+
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+      let replyText = '';
+      const systemPrompt = buildSystemPrompt(settings.mode, settings.style);
+
+      const historyContents = session.messages.slice(-12).map(m => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      }));
 
       try {
-        const localKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
-        const combinedPrompt = isCoordinator
-          ? `01 AUTOPILOT — Coordinateur a orienté cette demande vers ${activeAgent.title}. ${activeAgent.systemPrompt}`
-          : activeAgent.systemPrompt;
-
-        if (localKey) {
-          const geminiRes = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${localKey}`,
+        if (settings.apiKey) {
+          const res = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(settings.apiKey)}`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                systemInstruction: { parts: [{ text: combinedPrompt }] },
-                contents: [{ parts: [{ text: input }] }]
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                contents: historyContents
               })
             }
           );
-          const geminiData = await geminiRes.json();
-          if (geminiRes.ok && geminiData.candidates?.[0]?.content?.parts?.[0]?.text) {
-            outputText = deduplicateLines(geminiData.candidates[0].content.parts[0].text.trim());
-            engineLabel = 'Gemini';
-          }
-        }
-
-        if (!outputText) {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000);
-          const res = await fetch('https://text.pollinations.ai/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
-            body: JSON.stringify({
-              messages: [
-                { role: 'system', content: combinedPrompt },
-                { role: 'user', content: input }
-              ],
-              model: 'openai'
-            })
-          });
-          clearTimeout(timeoutId);
-          if (res.ok) {
-            const remoteText = (await res.text()).trim();
-            if (remoteText && !remoteText.toLowerCase().includes('error') && remoteText.length > 40) {
-              outputText = deduplicateLines(
-                isCoordinator
-                  ? `Routage 01 AUTOPILOT -> ${activeAgent.title}\n\n` + remoteText
-                  : remoteText
-              );
-              engineLabel = 'IA distante';
-            }
+          const data = await res.json();
+          if (res.ok && data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+            replyText = data.candidates[0].content.parts[0].text.trim();
           }
         }
       } catch (_) {}
 
-      if (!outputText) {
-        outputText = buildAutonomousOutput(activeAgent, input, isCoordinator);
-        engineLabel = 'Moteur autonome';
+      if (!replyText) {
+        replyText = buildLocalReasonedFallback(combinedPrompt, session, settings.mode, settings.style);
       }
 
-      rawLastOutputText = outputText;
-      document.getElementById('output-editor-box').classList.add('hidden');
-      document.getElementById('collaboration-trace-box').classList.add('hidden');
-      document.getElementById('routed-agent-badge').textContent = activeAgent.title;
-      document.getElementById('engine-badge').textContent = engineLabel;
-      renderFormattedOutput(outputText, document.getElementById('studio-output'));
-      document.getElementById('result-card').classList.remove('hidden');
-
-      const nowIso = new Date().toISOString();
-      const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
-      history.unshift({
-        isoDate: nowIso,
-        date: formatDisplayDate(nowIso),
-        title: isCoordinator ? `01 Coordinateur -> ${activeAgent.title}` : activeAgent.title,
-        engine: engineLabel,
-        input,
-        output: outputText
+      session.messages.push({
+        role: 'assistant',
+        content: replyText,
+        timestamp: new Date().toISOString()
       });
-      localStorage.setItem('autopilot_history', JSON.stringify(history.slice(0, 25)));
+      session.updatedAt = new Date().toISOString();
+      persistSessions();
+      renderMessages();
 
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-play"></i> Exécuter avec l\'agent';
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
+    }
+  </script>
+  <script>
+    function getLastAssistantText() {
+      const session = ensureActiveSession();
+      const found = [...session.messages].reverse().find(m => m.role === 'assistant');
+      return found ? found.content : '';
     }
 
-    function toggleEditOutput() {
-      const editorBox = document.getElementById('output-editor-box');
-      const textarea = document.getElementById('studio-output-editor');
-      const isHidden = editorBox.classList.contains('hidden');
-      if (isHidden) {
-        textarea.value = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-        editorBox.classList.remove('hidden');
-        textarea.focus();
-      } else {
-        editorBox.classList.add('hidden');
-      }
-    }
-
-    function cancelEditOutput() {
-      document.getElementById('output-editor-box').classList.add('hidden');
-    }
-
-    function applyEditedOutput(alsoSaveVault) {
-      const textarea = document.getElementById('studio-output-editor');
-      const updated = textarea.value.trim();
-      if (!updated) return alert('Le livrable ne peut pas être vide.');
-      rawLastOutputText = updated;
-      renderFormattedOutput(updated, document.getElementById('studio-output'));
-      document.getElementById('output-editor-box').classList.add('hidden');
-      if (alsoSaveVault) saveOutputToVault();
-    }
-
-    function saveOutputToVault() {
-      const editorBox = document.getElementById('output-editor-box');
-      const text = (!editorBox.classList.contains('hidden'))
-        ? document.getElementById('studio-output-editor').value.trim()
-        : (rawLastOutputText || document.getElementById('studio-output').innerText.trim());
-
-      if (!text) return alert('Aucun résultat à enregistrer.');
-
-      const nowIso = new Date().toISOString();
-      const agentLabel = document.getElementById('routed-agent-badge').textContent
-        || document.getElementById('studio-flow-select').selectedOptions[0]?.textContent
-        || 'Livrable';
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      vault.unshift({
-        id: 'vault-' + Date.now(),
-        isoDate: nowIso,
-        date: formatDisplayDate(nowIso),
-        title: agentLabel,
-        content: text
-      });
-      localStorage.setItem('autopilot_vault', JSON.stringify(vault.slice(0, 50)));
-
-      const btn = document.getElementById('save-vault-btn');
-      const prevHtml = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Enregistré';
-      setTimeout(() => { btn.innerHTML = prevHtml; }, 1500);
-    }
-
-    function renderVault() {
-      const list = document.getElementById('vault-list');
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      if (!vault.length) {
-        list.innerHTML = '<div class="glass rounded-2xl p-6 text-center text-xs text-slate-400">Aucun élément enregistré dans la boîte interne pour le moment.</div>';
+    function summarizeCurrentThread() {
+      const session = ensureActiveSession();
+      const userMsgs = session.messages.filter(m => m.role === 'user');
+      if (!userMsgs.length) {
+        alert('Aucun échange à résumer pour le moment.');
         return;
       }
-      list.innerHTML = vault.map((item, idx) => `
-        <div class="glass rounded-2xl p-4 space-y-2.5">
-          <div class="flex items-center justify-between text-xs gap-2 flex-wrap">
-            <span class="font-bold text-emerald-400">${escapeHtml(item.title)}</span>
-            <span class="text-slate-500">${escapeHtml(formatDisplayDate(item.isoDate || item.date))}</span>
-          </div>
-          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 max-h-60 overflow-y-auto">${buildFormattedHtml(item.content)}</div>
-          <div class="flex items-center justify-end gap-2 pt-1">
-            <button type="button" onclick="loadVaultIntoStudio(${idx})" class="text-xs px-3 py-1 rounded-lg bg-amber-500/20 text-amber-200 border border-amber-500/30">
-              <i class="fa-solid fa-pen mr-1"></i>Modifier
-            </button>
-            <button type="button" onclick="copyVaultItem(${idx})" class="text-xs px-3 py-1 rounded-lg bg-slate-800 text-slate-200">
-              <i class="fa-regular fa-copy mr-1"></i>Copier
-            </button>
-            <button type="button" onclick="deleteVaultItem(${idx})" class="text-xs px-3 py-1 rounded-lg bg-rose-500/15 text-rose-300">
-              Supprimer
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
 
-    function loadVaultIntoStudio(idx) {
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      const item = vault[idx];
-      if (!item) return;
-      rawLastOutputText = item.content;
-      renderFormattedOutput(item.content, document.getElementById('studio-output'));
-      document.getElementById('result-card').classList.remove('hidden');
-      document.getElementById('studio-output-editor').value = item.content;
-      document.getElementById('output-editor-box').classList.remove('hidden');
-      switchTab('studio');
-    }
+      const lastUser = userMsgs[userMsgs.length - 1].content.replace(/\s+/g, ' ').slice(0, 140);
+      const lastBot = getLastAssistantText().split('\n').find(l => l.trim().length > 20) || 'Réponse générée.';
 
-    function copyVaultItem(idx) {
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      if (vault[idx]) navigator.clipboard.writeText(vault[idx].content);
-    }
+      const summaryPrompt = [
+        `Fais une synthèse claire en 4 points des échanges de cette conversation.`,
+        `Dernier sujet abordé : ${lastUser}`,
+        `Point clé récent : ${lastBot.slice(0, 180)}`
+      ].join('\n');
 
-    function deleteVaultItem(idx) {
-      const vault = JSON.parse(localStorage.getItem('autopilot_vault') || '[]');
-      vault.splice(idx, 1);
-      localStorage.setItem('autopilot_vault', JSON.stringify(vault));
-      renderVault();
-    }
-
-    function clearVault() {
-      if (!confirm('Vider toute la boîte interne ?')) return;
-      localStorage.removeItem('autopilot_vault');
-      renderVault();
-    }
-
-    async function shareOutput() {
-      const flowTitle = document.getElementById('routed-agent-badge').textContent
-        || document.getElementById('studio-flow-select').selectedOptions[0]?.textContent
-        || 'Autopilot-IA';
-      const text = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-      if (!text) return;
-
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: `Autopilot-IA — ${flowTitle}`,
-            text
-          });
-          return;
-        } catch (e) {
-          if (e && e.name === 'AbortError') return;
-        }
+      const inputEl = document.getElementById('user-prompt');
+      if (inputEl) {
+        inputEl.value = summaryPrompt;
+        sendMessage();
       }
-      copyOutput();
     }
 
-    function copyOutput() {
-      const text = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-      navigator.clipboard.writeText(text);
-      const copyBtn = document.getElementById('copy-btn');
-      copyBtn.innerHTML = '<i class="fa-solid fa-check mr-1 text-emerald-400"></i> Copié';
-      setTimeout(() => {
-        copyBtn.innerHTML = '<i class="fa-regular fa-copy mr-1"></i> Copier';
-      }, 1500);
+    function exportConversationMarkdown() {
+      const session = ensureActiveSession();
+      const lines = [
+        `# ${session.title || 'Conversation Nexus AI'}`,
+        `Mode : ${session.mode || settings.mode} | Mis à jour : ${new Date(session.updatedAt || Date.now()).toLocaleString('fr-FR')}`,
+        ''
+      ];
+
+      for (const m of session.messages) {
+        const speaker = m.role === 'user' ? '## Utilisateur' : '## Nexus AI';
+        lines.push(speaker, '', m.content, '');
+      }
+
+      const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${(session.title || 'nexus-ai-conversation').toLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '')}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
-    function renderHistory() {
-      const list = document.getElementById('history-list');
-      const history = JSON.parse(localStorage.getItem('autopilot_history') || '[]');
-      if (!history.length) {
-        list.innerHTML = '<div class="glass rounded-2xl p-6 text-center text-xs text-slate-400">Aucune exécution enregistrée pour le moment.</div>';
+    function openExternalSearchForTopic() {
+      const inputEl = document.getElementById('user-prompt');
+      const session = ensureActiveSession();
+      const lastUser = [...session.messages].reverse().find(m => m.role === 'user')?.content || '';
+      const query = (inputEl?.value || lastUser || '').trim().slice(0, 140);
+      if (!query) {
+        alert('Saisissez un sujet ou posez une question d\'abord.');
         return;
       }
-      list.innerHTML = history.map(item => `
-        <div class="glass rounded-2xl p-4 space-y-2">
-          <div class="flex items-center justify-between text-xs gap-2">
-            <span class="font-bold text-indigo-400">${escapeHtml(item.title)}</span>
-            <span class="text-slate-500">${escapeHtml(formatDisplayDate(item.isoDate || item.date))}</span>
-          </div>
-          <p class="text-xs text-slate-400 line-clamp-2">Entrée : ${escapeHtml(item.input)}</p>
-          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 max-h-60 overflow-y-auto">${buildFormattedHtml(item.output)}</div>
+      window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank', 'noopener,noreferrer');
+    }
+
+    function injectToolBarIntoChat() {
+      const chatContainer = document.getElementById('chat-messages');
+      const section = chatContainer?.parentElement;
+      if (!section || document.getElementById('nexus-quick-tools')) return;
+
+      const bar = document.createElement('div');
+      bar.id = 'nexus-quick-tools';
+      bar.className = 'px-3 sm:px-5 py-2 border-t border-slate-800/80 bg-slate-900/70 flex items-center justify-between gap-2 flex-wrap text-[11px]';
+      bar.innerHTML = `
+        <div class="flex items-center gap-2 flex-wrap">
+          <button type="button" onclick="summarizeCurrentThread()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white transition">
+            <i class="fa-solid fa-compress-alt mr-1 text-indigo-400"></i>Résumer le fil
+          </button>
+          <button type="button" onclick="openExternalSearchForTopic()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white transition">
+            <i class="fa-solid fa-magnifying-glass mr-1 text-amber-400"></i>Recherche web
+          </button>
+          <button type="button" onclick="exportConversationMarkdown()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white transition">
+            <i class="fa-solid fa-file-arrow-down mr-1 text-emerald-400"></i>Exporter .MD
+          </button>
         </div>
-      `).join('');
+        <span class="text-slate-400">Entrée = Envoyer • Maj+Entrée = Saut de ligne</span>
+      `;
+
+      section.insertBefore(bar, chatContainer.nextSibling);
     }
+  </script>
+  <script>
+    window.addEventListener('error', (event) => {
+      console.warn('Erreur interceptée dans Nexus AI :', event?.message || event);
+    });
 
-    function clearHistory() {
-      localStorage.removeItem('autopilot_history');
-      renderHistory();
-    }
+    window.addEventListener('unhandledrejection', (event) => {
+      console.warn('Promesse rejetée interceptée dans Nexus AI :', event?.reason || event);
+    });
 
-    function resetDefaultFlows() {
-      if (!confirm('Revenir aux 10 agents par défaut ?')) return;
-      flows = [...defaultFlows];
-      localStorage.setItem('autopilot_flows_v3', JSON.stringify(flows));
-      selectedFlowId = flows[0].id;
-      localStorage.setItem('autopilot_selected_flow_v3', selectedFlowId);
-      currentFilter = 'all';
-      filterFlows('all');
-    }
-
-    function openModal() { document.getElementById('create-modal').classList.remove('hidden'); }
-    function closeModal() { document.getElementById('create-modal').classList.add('hidden'); }
-
-    function addCustomFlow() {
-      const title = document.getElementById('new-title').value.trim();
-      const category = document.getElementById('new-cat').value;
-      const systemPrompt = document.getElementById('new-prompt').value.trim();
-      if (!title || !systemPrompt) return alert('Remplissez le nom de l\'agent et son instruction.');
-
-      const badges = {
-        pilotage: 'Pilotage & Projets',
-        business: 'Business, Marketing & Client',
-        'finance-juridique': 'Finance, RH & Juridique',
-        'tech-data': 'Développement & Analyse'
-      };
-      const newFlow = {
-        id: 'custom-' + Date.now(),
-        title,
-        category,
-        badge: badges[category],
-        icon: 'fa-wand-magic-sparkles',
-        role: 'Agent personnalisé ajouté dans le Studio.',
-        action: 'Exécute les instructions personnalisées définies.',
-        systemPrompt,
-        sample: ''
-      };
-      flows.push(newFlow);
-      localStorage.setItem('autopilot_flows_v3', JSON.stringify(flows));
-      selectedFlowId = newFlow.id;
-      localStorage.setItem('autopilot_selected_flow_v3', selectedFlowId);
-      closeModal();
-      renderCatalog();
-    }
-
-    const savedWebhook = localStorage.getItem('autopilot_mail_webhook');
-    if (savedWebhook && document.getElementById('mail-webhook-input')) {
-      document.getElementById('mail-webhook-input').value = savedWebhook;
-    }
-
-    syncDateLocaleButton();
-    renderCatalog();
+    (function initNexusAI() {
+      syncSettingsUI();
+      ensureActiveSession();
+      injectToolBarIntoChat();
+      renderSessions();
+      renderMessages();
+    })();
   </script>
 </body>
 </html>
