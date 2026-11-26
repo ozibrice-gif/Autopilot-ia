@@ -1427,92 +1427,197 @@
         '| 3. Contrôle | Vérifier la cohérence des éléments et définir la prochaine étape | Validation et suivi |'
       ].join('\n'));
     }
+function buildSystemPromptForAgent(agent, serviceTier = 'pro') {
+  const isPro = serviceTier === 'pro';
+  const tierInstruction = isPro
+    ? [
+        'Niveau de prestation : PROFESSIONNEL (PRO).',
+        'Produis un livrable approfondi, rigoureux et structuré avec tableaux si pertinent.',
+        'Distingue clairement les faits fournis, les hypothèses, les estimations et les incertitudes.',
+        'Intègre les contrôles métier adaptés (équilibre débit/crédit, cohérence financière, cadres applicables/OHADA, risques, plan d\'action) et précise quand une validation humaine ou professionnelle est requise.'
+      ].join(' ')
+    : [
+        'Niveau de prestation : STANDARD.',
+        'Produis une réponse claire, concise, structurée et directement exploitable, sans allongement inutile.'
+      ].join(' ');
 
-    async function executeWorkflow(multiAgentMode = false) {
-      if (!ensureAuthenticatedAction(multiAgentMode)) return;
+  return [
+    agent.systemPrompt,
+    tierInstruction,
+    'Règle stricte : ne jamais inventer de chiffres, montants, dates ou faits absents des données fournies.'
+  ].join('\n');
+}
 
-      const btn = document.getElementById('run-btn');
-      const statePill = document.getElementById('mission-state-pill');
-      const selectedId = document.getElementById('studio-flow-select')?.value || flows[0].id;
-      const selectedFlow = flows.find(f => f.id === selectedId) || flows[0];
-      const input = (document.getElementById('studio-input')?.value || '').trim();
+async function callRealGeminiAgent({ agent, input, serviceTier = 'pro', apiKey = '' }) {
+  const cleanKey = String(apiKey || '').trim();
+  if (!cleanKey) {
+    throw new Error('Aucune clé API Gemini configurée. Ouvrez "Clé API" dans le Studio pour enregistrer votre clé.');
+  }
 
-      if (!input) {
-        alert('Veuillez saisir les données ou la consigne de la mission.');
-        return;
-      }
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-      if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Exécution en cours...';
-      }
-      if (statePill) {
-        statePill.textContent = 'Statut : En cours';
-        statePill.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40';
-      }
-
-      try {
-        const isCoordinator = selectedFlow.id === '01-coordinateur';
-        const activeAgent = isCoordinator ? routeToBestAgent(input) : selectedFlow;
-        let outputText = buildAutonomousOutput(activeAgent, input, isCoordinator);
-        const traceBox = document.getElementById('collaboration-trace-box');
-
-        if (multiAgentMode) {
-          const companionIds = ['08-projets', '10-analyste'].filter(id => id !== activeAgent.id);
-          const companions = companionIds.map(id => flows.find(f => f.id === id)).filter(Boolean);
-          const notes = companions.map(c => {
-            const sub = buildAutonomousOutput(c, input, false).split('\n').filter(l => l.trim() && !l.startsWith('|')).slice(0, 2).join(' — ');
-            return `• <strong>${escapeHtml(c.title)}</strong> : ${escapeHtml(sub)}`;
-          });
-          outputText = deduplicateLines(outputText + '\n\nContrôle multi-agents :\n' + companions.map(c => `- ${c.title} : revue de cohérence et de planification intégrée.`).join('\n'));
-          if (traceBox) {
-            traceBox.classList.remove('hidden');
-            traceBox.innerHTML = `<div class="font-bold text-indigo-300">Agents mobilisés : ${escapeHtml(activeAgent.title)} + ${companions.map(c => escapeHtml(c.title)).join(' + ')}</div>` + notes.join('<br>');
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(cleanKey)}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: buildSystemPromptForAgent(agent, serviceTier) }]
+          },
+          contents: [
+            {
+              parts: [{ text: input }]
+            }
+          ],
+          generationConfig: {
+            temperature: serviceTier === 'pro' ? 0.35 : 0.25
           }
-        } else if (traceBox) {
-          traceBox.classList.add('hidden');
-        }
-
-        rawLastOutputText = outputText;
-        document.getElementById('routed-agent-badge').textContent = activeAgent.title;
-        document.getElementById('engine-badge').textContent = multiAgentMode ? 'Multi-Agents' : 'Moteur spécialisé';
-        renderFormattedOutput(outputText, document.getElementById('studio-output'));
-        document.getElementById('result-card').classList.remove('hidden');
-
-        const nowIso = new Date().toISOString();
-        const history = getScopedArray('autopilot_history_v2');
-        history.unshift({
-          id: 'msn-' + Date.now(),
-          isoDate: nowIso,
-          date: formatDisplayDate(nowIso),
-          title: activeServiceContext ? `${activeServiceContext.name} (${activeAgent.title})` : activeAgent.title,
-          tier: activeServiceContext ? activeServiceContext.tier : 'libre',
-          projectId: document.getElementById('studio-project-select')?.value || '',
-          input,
-          output: outputText
-        });
-        setScopedArray('autopilot_history_v2', history.slice(0, 50));
-
-        if (statePill) {
-          statePill.textContent = 'Statut : Terminée';
-          statePill.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
-        }
-        renderAccountAndClientViews();
-      } catch (err) {
-        console.error(err);
-        if (statePill) {
-          statePill.textContent = 'Statut : En échec';
-          statePill.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40';
-        }
-      } finally {
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-play"></i> Exécuter la mission';
-        }
+        })
       }
+    );
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      const apiMsg = data?.error?.message || `Erreur HTTP ${response.status}`;
+      throw new Error(`Appel IA refusé (${apiMsg}).`);
     }
-  </script>
-  <script>
+
+    const text = data?.candidates?.[0]?.content?.parts
+      ?.map(p => p?.text || '')
+      .join('\n')
+      .trim();
+
+    if (!text) {
+      throw new Error('Le modèle IA n\'a renvoyé aucun contenu exploitable.');
+    }
+
+    return deduplicateLines(text);
+  } catch (err) {
+    if (err && err.name === 'AbortError') {
+      throw new Error('Délai d\'attente dépassé lors de l\'appel à l\'IA. Réessayez.');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+async function executeWorkflow(multiAgentMode = false) {
+  if (!ensureAuthenticatedAction(multiAgentMode)) return;
+
+  const btn = document.getElementById('run-btn');
+  const statePill = document.getElementById('mission-state-pill');
+  const selectedId = document.getElementById('studio-flow-select')?.value || flows[0].id;
+  const selectedFlow = flows.find(f => f.id === selectedId) || flows[0];
+  const input = (document.getElementById('studio-input')?.value || '').trim();
+  const apiKey = (localStorage.getItem('gemini_fallback_key') || '').trim();
+  const serviceTier = activeServiceContext?.tier || (multiAgentMode ? 'pro' : 'standard');
+
+  if (!input) {
+    alert('Veuillez saisir les données ou la consigne de la mission.');
+    return;
+  }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Traitement IA en cours...';
+  }
+  if (statePill) {
+    statePill.textContent = 'Statut : En cours';
+    statePill.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40';
+  }
+
+  try {
+    const isCoordinator = selectedFlow.id === '01-coordinateur';
+    const activeAgent = isCoordinator ? routeToBestAgent(input) : selectedFlow;
+
+    let finalOutput = await callRealGeminiAgent({
+      agent: activeAgent,
+      input: isCoordinator
+        ? `Demande transmise par 01 AUTOPILOT à ${activeAgent.title} :\n${input}`
+        : input,
+      serviceTier,
+      apiKey
+    });
+
+    const traceBox = document.getElementById('collaboration-trace-box');
+    if (multiAgentMode) {
+      const peerIds = ['10-analyste', '08-projets'].filter(id => id !== activeAgent.id);
+      const peers = peerIds.map(id => flows.find(f => f.id === id)).filter(Boolean);
+      const traceLines = [`• <strong>${escapeHtml(activeAgent.title)}</strong> : livrable principal généré.`];
+      const sections = [`=== ${activeAgent.title} ===\n${finalOutput}`];
+
+      for (const peer of peers) {
+        const peerText = await callRealGeminiAgent({
+          agent: peer,
+          input: `Mission initiale :\n${input}\n\nLivrable à contrôler / structurer :\n${finalOutput}`,
+          serviceTier: 'pro',
+          apiKey
+        });
+        sections.push(`=== ${peer.title} ===\n${peerText}`);
+        traceLines.push(`• <strong>${escapeHtml(peer.title)}</strong> : revue et structuration exécutées.`);
+      }
+
+      finalOutput = sections.join('\n\n');
+      if (traceBox) {
+        traceBox.classList.remove('hidden');
+        traceBox.innerHTML = `<div class="font-bold text-indigo-300">Orchestration Multi-Agents (${serviceTier.toUpperCase()})</div>` + traceLines.join('<br>');
+      }
+    } else if (traceBox) {
+      traceBox.classList.add('hidden');
+    }
+
+    rawLastOutputText = finalOutput;
+    document.getElementById('routed-agent-badge').textContent = activeAgent.title;
+    document.getElementById('engine-badge').textContent = `Gemini 2.5 Flash • ${serviceTier.toUpperCase()}`;
+    renderFormattedOutput(finalOutput, document.getElementById('studio-output'));
+    document.getElementById('result-card').classList.remove('hidden');
+
+    const nowIso = new Date().toISOString();
+    const history = getScopedArray('autopilot_history_v2');
+    history.unshift({
+      id: 'msn-' + Date.now(),
+      isoDate: nowIso,
+      date: formatDisplayDate(nowIso),
+      title: activeServiceContext
+        ? `${activeServiceContext.name} (${serviceTier.toUpperCase()}) — ${activeAgent.title}`
+        : `${activeAgent.title} (${serviceTier.toUpperCase()})`,
+      tier: serviceTier,
+      projectId: document.getElementById('studio-project-select')?.value || '',
+      input,
+      output: finalOutput
+    });
+    setScopedArray('autopilot_history_v2', history.slice(0, 50));
+
+    if (statePill) {
+      statePill.textContent = 'Statut : Terminée';
+      statePill.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+    }
+    renderAccountAndClientViews();
+  } catch (err) {
+    const errMsg = err?.message || 'Erreur inconnue lors de l\'exécution.';
+    rawLastOutputText = `Erreur d'exécution IA :\n${errMsg}`;
+    document.getElementById('engine-badge').textContent = 'Erreur IA';
+    renderFormattedOutput(rawLastOutputText, document.getElementById('studio-output'));
+    document.getElementById('result-card').classList.remove('hidden');
+
+    if (statePill) {
+      statePill.textContent = 'Statut : En échec';
+      statePill.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40';
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-play"></i> Exécuter la mission';
+    }
+  }
+}
+
     function filterServicesByTier(tier) {
       currentTierFilter = tier;
       document.querySelectorAll('.tier-filter-btn').forEach(btn => {
