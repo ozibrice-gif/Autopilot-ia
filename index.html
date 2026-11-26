@@ -1,2172 +1,442 @@
-<!DOCTYPE html>
-<html lang="fr" class="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AUTOPILOT AI | Plateforme Intelligente de Prestations & Multi-Agents</title>
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#090d16">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-          colors: { slate: { 850: '#151e32', 900: '#0f172a', 950: '#090d16' } }
-        }
-      }
-    }
-  </script>
-  <style>
-    body { background-color: #090d16; color: #f8fafc; -webkit-tap-highlight-color: transparent; }
-    .glass { background: rgba(15, 23, 42, 0.86); backdrop-filter: blur(14px); border: 1px solid rgba(99, 102, 241, 0.22); }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-  </style>
-</head>
-<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- EN-TÊTE & NAVIGATION MULTI-ESPACES -->
-  <header class="sticky top-0 z-40 glass border-b border-slate-800/80 px-2.5 sm:px-4 py-2.5">
-    <div class="max-w-6xl mx-auto flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2 shrink-0 cursor-pointer" onclick="switchTab('home')">
-        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-600 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-          <i class="fa-solid fa-robot text-white text-xs sm:text-sm"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-1.5">
-            <span class="font-extrabold text-xs sm:text-base tracking-tight text-white">AUTOPILOT AI</span>
-            <span id="header-tier-badge" class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">VISITEUR</span>
-          </div>
-          <p class="text-[10px] text-slate-400 hidden lg:block">Une intelligence artificielle, plusieurs expertises, un seul espace de travail.</p>
-        </div>
-      </div>
+"use client";
 
-      <div class="flex items-center gap-1.5 min-w-0">
-        <button type="button" onclick="toggleDateLocale()" title="Langue des dates" class="px-2 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900 text-indigo-300 border border-indigo-500/35 hover:border-indigo-400 transition whitespace-nowrap flex items-center gap-1 shrink-0">
-          <i class="fa-regular fa-calendar text-amber-400"></i>
-          <span id="date-locale-label">FR</span>
-        </button>
+import Link from "next/link";
+import {
+  ArrowRight,
+  Bot,
+  BrainCircuit,
+  BriefcaseBusiness,
+  ChartNoAxesCombined,
+  CheckCircle2,
+  Code2,
+  FileText,
+  Globe,
+  LockKeyhole,
+  Menu,
+  MessageSquare,
+  ShieldCheck,
+  Sparkles,
+  Users,
+  X,
+  Zap
+} from "lucide-react";
+import { useState } from "react";
 
-        <nav class="flex items-center bg-slate-900/95 p-1 rounded-xl border border-slate-800 overflow-x-auto no-scrollbar">
-          <button type="button" onclick="switchTab('home')" id="tab-home" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all bg-indigo-600 text-white shadow whitespace-nowrap">Accueil</button>
-          <button type="button" onclick="switchTab('account')" id="tab-account" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">Compte</button>
-          <button type="button" onclick="switchTab('client')" id="tab-client" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">Espace Client</button>
-          <button type="button" onclick="switchTab('services')" id="tab-services" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">Prestations</button>
-          <button type="button" onclick="switchTab('studio')" id="tab-studio" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">Studio</button>
-          <button type="button" onclick="switchTab('projects')" id="tab-projects" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">Projets</button>
-          <button type="button" onclick="switchTab('vault')" id="tab-vault" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">Documents</button>
-          <button type="button" onclick="switchTab('history')" id="tab-history" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">Historique</button>
-          <button type="button" onclick="switchTab('billing')" id="tab-billing" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">Abonnement</button>
-          <button type="button" onclick="switchTab('admin')" id="tab-admin" class="px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap">Admin</button>
-        </nav>
-      </div>
-    </div>
-  </header>
+const services = [
+  {
+    icon: BriefcaseBusiness,
+    name: "Business & Entrepreneuriat",
+    description: "Création d'entreprise, stratégies commerciales et développement de projets.",
+    plan: "PRO"
+  },
+  {
+    icon: ChartNoAxesCombined,
+    name: "Finance & Gestion",
+    description: "Budgets, analyses financières, rentabilité et gestion des activités.",
+    plan: "PRO"
+  },
+  {
+    icon: MessageSquare,
+    name: "Marketing & Communication",
+    description: "Publicité, contenus, réseaux sociaux et stratégies marketing.",
+    plan: "PRO"
+  },
+  {
+    icon: Users,
+    name: "Ressources humaines",
+    description: "Recrutement, contrats, gestion du personnel et documents RH.",
+    plan: "PRO"
+  },
+  {
+    icon: ShieldCheck,
+    name: "Assistant juridique",
+    description: "Recherche juridique, rédaction et analyse de documents, notamment OHADA.",
+    plan: "PRO"
+  },
+  {
+    icon: Code2,
+    name: "Développement informatique",
+    description: "Création d'applications, programmation et assistance technique.",
+    plan: "PRO"
+  },
+  {
+    icon: FileText,
+    name: "Gestion de projets",
+    description: "Organisation, planification, suivi et réalisation de projets.",
+    plan: "PRO"
+  },
+  {
+    icon: MessageSquare,
+    name: "Service client",
+    description: "Réponses clients, assistance et automatisation des échanges.",
+    plan: "PRO"
+  },
+  {
+    icon: ChartNoAxesCombined,
+    name: "Analyste intelligent",
+    description: "Analyse de données, rapports et aide à la prise de décision.",
+    plan: "PRO"
+  },
+  {
+    icon: Bot,
+    name: "AUTOPILOT Assistant",
+    description: "Votre assistant intelligent généraliste pour vos tâches quotidiennes.",
+    plan: "STANDARD"
+  }
+];
 
-  <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 py-5 sm:py-6 space-y-6">
+export default function HomePage() {
+  const [menuOpen, setMenuOpen] = useState(false);
 
-    <!-- 1. INTERFACE PUBLIQUE D'ACCUEIL -->
-    <section id="view-home" class="space-y-6">
-      <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/60 border border-indigo-500/25 p-5 sm:p-8 space-y-5">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-          <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/25 px-3 py-1 rounded-full">
-            <i class="fa-solid fa-layer-group text-amber-400"></i> Plateforme Intelligente de Prestations & Multi-Agents
-          </span>
-          <span class="text-xs text-slate-400">Version 2.0 • Accès sécurisé par compte</span>
-        </div>
-
-        <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-          Une intelligence artificielle, plusieurs expertises, un seul espace de travail.
-        </h2>
-        <p class="text-sm sm:text-base text-slate-300 max-w-3xl leading-relaxed">
-          AUTOPILOT AI mobilise 10 agents spécialisés pilotés par un coordinateur pour produire des livrables structurés en finance, droit/OHADA, business, ressources humaines, marketing, développement, gestion de projets, relation client et analyse.
-        </p>
-
-        <div class="flex flex-wrap gap-3 pt-1">
-          <button type="button" onclick="switchTab('account')" class="px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-indigo-600/25">
-            <i class="fa-solid fa-user-plus mr-1.5"></i> Créer un compte / Se connecter
-          </button>
-          <button type="button" onclick="switchTab('services')" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs sm:text-sm">
-            <i class="fa-solid fa-briefcase mr-1.5 text-emerald-400"></i> Découvrir les Prestations (Standard & Pro)
-          </button>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="glass rounded-2xl p-5 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-base text-emerald-300"><i class="fa-solid fa-check-circle mr-1.5"></i> Services Standards</h3>
-            <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300">Traitement rapide</span>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            Rédaction et communication, assistance administrative, calculs et analyses simples, plans d'action et réponses clients structurées.
-          </p>
-        </div>
-
-        <div class="glass rounded-2xl p-5 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-base text-amber-300"><i class="fa-solid fa-crown mr-1.5"></i> Services Professionnels (PRO)</h3>
-            <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300">Mensuel (1 mois) / Annuel (12 mois)</span>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            Accès intégral à toutes les prestations et aux 10 agents, collaboration multi-agents, projets, documents, historique et nouvelles prestations ajoutées automatiquement.
-          </p>
-        </div>
-      </div>
-
-      <div class="glass rounded-2xl p-5 space-y-2 text-xs text-slate-300">
-        <div class="font-bold text-white text-sm">Modalités, CGU & Confidentialité</div>
-        <p>• <strong>Obligation de compte :</strong> La consultation publique est ouverte, mais la création d'un compte et la connexion sont obligatoires pour exécuter une prestation.</p>
-        <p>• <strong>Isolation & sécurité :</strong> Chaque compte dispose de son espace isolé (profil, projets, documents, historique, abonnements).</p>
-        <p>• <strong>Rigueur factuelle :</strong> Les hypothèses, estimations et projets de documents sont distingués des faits vérifiés.</p>
-      </div>
-    </section>
-
-    <!-- 2. INSCRIPTION, CONNEXION & GESTION DE COMPTE -->
-    <section id="view-account" class="hidden space-y-5">
-      <div class="glass rounded-2xl p-5 sm:p-6 space-y-5">
-        <div class="flex items-center justify-between gap-3 flex-wrap">
-          <div>
-            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 mb-2">
-              <i class="fa-solid fa-shield-halved"></i> Système de Comptes & Authentification
-            </span>
-            <h2 class="text-xl sm:text-2xl font-extrabold text-white">Création de compte & Connexion</h2>
-            <p class="text-xs sm:text-sm text-slate-300 mt-1">Un compte client actif est requis pour lancer des prestations, gérer des projets ou accéder à l'espace personnel.</p>
-          </div>
-          <span id="account-status-badge" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-rose-500/15 text-rose-300 border border-rose-500/30">Non connecté</span>
-        </div>
-
-        <div id="connected-profile-box" class="hidden bg-slate-950/90 border border-emerald-500/30 rounded-2xl p-4 space-y-3">
-          <div class="flex items-center justify-between gap-3 flex-wrap">
+  return (
+    <main className="min-h-screen bg-[#070B17] text-white">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#070B17]/95 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600">
+              <BrainCircuit size={27} />
+            </div>
             <div>
-              <div id="profile-fullname" class="text-base font-extrabold text-white"></div>
-              <div id="profile-details" class="text-xs text-slate-400"></div>
+              <h1 className="text-xl font-black tracking-wide">
+                AUTOPILOT <span className="text-blue-400">AI</span>
+              </h1>
+              <p className="text-[10px] tracking-[3px] text-gray-400">
+                INTELLIGENCE ARTIFICIELLE
+              </p>
             </div>
-            <div class="flex items-center gap-2 flex-wrap">
-              <button type="button" onclick="switchTab('client')" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">Espace Client</button>
-              <button type="button" onclick="logoutUser()" class="px-3 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500 text-rose-300 hover:text-white text-xs font-bold">Déconnexion</button>
-            </div>
+          </Link>
+
+          <nav className="hidden items-center gap-8 text-sm text-gray-300 md:flex">
+            <a href="#accueil" className="hover:text-blue-400">Accueil</a>
+            <a href="#services" className="hover:text-blue-400">Services</a>
+            <a href="#offres" className="hover:text-blue-400">Abonnements</a>
+            <a href="#fonctionnement" className="hover:text-blue-400">Fonctionnement</a>
+          </nav>
+
+          <div className="hidden items-center gap-3 md:flex">
+            <Link
+              href="/login"
+              className="rounded-lg px-4 py-2 text-sm font-semibold hover:bg-white/10"
+            >
+              Connexion
+            </Link>
+            <Link
+              href="/signup"
+              className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-bold hover:bg-blue-500"
+            >
+              Créer un compte
+            </Link>
           </div>
-        </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <form id="register-form" onsubmit="handleRegister(event)" class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
-            <h3 class="font-bold text-sm text-indigo-300">Créer un nouveau compte client</h3>
-            <input id="reg-fullname" type="text" required placeholder="Nom et prénom *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
-            <input id="reg-email" type="email" required placeholder="Adresse électronique *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
-            <input id="reg-phone" type="tel" required placeholder="Numéro de téléphone *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
-            <input id="reg-company" type="text" placeholder="Entreprise / Organisation (optionnel)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <input id="reg-password" type="password" required minlength="6" placeholder="Mot de passe (min. 6 car.) *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
-              <input id="reg-password2" type="password" required minlength="6" placeholder="Confirmation mot de passe *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
-            </div>
-            <label class="flex items-start gap-2 text-xs text-slate-300 pt-1">
-              <input id="reg-cgu" type="checkbox" required class="mt-0.5 rounded border-slate-600 bg-slate-900 text-indigo-600">
-              <span>J'accepte les conditions générales d'utilisation et la politique de confidentialité d'AUTOPILOT AI.</span>
-            </label>
-            <button type="submit" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm">
-              <i class="fa-solid fa-user-check mr-1.5"></i> Créer mon compte
-            </button>
-          </form>
-
-          <form id="login-form" onsubmit="handleLogin(event)" class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3 flex flex-col justify-between">
-            <div class="space-y-3">
-              <h3 class="font-bold text-sm text-emerald-300">Connexion à un compte existant</h3>
-              <input id="login-email" type="email" required placeholder="Adresse électronique *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
-              <input id="login-password" type="password" required placeholder="Mot de passe *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
-              <button type="submit" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm">
-                <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Se connecter
-              </button>
-            </div>
-            <div class="pt-3 border-t border-slate-800/80 text-xs text-slate-400 space-y-1">
-              <div class="font-semibold text-slate-300">Démo rapide (compte test local) :</div>
-              <button type="button" onclick="fillDemoAccount()" class="text-indigo-400 hover:underline">Remplir un compte de test et activer PRO</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. ESPACE PERSONNEL CLIENT -->
-    <section id="view-client" class="hidden space-y-5">
-      <div class="glass rounded-2xl p-5 sm:p-6 space-y-5">
-        <div class="flex items-center justify-between gap-3 flex-wrap">
-          <div>
-            <h2 class="text-xl font-extrabold text-white">Tableau de bord Client</h2>
-            <p id="client-welcome-line" class="text-xs sm:text-sm text-slate-300"></p>
-          </div>
-          <button type="button" onclick="switchTab('services')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">
-            Commander / Lancer une prestation
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="rounded-lg border border-white/20 p-2 md:hidden"
+            aria-label="Ouvrir le menu"
+          >
+            {menuOpen ? <X /> : <Menu />}
           </button>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5">
-            <div id="kpi-plan" class="text-base font-extrabold text-amber-300">STANDARD</div>
-            <div class="text-[11px] text-slate-400">Niveau d'abonnement</div>
+        {menuOpen && (
+          <div className="border-t border-white/10 bg-[#0D1426] p-5 md:hidden">
+            <div className="flex flex-col gap-5">
+              <a href="#accueil" onClick={() => setMenuOpen(false)}>Accueil</a>
+              <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
+              <a href="#offres" onClick={() => setMenuOpen(false)}>Abonnements</a>
+              <a href="#fonctionnement" onClick={() => setMenuOpen(false)}>Fonctionnement</a>
+              <Link href="/login" className="text-blue-400">Connexion</Link>
+              <Link href="/signup" className="rounded-lg bg-blue-600 p-3 text-center font-bold">
+                Créer un compte
+              </Link>
+            </div>
           </div>
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5">
-            <div id="kpi-missions" class="text-base font-extrabold text-indigo-400">0</div>
-            <div class="text-[11px] text-slate-400">Prestations réalisées</div>
-          </div>
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5">
-            <div id="kpi-projects" class="text-base font-extrabold text-emerald-400">0</div>
-            <div class="text-[11px] text-slate-400">Projets actifs</div>
-          </div>
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5">
-            <div id="kpi-docs" class="text-base font-extrabold text-violet-400">0</div>
-            <div class="text-[11px] text-slate-400">Documents archivés</div>
-          </div>
-        </div>
+        )}
+      </header>
 
-        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-xs text-slate-300 space-y-1">
-          <div class="font-bold text-white">Statut d'abonnement & droits</div>
-          <div id="client-subscription-summary">Vérification en cours...</div>
-        </div>
-      </div>
-    </section>
-    <!-- 4, 5 & 6. CATALOGUE DES PRESTATIONS (STANDARD & PROFESSIONNEL) -->
-    <section id="view-services" class="hidden space-y-6">
-      <div class="glass rounded-2xl p-5 sm:p-6 space-y-4">
-        <div class="flex items-center justify-between gap-3 flex-wrap">
-          <div>
-            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 mb-2">
-              <i class="fa-solid fa-briefcase"></i> Catalogue Commercial des Prestations
+      <section id="accueil" className="relative overflow-hidden px-5 py-24 md:py-32">
+        <div className="pointer-events-none absolute left-1/2 top-0 h-[450px] w-[450px] -translate-x-1/2 rounded-full bg-blue-600/20 blur-[130px]" />
+
+        <div className="relative mx-auto max-w-5xl text-center">
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm text-blue-300">
+            <Sparkles size={16} />
+            Une nouvelle génération d'assistants intelligents
+          </div>
+
+          <h2 className="text-4xl font-black leading-tight md:text-7xl">
+            Votre travail.
+            <br />
+            <span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+              Votre intelligence artificielle.
             </span>
-            <h2 class="text-xl sm:text-2xl font-extrabold text-white">Services Standards & Services Professionnels (PRO)</h2>
-            <p class="text-xs sm:text-sm text-slate-300 mt-1">
-              L'abonnement PRO actif donne accès à 100 % des prestations présentes et futures. La création de compte est obligatoire pour lancer une prestation.
+          </h2>
+
+          <p className="mx-auto mt-7 max-w-3xl text-base leading-8 text-gray-400 md:text-xl">
+            AUTOPILOT AI rassemble plusieurs agents spécialisés dans une seule
+            plateforme pour vous aider à entreprendre, gérer, analyser,
+            développer et automatiser vos activités.
+          </p>
+
+          <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+            <Link
+              href="/signup"
+              className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 py-4 font-bold hover:bg-blue-500"
+            >
+              Commencer maintenant <ArrowRight size={19} />
+            </Link>
+            <a
+              href="#services"
+              className="rounded-xl border border-white/20 px-8 py-4 font-bold hover:bg-white/10"
+            >
+              Découvrir les services
+            </a>
+          </div>
+
+          <div className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {[
+              ["10", "Agents spécialisés"],
+              ["2", "Formules"],
+              ["24/7", "Disponibilité visée"],
+              ["1", "Plateforme"]
+            ].map(([number, label]) => (
+              <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+                <p className="text-3xl font-black text-blue-400">{number}</p>
+                <p className="mt-2 text-sm text-gray-400">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="fonctionnement" className="border-y border-white/10 bg-[#0B1120] px-5 py-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto mb-14 max-w-2xl text-center">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[3px] text-blue-400">
+              Une plateforme intelligente
+            </p>
+            <h2 className="text-3xl font-black md:text-5xl">
+              Tout votre travail au même endroit
+            </h2>
+            <p className="mt-5 leading-7 text-gray-400">
+              Une interface unique pour accéder à des assistants spécialisés
+              et organiser vos activités.
             </p>
           </div>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button type="button" onclick="filterServicesByTier('all')" data-tier-btn="all" class="tier-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white">Toutes</button>
-            <button type="button" onclick="filterServicesByTier('standard')" data-tier-btn="standard" class="tier-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800">Standards</button>
-            <button type="button" onclick="filterServicesByTier('pro')" data-tier-btn="pro" class="tier-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800">Professionnelles (PRO)</button>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                icon: Bot,
+                title: "Agents spécialisés",
+                description: "Des assistants IA organisés par domaine d'activité."
+              },
+              {
+                icon: BrainCircuit,
+                title: "Intelligence collaborative",
+                description: "Une architecture conçue pour permettre la collaboration entre agents."
+              },
+              {
+                icon: LockKeyhole,
+                title: "Espace personnel",
+                description: "Un compte utilisateur pour accéder à vos services et à votre espace client."
+              }
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.04] p-8">
+                <item.icon className="mb-5 text-blue-400" size={34} />
+                <h3 className="mb-3 text-xl font-bold">{item.title}</h3>
+                <p className="leading-7 text-gray-400">{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
 
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="service-domain-filters">
-          <button type="button" onclick="filterServicesByDomain('all')" data-dom-btn="all" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 text-white whitespace-nowrap">Tous domaines</button>
-          <button type="button" onclick="filterServicesByDomain('redaction-admin')" data-dom-btn="redaction-admin" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap">Rédaction & Admin</button>
-          <button type="button" onclick="filterServicesByDomain('business')" data-dom-btn="business" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap">Business</button>
-          <button type="button" onclick="filterServicesByDomain('finance')" data-dom-btn="finance" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap">Finance & SYSCOHADA</button>
-          <button type="button" onclick="filterServicesByDomain('juridique')" data-dom-btn="juridique" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap">Juridique & OHADA</button>
-          <button type="button" onclick="filterServicesByDomain('rh')" data-dom-btn="rh" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap">RH</button>
-          <button type="button" onclick="filterServicesByDomain('marketing')" data-dom-btn="marketing" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap">Marketing & Ventes</button>
-          <button type="button" onclick="filterServicesByDomain('dev')" data-dom-btn="dev" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap">Développement</button>
-          <button type="button" onclick="filterServicesByDomain('projets')" data-dom-btn="projets" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap">Projets</button>
-          <button type="button" onclick="filterServicesByDomain('client')" data-dom-btn="client" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap">Service Client</button>
-          <button type="button" onclick="filterServicesByDomain('analyste')" data-dom-btn="analyste" class="dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap">Analyste</button>
+      <section id="services" className="px-5 py-24">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-14 text-center">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[3px] text-blue-400">
+              Nos prestations
+            </p>
+            <h2 className="text-3xl font-black md:text-5xl">
+              Découvrez nos agents IA
+            </h2>
+            <p className="mt-5 text-gray-400">
+              Des assistants adaptés à vos besoins professionnels et personnels.
+            </p>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((service) => (
+              <div
+                key={service.name}
+                className="group rounded-2xl border border-white/10 bg-[#0D1426] p-7 transition hover:-translate-y-1 hover:border-blue-500/50"
+              >
+                <div className="mb-5 flex items-center justify-between">
+                  <div className="rounded-xl bg-blue-500/10 p-3 text-blue-400">
+                    <service.icon size={27} />
+                  </div>
+                  <span className={`rounded-full px-3 py-1 text-xs font-bold ${
+                    service.plan === "PRO"
+                      ? "bg-purple-500/15 text-purple-300"
+                      : "bg-blue-500/15 text-blue-300"
+                  }`}>
+                    {service.plan}
+                  </span>
+                </div>
+                <h3 className="mb-3 text-lg font-bold">{service.name}</h3>
+                <p className="min-h-[72px] text-sm leading-6 text-gray-400">
+                  {service.description}
+                </p>
+                <Link
+                  href="/signup"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-blue-400 hover:text-blue-300"
+                >
+                  Accéder au service <ArrowRight size={16} />
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div id="services-catalog-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </section>
+      <section id="offres" className="border-y border-white/10 bg-[#0B1120] px-5 py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-14 text-center">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[3px] text-blue-400">
+              Nos abonnements
+            </p>
+            <h2 className="text-3xl font-black md:text-5xl">
+              Choisissez votre formule
+            </h2>
+            <p className="mt-5 text-gray-400">
+              Commencez avec Standard ou débloquez toute la puissance de PRO.
+            </p>
+          </div>
 
-    <!-- 7 & 8. STUDIO MULTI-AGENTS + ASSISTANT AUTOPILOT -->
-    <section id="view-studio" class="hidden space-y-5">
-      <div class="glass rounded-2xl p-5 space-y-4">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-          <div>
-            <div class="flex items-center gap-2 flex-wrap">
-              <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-microchip text-indigo-400"></i> Studio Multi-Agents
-              </h2>
-              <span id="studio-active-service-pill" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">Mission libre</span>
+          <div className="grid gap-7 md:grid-cols-2">
+            <div className="rounded-3xl border border-white/10 bg-[#10182B] p-8">
+              <div className="mb-6 flex items-center gap-3">
+                <Zap className="text-blue-400" size={27} />
+                <h3 className="text-2xl font-black">STANDARD</h3>
+              </div>
+              <p className="mb-8 text-gray-400">
+                Pour découvrir AUTOPILOT AI et utiliser les fonctionnalités essentielles.
+              </p>
+              <ul className="mb-10 space-y-4 text-sm text-gray-300">
+                {[
+                  "Accès à l'assistant généraliste",
+                  "Espace client personnel",
+                  "Historique des échanges",
+                  "Accès aux prestations Standard"
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-3">
+                    <CheckCircle2 className="shrink-0 text-blue-400" size={19} />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/signup"
+                className="block rounded-xl border border-white/20 px-6 py-4 text-center font-bold hover:bg-white/10"
+              >
+                Choisir Standard
+              </Link>
             </div>
-            <p class="text-xs text-slate-400 mt-0.5">10 agents spécialisés • Exécution simple ou multi-agents • Contrôle de cohérence</p>
-          </div>
-          <div class="flex items-center gap-2">
-            <span id="mission-state-pill" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-slate-900 text-slate-300 border border-slate-700">Statut : En attente</span>
-            <button type="button" onclick="toggleKeyBox()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700">
-              <i class="fa-solid fa-key mr-1 text-amber-400"></i> Clé API
-            </button>
-          </div>
-        </div>
 
-        <div id="fallback-key-box" class="hidden bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
-          <label class="block text-xs font-semibold text-slate-300">Clé API Gemini facultative (connectée à l'appareil)</label>
-          <div class="flex gap-2">
-            <input type="password" id="local-api-key" placeholder="AIzaSy... (facultatif)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-            <button type="button" onclick="saveLocalKey()" class="px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Sauver</button>
-          </div>
-        </div>
+            <div className="relative rounded-3xl border border-blue-500/60 bg-gradient-to-b from-blue-950/80 to-[#10182B] p-8 shadow-2xl shadow-blue-900/20">
+              <div className="absolute -top-4 right-8 rounded-full bg-blue-600 px-5 py-2 text-xs font-black">
+                ACCÈS COMPLET
+              </div>
+              <div className="mb-6 flex items-center gap-3">
+                <Sparkles className="text-cyan-300" size={27} />
+                <h3 className="text-2xl font-black">PRO</h3>
+              </div>
+              <p className="mb-8 text-gray-300">
+                La formule complète pour les professionnels, entreprises et entrepreneurs.
+              </p>
+              <ul className="mb-10 space-y-4 text-sm text-gray-200">
+                {[
+                  "Accès à tous les agents IA",
+                  "Accès à tous les services présents et futurs",
+                  "Studio multi-agents",
+                  "Collaboration entre agents",
+                  "Analyses et prestations avancées",
+                  "Traitement de documents et projets",
+                  "Accès pendant toute la durée de l'abonnement"
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-3">
+                    <CheckCircle2 className="shrink-0 text-cyan-300" size={19} />
+                    {item}
+                  </li>
+                ))}
+              </ul>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">1. Agent mobilisé (ou 01 Coordinateur)</label>
-            <select id="studio-flow-select" onchange="loadFlowTemplate()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-indigo-500"></select>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">2. Rattacher à un projet client (optionnel)</label>
-            <select id="studio-project-select" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-indigo-500">
-              <option value="">Aucun projet rattaché</option>
-            </select>
-          </div>
-        </div>
+              <div className="mb-6 grid grid-cols-2 gap-3">
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <p className="font-bold">Mensuel</p>
+                  <p className="mt-1 text-xs text-gray-400">1 mois</p>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <p className="font-bold">Annuel</p>
+                  <p className="mt-1 text-xs text-gray-400">12 mois</p>
+                </div>
+              </div>
 
-        <div>
-          <div class="flex items-center justify-between mb-1.5 gap-2 flex-wrap">
-            <label class="text-xs font-semibold text-slate-300">3. Cahier de mission, données chiffrées ou fichier texte</label>
-            <div class="flex items-center gap-3">
-              <label for="doc-file-input" class="text-[11px] text-emerald-400 hover:underline cursor-pointer">
-                <i class="fa-solid fa-file-import mr-1"></i>Importer (.txt/.csv)
-              </label>
-              <input type="file" id="doc-file-input" accept=".txt,.md,.csv,.json,.log,text/*" onchange="handleFileImport(event)" class="hidden">
-              <button type="button" onclick="fillSampleData()" class="text-[11px] text-indigo-400 hover:underline">Exemple</button>
-              <button type="button" onclick="clearInput()" class="text-[11px] text-rose-400 hover:underline">Effacer</button>
+              <Link
+                href="/signup"
+                className="block rounded-xl bg-blue-600 px-6 py-4 text-center font-black hover:bg-blue-500"
+              >
+                Passer à PRO
+              </Link>
             </div>
           </div>
-          <div id="imported-file-banner" class="hidden mb-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-[11px] text-emerald-300 flex items-center justify-between gap-2">
-            <span id="imported-file-name" class="truncate"></span>
-            <button type="button" onclick="hideFileBanner()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-          </div>
-          <textarea id="studio-input" rows="5" placeholder="Décrivez précisément votre demande : montants, devises, contexte juridique/OHADA, options à comparer, délais, objectifs..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <button type="button" id="run-btn" onclick="executeWorkflow(false)" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition">
-            <i class="fa-solid fa-play"></i> Exécuter la mission
-          </button>
-          <button type="button" id="run-collab-btn" onclick="executeWorkflow(true)" class="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-indigo-500/35 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition">
-            <i class="fa-solid fa-people-arrows"></i> Exécution Multi-Agents (PRO)
-          </button>
-        </div>
-      </div>
-
-      <!-- RÉSULTAT & LIVRABLE -->
-      <div id="result-card" class="hidden glass rounded-2xl p-5 space-y-3 border-emerald-500/30">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-              <i class="fa-solid fa-circle-check"></i> Livrable contrôlé
-            </span>
-            <span id="routed-agent-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/25">Agent actif</span>
-            <span id="engine-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">Moteur métier</span>
-          </div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <button type="button" onclick="toggleEditOutput()" class="text-xs px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-200 hover:text-slate-950 border border-amber-500/30 transition">
-              <i class="fa-solid fa-pen mr-1"></i>Modifier
-            </button>
-            <button type="button" onclick="saveOutputToVault()" id="save-vault-btn" class="text-xs px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500 text-emerald-200 hover:text-slate-950 border border-emerald-500/30 transition">
-              <i class="fa-solid fa-box-archive mr-1"></i>Archiver
-            </button>
-            <button type="button" onclick="downloadDeliverableTxt()" class="text-xs px-3 py-1 rounded-lg bg-violet-600/25 hover:bg-violet-600 text-violet-200 hover:text-white border border-violet-500/30 transition">
-              <i class="fa-solid fa-download mr-1"></i>Télécharger
-            </button>
-            <button type="button" onclick="shareOutput()" class="text-xs px-3 py-1 rounded-lg bg-indigo-600/25 hover:bg-indigo-600 text-indigo-200 hover:text-white border border-indigo-500/30 transition">
-              <i class="fa-solid fa-share-nodes mr-1"></i>Partager
-            </button>
-            <button type="button" onclick="copyOutput()" id="copy-btn" class="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
-              <i class="fa-regular fa-copy mr-1"></i>Copier
-            </button>
-          </div>
-        </div>
-
-        <div id="collaboration-trace-box" class="hidden bg-slate-900/90 border border-indigo-500/25 rounded-xl p-3 text-xs text-slate-300 space-y-1"></div>
-        <div id="studio-output" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 leading-relaxed font-sans"></div>
-
-        <div id="output-editor-box" class="hidden space-y-2 pt-2">
-          <label class="block text-xs font-semibold text-amber-300">Édition directe du livrable</label>
-          <textarea id="studio-output-editor" rows="10" class="w-full bg-slate-950 border border-amber-500/40 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-amber-400"></textarea>
-          <div class="flex items-center justify-end gap-2">
-            <button type="button" onclick="cancelEditOutput()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300">Annuler</button>
-            <button type="button" onclick="applyEditedOutput(true)" class="text-xs px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold">Appliquer & Archiver</button>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- 9. ESPACE DE GESTION DES PROJETS -->
-    <section id="view-projects" class="hidden space-y-5">
-      <div class="glass rounded-2xl p-5 sm:p-6 space-y-4">
-        <div>
-          <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 mb-2">
-            <i class="fa-solid fa-diagram-project"></i> Gestion de Projets Client
-          </span>
-          <h2 class="text-xl font-extrabold text-white">Créer et suivre vos projets multi-missions</h2>
-          <p class="text-xs text-slate-300 mt-1">Rattachez des missions et des livrables à un projet structuré avec titre, objectif et statut.</p>
-        </div>
-
-        <form id="create-project-form" onsubmit="handleCreateProject(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-950/80 border border-slate-800 rounded-2xl p-4">
-          <input id="prj-title" type="text" required placeholder="Titre du projet *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
-          <input id="prj-goal" type="text" required placeholder="Objectif principal *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
-          <select id="prj-status" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
-            <option value="En cours">En cours</option>
-            <option value="En attente">En attente</option>
-            <option value="Terminé">Terminé</option>
-          </select>
-          <textarea id="prj-desc" rows="2" placeholder="Description, périmètre et contraintes..." class="sm:col-span-3 bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white"></textarea>
-          <div class="sm:col-span-3 flex justify-end">
-            <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">
-              <i class="fa-solid fa-plus mr-1"></i> Créer le projet
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <div id="projects-list" class="space-y-3"></div>
-    </section>
-
-    <!-- 10. GESTION DOCUMENTAIRE (CLASSEUR) -->
-    <section id="view-vault" class="hidden space-y-4">
-      <div class="flex items-center justify-between gap-2 flex-wrap">
-        <div>
-          <h2 class="text-lg font-bold text-white">Gestion documentaire — Livrables archivés</h2>
-          <p class="text-xs text-slate-400">Documents générés, modifiés, téléchargeables et isolés par compte client</p>
-        </div>
-        <button type="button" onclick="clearVault()" class="text-xs text-rose-400 hover:underline">Tout vider</button>
-      </div>
-      <div id="vault-list" class="space-y-3"></div>
-    </section>
-
-    <!-- 11. HISTORIQUE DES PRESTATIONS -->
-    <section id="view-history" class="hidden space-y-4">
-      <div class="flex items-center justify-between gap-2 flex-wrap">
-        <div>
-          <h2 class="text-lg font-bold text-white">Historique des prestations & missions</h2>
-          <p class="text-xs text-slate-400">Suivi chronologique des exécutions, agents mobilisés et livrables</p>
-        </div>
-        <button type="button" onclick="clearHistory()" class="text-xs text-rose-400 hover:underline">Tout effacer</button>
-      </div>
-      <div id="history-list" class="space-y-3"></div>
-    </section>
-
-    <!-- 12. ESPACE ABONNEMENTS & PAIEMENTS (EXCLUSIVEMENT MENSUEL OU ANNUEL) -->
-    <section id="view-billing" class="hidden space-y-5">
-      <div class="glass rounded-2xl p-5 sm:p-6 space-y-5">
-        <div>
-          <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 mb-2">
-            <i class="fa-solid fa-crown"></i> Abonnements & Paiements
-          </span>
-          <h2 class="text-xl font-extrabold text-white">Formules STANDARD & PRO (Mensuelle 1 mois / Annuelle 12 mois)</h2>
-          <p class="text-xs sm:text-sm text-slate-300 mt-1">
-            L'abonnement PRO donne accès à l'intégralité des prestations présentes et futures, aux 10 agents et à la collaboration multi-agents. Aucune autre durée n'est proposée.
+          <p className="mt-8 text-center text-xs text-gray-500">
+            Les tarifs et modalités de paiement seront affichés lors de la souscription.
+            Les limites techniques éventuelles seront précisées dans les conditions du service.
           </p>
         </div>
+      </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between gap-4">
-            <div class="space-y-2">
-              <div class="text-xs font-bold uppercase text-emerald-400">Standard</div>
-              <div class="text-lg font-extrabold text-white">Accès Standard</div>
-              <p class="text-xs text-slate-400">Prestations Standards, suivi de base et historique personnel.</p>
-            </div>
-            <button type="button" onclick="activateSubscription('standard', 0)" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold">
-              Activer Standard
-            </button>
-          </div>
-
-          <div class="bg-slate-950/90 border border-indigo-500/40 rounded-2xl p-4 flex flex-col justify-between gap-4">
-            <div class="space-y-2">
-              <div class="text-xs font-bold uppercase text-indigo-300">PRO — Formule Mensuelle</div>
-              <div id="price-monthly-label" class="text-lg font-extrabold text-white">15 000 FCFA / 1 mois</div>
-              <p class="text-xs text-slate-300">Durée : 1 mois. Accès intégral à toutes les prestations et agents.</p>
-            </div>
-            <button type="button" onclick="activateSubscription('pro_monthly', 1)" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">
-              Souscrire PRO (1 mois)
-            </button>
-          </div>
-
-          <div class="bg-slate-950/90 border border-amber-500/40 rounded-2xl p-4 flex flex-col justify-between gap-4">
-            <div class="space-y-2">
-              <div class="text-xs font-bold uppercase text-amber-300">PRO — Formule Annuelle</div>
-              <div id="price-yearly-label" class="text-lg font-extrabold text-white">150 000 FCFA / 12 mois</div>
-              <p class="text-xs text-slate-300">Durée : 12 mois. Accès intégral continu pendant toute l'année.</p>
-            </div>
-            <button type="button" onclick="activateSubscription('pro_yearly', 12)" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold">
-              Souscrire PRO (12 mois)
-            </button>
-          </div>
+      <section className="px-5 py-24 text-center">
+        <div className="mx-auto max-w-4xl rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-950/70 to-[#10182B] p-10 md:p-16">
+          <Globe className="mx-auto mb-6 text-cyan-300" size={42} />
+          <h2 className="text-3xl font-black md:text-5xl">
+            Passez à une nouvelle façon de travailler.
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl leading-7 text-gray-400">
+            Créez votre compte et découvrez les possibilités offertes par
+            AUTOPILOT AI.
+          </p>
+          <Link
+            href="/signup"
+            className="mt-9 inline-flex items-center gap-3 rounded-xl bg-blue-600 px-8 py-4 font-bold hover:bg-blue-500"
+          >
+            Créer mon compte <ArrowRight size={19} />
+          </Link>
         </div>
+      </section>
 
-        <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 space-y-2">
-          <div class="text-xs font-bold text-white">Journal des abonnements & transactions</div>
-          <div id="billing-log-list" class="space-y-2 text-xs text-slate-300"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 13. TABLEAU DE BORD ADMINISTRATEUR -->
-    <section id="view-admin" class="hidden space-y-5">
-      <div class="glass rounded-2xl p-5 sm:p-6 space-y-5">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
+      <footer className="border-t border-white/10 bg-[#050812] px-5 py-10">
+        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row md:items-center">
           <div>
-            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 mb-2">
-              <i class="fa-solid fa-user-gear"></i> Administration Générale
-            </span>
-            <h2 class="text-xl font-extrabold text-white">Gestion du catalogue, des tarifs PRO & des accès</h2>
-            <p class="text-xs text-slate-300 mt-1">Ajoutez, modifiez ou supprimez des prestations sans reconstruction de l'application ; toute nouvelle prestation est ouverte aux abonnés PRO actifs.</p>
+            <p className="text-lg font-black">
+              AUTOPILOT <span className="text-blue-400">AI</span>
+            </p>
+            <p className="mt-2 text-xs text-gray-500">
+              Votre plateforme d'intelligence artificielle.
+            </p>
           </div>
+          <div className="flex flex-wrap gap-6 text-sm text-gray-400">
+            <a href="#services" className="hover:text-white">Services</a>
+            <a href="#offres" className="hover:text-white">Abonnements</a>
+            <Link href="/login" className="hover:text-white">Connexion</Link>
+            <Link href="/signup" className="hover:text-white">Inscription</Link>
+          </div>
+          <p className="text-xs text-gray-600">
+            © {new Date().getFullYear()} AUTOPILOT AI. Tous droits réservés.
+          </p>
         </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3">
-            <div id="admin-kpi-users" class="text-lg font-extrabold text-indigo-400">0</div>
-            <div class="text-[11px] text-slate-400">Comptes enregistrés</div>
-          </div>
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3">
-            <div id="admin-kpi-services" class="text-lg font-extrabold text-emerald-400">0</div>
-            <div class="text-[11px] text-slate-400">Prestations catalogue</div>
-          </div>
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3">
-            <div id="admin-kpi-missions" class="text-lg font-extrabold text-amber-300">0</div>
-            <div class="text-[11px] text-slate-400">Missions exécutées</div>
-          </div>
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3">
-            <div id="admin-kpi-pro" class="text-lg font-extrabold text-violet-400">0</div>
-            <div class="text-[11px] text-slate-400">Abonnés PRO actifs</div>
-          </div>
-        </div>
-
-        <form id="admin-add-service-form" onsubmit="adminAddService(event)" class="bg-slate-950/85 border border-slate-800 rounded-2xl p-4 space-y-3">
-          <div class="text-xs font-bold text-indigo-300">Ajouter une prestation au catalogue (Standard ou Professionnel)</div>
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
-            <input id="adm-srv-name" type="text" required placeholder="Nom de la prestation *" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-            <select id="adm-srv-tier" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-              <option value="standard">Standard</option>
-              <option value="pro">Professionnel (PRO)</option>
-            </select>
-            <select id="adm-srv-domain" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-              <option value="redaction-admin">Rédaction & Admin</option>
-              <option value="business">Business</option>
-              <option value="finance">Finance & SYSCOHADA</option>
-              <option value="juridique">Juridique & OHADA</option>
-              <option value="rh">RH</option>
-              <option value="marketing">Marketing & Ventes</option>
-              <option value="dev">Développement</option>
-              <option value="projets">Projets</option>
-              <option value="client">Service Client</option>
-              <option value="analyste">Analyste</option>
-            </select>
-            <select id="adm-srv-agent" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
-          </div>
-          <input id="adm-srv-desc" type="text" required placeholder="Description & résultats attendus *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-          <textarea id="adm-srv-prompt" rows="2" required placeholder="Consigne / brief d'exécution de la prestation *" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white"></textarea>
-          <div class="flex justify-end">
-            <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
-              Publier la prestation
-            </button>
-          </div>
-        </form>
-
-        <div id="admin-services-list" class="space-y-2"></div>
-      </div>
-    </section>
-
-  </main>
-  <script>
-    const defaultFlows = [
-      {
-        id: '01-coordinateur',
-        title: '01 AUTOPILOT — Coordinateur',
-        category: 'pilotage',
-        badge: 'Coordinateur Intelligent',
-        icon: 'fa-compass-drafting',
-        role: 'Comprend les demandes, identifie les compétences, sélectionne les agents et unifie les résultats.',
-        action: 'Analyse l\'intention, oriente vers le spécialiste adapté ou orchestre plusieurs agents.',
-        systemPrompt: 'Tu es 01 AUTOPILOT, le Coordinateur intelligent d\'AUTOPILOT AI. Réponds en français clair, structuré et professionnel sans ** ni ## ni <br>, sans inventer de chiffres ou faits non fournis.',
-        sample: 'Structurer le lancement d\'une offre de prestations avec budget, cadre juridique OHADA et plan d\'exécution sur 30 jours.'
-      },
-      {
-        id: '02-business',
-        title: '02 Agent Business',
-        category: 'business',
-        badge: 'Business & Stratégie',
-        icon: 'fa-briefcase',
-        role: 'Business plans, études de marché, faisabilité, modèles économiques, rentabilité et développement.',
-        action: 'Structure l\'offre, les segments, le modèle économique, les hypothèses et la feuille de route.',
-        systemPrompt: 'Tu es l\'Agent Business (02) d\'AUTOPILOT AI. Réponds en français professionnel sans ** ni ## ni <br>, sans inventer de chiffres fictifs.',
-        sample: 'Structurer un modèle économique et un plan de développement pour une activité de prestations à 45 000 FCFA/mois.'
-      },
-      {
-        id: '03-finance',
-        title: '03 Agent Finance',
-        category: 'finance',
-        badge: 'Finance & SYSCOHADA',
-        icon: 'fa-calculator',
-        role: 'Budgets, trésorerie, bilans, écritures comptables, TVA, ratios et contrôle comptable SYSCOHADA.',
-        action: 'Établit des bilans équilibrés, écritures en partie double, ratios et tableaux de synthèse.',
-        systemPrompt: 'Tu es l\'Agent Finance (03) d\'AUTOPILOT AI, expert en comptabilité SYSCOHADA, bilans, écritures en partie double, trésorerie et ratios. Réponds sans ** ni ## ni <br>.',
-        sample: 'Établir un bilan comptable avec 2 000 000 FCFA d\'immobilisations et 1 200 000 FCFA de trésorerie, capital 2 500 000 FCFA.'
-      },
-      {
-        id: '04-marketing',
-        title: '04 Agent Marketing',
-        category: 'marketing',
-        badge: 'Marketing & Ventes',
-        icon: 'fa-bullhorn',
-        role: 'Positionnement, clientèle, offres, campagnes publicitaires, communication et fidélisation.',
-        action: 'Conçoit l\'argumentaire, les canaux ciblés, le plan d\'acquisition et la fidélisation.',
-        systemPrompt: 'Tu es l\'Agent Marketing (04) d\'AUTOPILOT AI. Réponds en français structuré et concret sans ** ni ## ni <br>.',
-        sample: 'Élaborer un plan marketing et commercial pour acquérir et fidéliser des clients entreprises.'
-      },
-      {
-        id: '05-rh',
-        title: '05 Agent Ressources humaines',
-        category: 'rh',
-        badge: 'Ressources Humaines',
-        icon: 'fa-users',
-        role: 'Recrutement, fiches de poste, contrats/procédures RH, évaluation et organisation des équipes.',
-        action: 'Structure les postes, critères d\'évaluation, grilles d\'entretien et intégration.',
-        systemPrompt: 'Tu es l\'Agent Ressources humaines (05) d\'AUTOPILOT AI. Réponds sans ** ni ## ni <br>.',
-        sample: 'Rédiger le cadre de recrutement et la grille d\'entretien pour un responsable administratif et opérationnel.'
-      },
-      {
-        id: '06-juridique',
-        title: '06 Agent Juridique',
-        category: 'juridique',
-        badge: 'Droit & OHADA',
-        icon: 'fa-scale-balanced',
-        role: 'Analyse et rédaction de contrats, droit des affaires, droit du travail, droit OHADA et risques.',
-        action: 'Rédige des projets de clauses structurées avec précisions sur les textes applicables et validations requises.',
-        systemPrompt: 'Tu es l\'Agent Juridique (06) d\'AUTOPILOT AI, spécialiste des contrats et du droit OHADA. Précise les cadres applicables et la nécessité de validation juridique formelle. Sans ** ni ## ni <br>.',
-        sample: 'Rédiger les clauses essentielles d\'un contrat de prestation de services dans l\'espace OHADA.'
-      },
-      {
-        id: '07-developpement',
-        title: '07 Agent Développement',
-        category: 'dev',
-        badge: 'Développement & Tech',
-        icon: 'fa-code',
-        role: 'Conception d\'applications, génération/analyse de code, API, architecture, tests et débogage.',
-        action: 'Fournit des solutions techniques fiables, gestion d\'erreurs et critères de validation.',
-        systemPrompt: 'Tu es l\'Agent Développement (07) d\'AUTOPILOT AI. Réponds sans ** ni ## ni <br>.',
-        sample: 'Proposer une architecture modulaire et sécurisée avec gestion des erreurs et validation des données.'
-      },
-      {
-        id: '08-projets',
-        title: '08 Agent Projets',
-        category: 'projets',
-        badge: 'Gestion de Projets',
-        icon: 'fa-list-check',
-        role: 'Planification, découpage en lots, ressources, délais, jalons, risques et suivi d\'avancement.',
-        action: 'Organise les phases, livrables, responsabilités et points de contrôle.',
-        systemPrompt: 'Tu es l\'Agent Projets (08) d\'AUTOPILOT AI. Réponds sans ** ni ## ni <br>.',
-        sample: 'Planifier le déploiement d\'un projet sur 3 semaines avec jalons, responsables et contrôle.'
-      },
-      {
-        id: '09-service-client',
-        title: '09 Agent Service client',
-        category: 'client',
-        badge: 'Relation & Satisfaction',
-        icon: 'fa-headset',
-        role: 'Réponses clients, traitement des réclamations, assistance, résolution et fidélisation.',
-        action: 'Rédige une réponse adaptée, un plan de résolution concret et un suivi de satisfaction.',
-        systemPrompt: 'Tu es l\'Agent Service client (09) d\'AUTOPILOT AI. Réponds sans ** ni ## ni <br>.',
-        sample: 'Répondre à un client mécontent d\'un retard de livraison et proposer un plan de résolution et de fidélisation.'
-      },
-      {
-        id: '10-analyste',
-        title: '10 Agent Analyste',
-        category: 'analyste',
-        badge: 'Analyse & Décision',
-        icon: 'fa-chart-line',
-        role: 'Analyse de données/documents, comparaison de scénarios, détection d\'incohérences et recommandations.',
-        action: 'Compare objectivement les options sur les critères demandés et formule une recommandation.',
-        systemPrompt: 'Tu es l\'Agent Analyste (10) d\'AUTOPILOT AI. Réponds sans ** ni ## ni <br>.',
-        sample: 'Comparer Option A : équipe centralisée et Option B : pôles autonomes selon coûts, réactivité et contrôle.'
-      }
-    ];
-
-    const defaultServices = [
-      {
-        id: 'srv-std-redaction',
-        name: 'Rédaction & Reformulation Standard',
-        tier: 'standard',
-        domain: 'redaction-admin',
-        agentId: '09-service-client',
-        description: 'Rédaction de courriers, messages professionnels, reformulation, synthèse et mise en forme claire.',
-        objective: 'Produire rapidement un texte clair, courtois et structuré.',
-        inputsNeeded: 'Destinataire, contexte, message clé et ton souhaité.',
-        expectedOutput: 'Texte rédigé prêt à l\'emploi + points de suivi.',
-        sla: 'Immédiat',
-        active: true,
-        sample: 'Rédiger un courrier professionnel de confirmation de rendez-vous et de rappel des pièces à préparer.'
-      },
-      {
-        id: 'srv-std-calcul',
-        name: 'Calculs, Pourcentages & Tableau Comparatif Standard',
-        tier: 'standard',
-        domain: 'analyste',
-        agentId: '10-analyste',
-        description: 'Calculs simples, pourcentages, estimations de base et tableaux comparatifs essentiels.',
-        objective: 'Clarifier des chiffres ou comparer deux options simples.',
-        inputsNeeded: 'Données chiffrées ou options à comparer et critères.',
-        expectedOutput: 'Tableau comparatif clair et synthèse de décision.',
-        sla: 'Immédiat',
-        active: true,
-        sample: 'Comparer Option A : prestataire externe et Option B : équipe interne selon coûts, réactivité et contrôle.'
-      },
-      {
-        id: 'srv-pro-finance',
-        name: 'Bilan Comptable, Ratios & Écritures SYSCOHADA (PRO)',
-        tier: 'pro',
-        domain: 'finance',
-        agentId: '03-finance',
-        description: 'Établissement de bilan comptable, écritures en partie double, TVA et analyse des ratios clés.',
-        objective: 'Fournir un contrôle d\'équilibre comptable et une lecture financière structurée.',
-        inputsNeeded: 'Montants d\'actifs, capitaux, dettes, charges/produits ou taux de TVA.',
-        expectedOutput: 'Tableau de bilan / écritures contrôlées et ratios financiers.',
-        sla: 'Traitement approfondi PRO',
-        active: true,
-        sample: 'Établir un bilan comptable avec 2 000 000 FCFA d\'immobilisations et 1 200 000 FCFA de trésorerie, capital 2 500 000 FCFA.'
-      },
-      {
-        id: 'srv-pro-business',
-        name: 'Modèle Commercial, Rentabilité & Lancement (PRO)',
-        tier: 'pro',
-        domain: 'business',
-        agentId: '02-business',
-        description: 'Structuration de modèle économique, simulation par paliers clients et plan de lancement.',
-        objective: 'Cadrer la monétisation, les hypothèses de volume et la feuille de route.',
-        inputsNeeded: 'Tarif, cible client, durée de lancement et charges principales.',
-        expectedOutput: 'Tableau de simulation chiffrée + plan d\'action daté.',
-        sla: 'Traitement approfondi PRO',
-        active: true,
-        sample: 'Je lance une offre d\'abonnement B2B à 45 000 FCFA/mois : structurer le modèle commercial, estimer la rentabilité et planifier le lancement sur 30 jours.'
-      },
-      {
-        id: 'srv-pro-juridique',
-        name: 'Cadre Contractuel & Vigilance OHADA (PRO)',
-        tier: 'pro',
-        domain: 'juridique',
-        agentId: '06-juridique',
-        description: 'Structuration de clauses contractuelles, répartition des obligations, délais, litiges et droit OHADA.',
-        objective: 'Préparer une trame contractuelle structurée soumise à validation juridique.',
-        inputsNeeded: 'Nature de la relation, secteur/espace juridique, obligations et points sensibles.',
-        expectedOutput: 'Projet de clauses structurées + points de vigilance à compléter.',
-        sla: 'Traitement approfondi PRO',
-        active: true,
-        sample: 'Rédiger les clauses essentielles d\'un contrat de prestation de services dans l\'espace OHADA.'
-      },
-      {
-        id: 'srv-pro-projets',
-        name: 'Plan Directeur de Projet & Suivi Multi-Lots (PRO)',
-        tier: 'pro',
-        domain: 'projets',
-        agentId: '08-projets',
-        description: 'Planification complète, jalons, tâches, risques et coordination inter-agents.',
-        objective: 'Piloter l\'exécution d\'un projet complexe de bout en bout.',
-        inputsNeeded: 'Objectif du projet, horizon temporel, ressources et livrables attendus.',
-        expectedOutput: 'Plan structuré par phases, jalons et critères de contrôle.',
-        sla: 'Traitement approfondi PRO',
-        active: true,
-        sample: 'Planifier le déploiement d\'un projet sur 3 semaines avec jalons, responsables et contrôle.'
-      }
-    ];
-
-    let flows = JSON.parse(localStorage.getItem('autopilot_flows_v4')) || defaultFlows;
-    let services = JSON.parse(localStorage.getItem('autopilot_services_v4')) || defaultServices;
-    let currentTierFilter = 'all';
-    let currentDomainFilter = 'all';
-    let selectedFlowId = localStorage.getItem('autopilot_selected_flow_v4') || flows[0].id;
-    let activeServiceContext = null;
-    let rawLastOutputText = '';
-    let dateLocale = localStorage.getItem('autopilot_date_locale') || 'fr-FR';
-
-    function syncDateLocaleButton() {
-      const label = document.getElementById('date-locale-label');
-      if (label) label.textContent = dateLocale.startsWith('en') ? 'EN' : 'FR';
-    }
-
-    function formatDisplayDate(dateInput = new Date()) {
-      const d = dateInput instanceof Date ? dateInput : new Date(dateInput);
-      if (Number.isNaN(d.getTime())) return String(dateInput || '');
-      return d.toLocaleString(dateLocale);
-    }
-
-    function toggleDateLocale() {
-      dateLocale = dateLocale.startsWith('fr') ? 'en-US' : 'fr-FR';
-      localStorage.setItem('autopilot_date_locale', dateLocale);
-      syncDateLocaleButton();
-      refreshAllViews();
-    }
-
-    function escapeHtml(str) {
-      return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function formatInlineMarkdown(str) {
-      return String(str || '')
-        .replace(/<br\s*\/?>/gi, ' ')
-        .replace(/\*\*(.*?)\*\*/g, '$1')
-        .replace(/__(.*?)__/g, '$1')
-        .replace(/\*\*/g, '')
-        .trim();
-    }
-
-    function buildFormattedHtml(rawText) {
-      const cleaned = String(rawText || '')
-        .replace(/<br\s*\/?>/gi, '\n')
-        .replace(/\*\*(.*?)\*\*/g, '$1')
-        .replace(/__(.*?)__/g, '$1')
-        .replace(/\*\*/g, '')
-        .replace(/^#{1,6}\s*/gm, '')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim();
-
-      if (!cleaned) return '';
-      const lines = cleaned.split('\n');
-      let html = '';
-      let tableRows = [];
-
-      const flushTable = () => {
-        if (!tableRows.length) return;
-        const parsedRows = tableRows
-          .filter(row => !/^\s*\|?[\s:-]+(?:\|[\s:-]+)+\|?\s*$/.test(row.trim()))
-          .map(row =>
-            row
-              .trim()
-              .replace(/^\||\|$/g, '')
-              .split('|')
-              .map(cell => formatInlineMarkdown(cell))
-          )
-          .filter(cells => cells.some(c => c.length > 0));
-
-        if (parsedRows.length > 0) {
-          const [header, ...body] = parsedRows;
-          html += '<div class="my-3 overflow-x-auto rounded-xl border border-slate-700/80 bg-slate-900/90">';
-          html += '<table class="min-w-[540px] w-full text-left border-collapse text-xs">';
-          html += '<thead class="bg-slate-800/90 text-indigo-300 border-b border-slate-700">';
-          html += '<tr>' + header.map(h => `<th class="px-3 py-2.5 font-bold whitespace-nowrap">${escapeHtml(h)}</th>`).join('') + '</tr>';
-          html += '</thead><tbody class="divide-y divide-slate-800/80">';
-          body.forEach(r => {
-            html += '<tr class="hover:bg-slate-800/40">' +
-              r.map(c => `<td class="px-3 py-2 text-slate-200 align-top">${escapeHtml(c)}</td>`).join('') +
-              '</tr>';
-          });
-          html += '</tbody></table></div>';
-        }
-        tableRows = [];
-      };
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.includes('|') && (trimmed.startsWith('|') || trimmed.split('|').length >= 3)) {
-          tableRows.push(trimmed);
-        } else {
-          flushTable();
-          if (!trimmed) html += '<div class="h-2"></div>';
-          else html += `<p class="text-sm text-slate-200 leading-relaxed my-1">${escapeHtml(trimmed)}</p>`;
-        }
-      }
-      flushTable();
-      return html;
-    }
-
-    function renderFormattedOutput(rawText, containerEl) {
-      containerEl.innerHTML = buildFormattedHtml(rawText);
-    }
-  </script>
-  <script>
-    const billingConfig = {
-      monthlyPrice: '15 000 FCFA',
-      yearlyPrice: '150 000 FCFA'
-    };
-
-    function getUsersStore() {
-      try {
-        return JSON.parse(localStorage.getItem('autopilot_users_v2') || '[]');
-      } catch (_) {
-        return [];
-      }
-    }
-
-    function saveUsersStore(users) {
-      localStorage.setItem('autopilot_users_v2', JSON.stringify(users));
-    }
-
-    function getCurrentSession() {
-      try {
-        return JSON.parse(localStorage.getItem('autopilot_session_v2') || 'null');
-      } catch (_) {
-        return null;
-      }
-    }
-
-    function getActiveUser() {
-      const sess = getCurrentSession();
-      if (!sess || !sess.userId) return null;
-      const users = getUsersStore();
-      return users.find(u => u.id === sess.userId) || null;
-    }
-
-    function syncUserSubscriptionStatus(user) {
-      if (!user || !user.subscription) return user;
-      const sub = user.subscription;
-      if (sub.tier === 'pro' && sub.status === 'Actif' && sub.expiresAt) {
-        if (new Date(sub.expiresAt).getTime() < Date.now()) {
-          sub.status = 'Expiré';
-          user.role = 'standard';
-        }
-      }
-      return user;
-    }
-
-    function canAccessService(service) {
-      const user = getActiveUser();
-      if (!user) return { allowed: false, reason: 'Compte requis : connectez-vous ou inscrivez-vous pour exécuter une prestation.' };
-      syncUserSubscriptionStatus(user);
-
-      if (user.status && user.status !== 'Actif') {
-        return { allowed: false, reason: `Compte ${user.status.toLowerCase()}.` };
-      }
-
-      if (user.role === 'admin' || user.role === 'superadmin') {
-        return { allowed: true, reason: 'Accès administrateur' };
-      }
-
-      if (service.tier === 'standard') {
-        return { allowed: true, reason: 'Accessible (Standard & PRO)' };
-      }
-
-      const isProActive = user.subscription && user.subscription.tier === 'pro' && user.subscription.status === 'Actif';
-      if (isProActive) {
-        return { allowed: true, reason: 'Accès intégral PRO actif' };
-      }
-
-      return { allowed: false, reason: 'Prestation PRO : activez un abonnement PRO (1 mois ou 12 mois).' };
-    }
-
-    function ensureAuthenticatedAction(requirePro = false) {
-      const user = getActiveUser();
-      if (!user) {
-        alert('La création d\'un compte et la connexion sont obligatoires pour exécuter une prestation ou gérer vos projets.');
-        switchTab('account');
-        return false;
-      }
-      syncUserSubscriptionStatus(user);
-      if (requirePro && user.role !== 'admin' && user.role !== 'superadmin') {
-        const isPro = user.subscription && user.subscription.tier === 'pro' && user.subscription.status === 'Actif';
-        if (!isPro) {
-          alert('Cette fonctionnalité ou prestation requiert un abonnement PRO actif (1 mois ou 12 mois).');
-          switchTab('billing');
-          return false;
-        }
-      }
-      return true;
-    }
-
-    function handleRegister(e) {
-      e.preventDefault();
-      const fullName = document.getElementById('reg-fullname').value.trim();
-      const email = document.getElementById('reg-email').value.trim().toLowerCase();
-      const phone = document.getElementById('reg-phone').value.trim();
-      const company = document.getElementById('reg-company').value.trim();
-      const pass = document.getElementById('reg-password').value;
-      const pass2 = document.getElementById('reg-password2').value;
-      const cgu = document.getElementById('reg-cgu').checked;
-
-      if (!fullName || !email || !phone || !pass || !cgu) {
-        alert('Veuillez renseigner tous les champs obligatoires et accepter les CGU.');
-        return;
-      }
-      if (pass !== pass2) {
-        alert('La confirmation du mot de passe ne correspond pas.');
-        return;
-      }
-
-      const users = getUsersStore();
-      if (users.some(u => u.email === email)) {
-        alert('Un compte existe déjà avec cette adresse électronique.');
-        return;
-      }
-
-      const isAdminEmail = email.startsWith('admin@') || email.startsWith('superadmin@');
-      const newUser = {
-        id: 'usr-' + Date.now(),
-        fullName,
-        email,
-        phone,
-        company: company || 'Compte individuel',
-        role: isAdminEmail ? 'admin' : 'standard',
-        status: 'Actif',
-        emailVerified: true,
-        createdAt: new Date().toISOString(),
-        passwordHash: btoa(unescape(encodeURIComponent(pass))),
-        subscription: {
-          tier: isAdminEmail ? 'pro' : 'standard',
-          planCode: isAdminEmail ? 'pro_yearly' : 'standard',
-          durationMonths: isAdminEmail ? 12 : 0,
-          status: 'Actif',
-          startedAt: new Date().toISOString(),
-          expiresAt: isAdminEmail ? new Date(Date.now() + 365 * 86400000).toISOString() : null
-        },
-        billingLogs: []
-      };
-
-      users.unshift(newUser);
-      saveUsersStore(users);
-      localStorage.setItem('autopilot_session_v2', JSON.stringify({ userId: newUser.id, loggedAt: new Date().toISOString() }));
-      document.getElementById('register-form').reset();
-      refreshAllViews();
-      switchTab('client');
-    }
-
-    function handleLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value.trim().toLowerCase();
-      const pass = document.getElementById('login-password').value;
-      const users = getUsersStore();
-      const found = users.find(u => u.email === email && u.passwordHash === btoa(unescape(encodeURIComponent(pass))));
-      if (!found) {
-        alert('Identifiants invalides. Vérifiez votre adresse e-mail et votre mot de passe.');
-        return;
-      }
-      syncUserSubscriptionStatus(found);
-      saveUsersStore(users);
-      localStorage.setItem('autopilot_session_v2', JSON.stringify({ userId: found.id, loggedAt: new Date().toISOString() }));
-      document.getElementById('login-form').reset();
-      refreshAllViews();
-      switchTab('client');
-    }
-
-    function fillDemoAccount() {
-      document.getElementById('login-email').value = 'demo.pro@autopilot-ai.local';
-      document.getElementById('login-password').value = 'AutopilotPro2026!';
-      const users = getUsersStore();
-      let demo = users.find(u => u.email === 'demo.pro@autopilot-ai.local');
-      if (!demo) {
-        const now = new Date();
-        demo = {
-          id: 'usr-demo-pro',
-          fullName: 'Client Démo PRO',
-          email: 'demo.pro@autopilot-ai.local',
-          phone: '+225 00 00 00 00',
-          company: 'Organisation Démo PRO',
-          role: 'admin',
-          status: 'Actif',
-          emailVerified: true,
-          createdAt: now.toISOString(),
-          passwordHash: btoa(unescape(encodeURIComponent('AutopilotPro2026!'))),
-          subscription: {
-            tier: 'pro',
-            planCode: 'pro_monthly',
-            durationMonths: 1,
-            status: 'Actif',
-            startedAt: now.toISOString(),
-            expiresAt: new Date(now.getTime() + 30 * 86400000).toISOString()
-          },
-          billingLogs: [{
-            date: formatDisplayDate(now),
-            label: 'Activation PRO (1 mois)',
-            amount: billingConfig.monthlyPrice,
-            status: 'Actif'
-          }]
-        };
-        users.unshift(demo);
-        saveUsersStore(users);
-      }
-    }
-
-    function logoutUser() {
-      localStorage.removeItem('autopilot_session_v2');
-      refreshAllViews();
-      switchTab('account');
-    }
-
-    function activateSubscription(planCode, months) {
-      if (!ensureAuthenticatedAction(false)) return;
-      const users = getUsersStore();
-      const user = getActiveUser();
-      const idx = users.findIndex(u => u.id === user.id);
-      if (idx === -1) return;
-
-      const now = new Date();
-      if (planCode === 'standard' || months === 0) {
-        users[idx].subscription = {
-          tier: 'standard',
-          planCode: 'standard',
-          durationMonths: 0,
-          status: 'Actif',
-          startedAt: now.toISOString(),
-          expiresAt: null
-        };
-        users[idx].billingLogs.unshift({
-          date: formatDisplayDate(now),
-          label: 'Formule Standard active',
-          amount: '0 FCFA',
-          status: 'Actif'
-        });
-      } else {
-        const validMonths = months === 12 ? 12 : 1;
-        const expires = new Date(now.getTime() + validMonths * 30 * 86400000);
-        users[idx].subscription = {
-          tier: 'pro',
-          planCode: validMonths === 12 ? 'pro_yearly' : 'pro_monthly',
-          durationMonths: validMonths,
-          status: 'Actif',
-          startedAt: now.toISOString(),
-          expiresAt: expires.toISOString()
-        };
-        users[idx].billingLogs.unshift({
-          date: formatDisplayDate(now),
-          label: `Abonnement PRO (${validMonths} mois)`,
-          amount: validMonths === 12 ? billingConfig.yearlyPrice : billingConfig.monthlyPrice,
-          status: 'Actif'
-        });
-      }
-
-      saveUsersStore(users);
-      refreshAllViews();
-      alert('Statut d\'abonnement mis à jour avec succès.');
-    }
-
-    function renderAccountAndClientViews() {
-      const user = getActiveUser();
-      const headerBadge = document.getElementById('header-tier-badge');
-      const accBadge = document.getElementById('account-status-badge');
-      const profBox = document.getElementById('connected-profile-box');
-
-      if (!user) {
-        if (headerBadge) headerBadge.textContent = 'VISITEUR';
-        if (accBadge) {
-          accBadge.textContent = 'Non connecté';
-          accBadge.className = 'text-xs font-bold px-3 py-1.5 rounded-xl bg-rose-500/15 text-rose-300 border border-rose-500/30';
-        }
-        if (profBox) profBox.classList.add('hidden');
-        document.getElementById('client-welcome-line').textContent = 'Connectez-vous pour accéder à votre espace personnel.';
-        document.getElementById('client-subscription-summary').textContent = 'Aucun compte actif.';
-        return;
-      }
-
-      syncUserSubscriptionStatus(user);
-      const isPro = user.subscription && user.subscription.tier === 'pro' && user.subscription.status === 'Actif';
-      if (headerBadge) {
-        headerBadge.textContent = user.role === 'admin' ? 'ADMIN PRO' : (isPro ? 'CLIENT PRO' : 'CLIENT STANDARD');
-      }
-      if (accBadge) {
-        accBadge.textContent = `Connecté • ${isPro ? 'PRO' : 'STANDARD'}`;
-        accBadge.className = 'text-xs font-bold px-3 py-1.5 rounded-xl bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
-      }
-      if (profBox) {
-        profBox.classList.remove('hidden');
-        document.getElementById('profile-fullname').textContent = `${user.fullName} (${user.company})`;
-        document.getElementById('profile-details').textContent = `${user.email} • ${user.phone} • Rôle : ${user.role.toUpperCase()}`;
-      }
-
-      const history = getScopedArray('autopilot_history_v2');
-      const projects = getScopedArray('autopilot_projects_v2');
-      const vault = getScopedArray('autopilot_vault_v2');
-
-      document.getElementById('client-welcome-line').textContent = `Bonjour ${user.fullName} — ${user.company} (${user.email})`;
-      document.getElementById('kpi-plan').textContent = isPro ? `PRO (${user.subscription.durationMonths}M)` : 'STANDARD';
-      document.getElementById('kpi-missions').textContent = String(history.length);
-      document.getElementById('kpi-projects').textContent = String(projects.length);
-      document.getElementById('kpi-docs').textContent = String(vault.length);
-
-      const expText = user.subscription?.expiresAt ? formatDisplayDate(user.subscription.expiresAt) : 'Illimité / Standard';
-      document.getElementById('client-subscription-summary').textContent =
-        `Statut : ${user.subscription?.status || 'Actif'} • Formule : ${isPro ? 'PRO (Accès intégral)' : 'STANDARD'} • Échéance : ${expText}`;
-
-      const logsEl = document.getElementById('billing-log-list');
-      if (logsEl) {
-        const logs = user.billingLogs || [];
-        logsEl.innerHTML = logs.length
-          ? logs.map(l => `<div class="flex items-center justify-between border-b border-slate-800/80 pb-1.5"><span>${escapeHtml(l.label)} (${escapeHtml(l.amount)})</span><span class="text-slate-400">${escapeHtml(l.date)} • ${escapeHtml(l.status)}</span></div>`).join('')
-          : '<div class="text-slate-400">Aucune transaction enregistrée pour ce compte.</div>';
-      }
-    }
-  </script>
-  <script>
-    function getScopedStorageKey(baseKey) {
-      const user = getActiveUser();
-      const uid = user ? user.id : 'guest';
-      return `${baseKey}__${uid}`;
-    }
-
-    function getScopedArray(baseKey) {
-      const user = getActiveUser();
-      if (!user) return [];
-      try {
-        return JSON.parse(localStorage.getItem(getScopedStorageKey(baseKey)) || '[]');
-      } catch (_) {
-        return [];
-      }
-    }
-
-    function setScopedArray(baseKey, arr) {
-      const user = getActiveUser();
-      if (!user) return;
-      localStorage.setItem(getScopedStorageKey(baseKey), JSON.stringify(arr));
-    }
-
-    function deduplicateLines(text) {
-      const seen = new Set();
-      return String(text || '')
-        .split('\n')
-        .filter(line => {
-          const norm = line.trim().toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, '');
-          if (!norm) return true;
-          if (norm.length < 18) return true;
-          if (seen.has(norm)) return false;
-          seen.add(norm);
-          return true;
-        })
-        .join('\n')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim();
-    }
-
-    function extractContextualNumbers(text) {
-      const raw = String(text || '');
-      const items = [];
-      const regex = /(?<!\w)(\d{1,3}(?:[\s\u00A0]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)\s*(%|fcfa|cfa|xof|eur|€|\$|usd|jours?|semaines?|mois|ans?|clients?|personnes?|postes?)?/gi;
-      for (const m of raw.matchAll(regex)) {
-        const num = Number(m[1].replace(/[\s\u00A0]+/g, '').replace(',', '.'));
-        if (!Number.isNaN(num) && num > 0) {
-          items.push({
-            value: num,
-            unit: (m[2] || '').trim(),
-            snippet: raw.slice(Math.max(0, m.index - 25), Math.min(raw.length, m.index + m[0].length + 25)).trim()
-          });
-        }
-      }
-      return items;
-    }
-
-    function extractMeaningfulKeywords(text) {
-      const words = String(text || '')
-        .toLowerCase()
-        .replace(/[^\p{L}\p{N}\s'-]/gu, ' ')
-        .split(/\s+/)
-        .filter(w => w.length >= 4);
-
-      const stopWords = new Set([
-        'pour', 'avec', 'dans', 'sur', 'une', 'des', 'les', 'que', 'qui', 'quoi',
-        'comment', 'faire', 'établir', 'rédiger', 'structurer', 'planifier', 'créer',
-        'calculer', 'analyser', 'traiter', 'demande', 'besoin', 'entre', 'leurs',
-        'votre', 'notre', 'cela', 'cette', 'plus', 'moins', 'tout', 'tous',
-        'clauses', 'essentielles', 'contrat', 'prestation', 'services', 'commerciales',
-        'espace', 'domaine', 'bilan', 'comptable', 'lance', 'offre', 'abonnement'
-      ]);
-
-      const counts = new Map();
-      for (const w of words) {
-        if (stopWords.has(w)) continue;
-        counts.set(w, (counts.get(w) || 0) + 1);
-      }
-      return [...counts.entries()]
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 6)
-        .map(([w]) => w);
-    }
-
-    function routeToBestAgent(inputText) {
-      const t = String(inputText || '').toLowerCase();
-
-      if (/(modèle commercial|modele commercial|rentabilité|rentabilite|abonnement|b2b|offre|chiffre d'affaires|marge|trésorerie|tresorerie|entreprise)/i.test(t) && !/(bilan|écriture|ecriture|tva|facture|contrat|clause|ohada|recrut|entretien|réclamation|reclamation)/i.test(t)) {
-        return flows.find(f => f.id === '02-business') || flows[0];
-      }
-
-      const rules = [
-        { id: '03-finance', keys: ['comptab', 'plan de comptes', 'écriture', 'ecriture', 'bilan', 'trésorerie', 'tresorerie', 'budget', 'tva', 'facture', 'ht', 'ttc', 'débit', 'debit', 'crédit', 'credit', 'syscohada'] },
-        { id: '06-juridique', keys: ['contrat', 'clause', 'ohada', 'juridique', 'droit', 'résiliation', 'resiliation', 'litige', 'statut', 'bail', 'accord', 'minier', 'mine'] },
-        { id: '05-rh', keys: ['recrut', 'candidat', 'cv', 'entretien', 'personnel', 'employé', 'employe', 'salaire', 'rh', 'ressources humaines', 'poste', 'fiche de poste', 'équipe', 'equipe'] },
-        { id: '09-service-client', keys: ['réclamation', 'reclamation', 'plainte', 'support client', 'service client', 'fidélis', 'fidelis', 'relance client', 'sav', 'mécontent', 'mecontent', 'livraison', 'retard'] },
-        { id: '07-developpement', keys: ['code', 'javascript', 'html', 'css', 'python', 'api', 'bug', 'application', 'développ', 'developp', 'script', 'sql', 'persistance'] },
-        { id: '04-marketing', keys: ['marketing', 'publicité', 'publicite', 'campagne', 'communication', 'marque', 'promo', 'affiche', 'réseaux sociaux', 'reseaux sociaux', 'clientèle', 'clientele'] },
-        { id: '08-projets', keys: ['projet', 'planning', 'jalon', 'tâche', 'tache', 'échéance', 'echeance', 'objectif', 'suivi', 'livrable', 'sprint', 'déploiement', 'deploiement', '30 jours', 'jours', 'semaines'] },
-        { id: '10-analyste', keys: ['analyse', 'rapport', 'données', 'donnees', 'statistique', 'comparer', 'option', 'décision', 'decision', 'indicateur', 'kpi'] },
-        { id: '02-business', keys: ['business', 'stratégie commerciale', 'strategie commerciale', 'modèle économique', 'modele economique', 'création', 'creation'] }
-      ];
-
-      for (const rule of rules) {
-        if (rule.keys.some(k => t.includes(k))) {
-          const found = flows.find(f => f.id === rule.id);
-          if (found) return found;
-        }
-      }
-      return flows.find(f => f.id === '02-business') || flows[0];
-    }
-
-    function buildAutonomousOutput(agent, input, wasCoordinated) {
-      const cleanInput = String(input || '').trim();
-      const lower = cleanInput.toLowerCase();
-      const nums = extractContextualNumbers(cleanInput);
-      const themes = extractMeaningfulKeywords(cleanInput);
-      const prefix = wasCoordinated ? `Orientation 01 AUTOPILOT -> ${agent.title}\n\n` : '';
-
-      // 03 FINANCE : Bilan structuré + ratios + contrôle d'équilibre ou écritures comptables
-      if (agent.id === '03-finance') {
-        const isBalanceSheet = /\bbilan\b/i.test(lower);
-        const moneyItems = nums.filter(n => n.unit !== '%');
-        const currency = (moneyItems[0]?.unit || 'FCFA').toUpperCase();
-
-        if (isBalanceSheet) {
-          const immo = moneyItems[0]?.value ?? 1500000;
-          const treso = moneyItems[1]?.value ?? 950000;
-          const totalActif = immo + treso;
-          const capital = moneyItems[2]?.value ?? 1800000;
-          const dettes = Math.max(0, totalActif - capital);
-          const autonomiePct = totalActif > 0 ? ((capital / totalActif) * 100).toFixed(1) : '0.0';
-          const dettePct = totalActif > 0 ? ((dettes / totalActif) * 100).toFixed(1) : '0.0';
-          const frng = (capital + dettes) - immo;
-
-          return deduplicateLines(prefix + [
-            `Bilan comptable structuré (${currency}) :`,
-            `Contrôle d'équilibre : Total Actif = ${totalActif.toLocaleString('fr-FR')} ${currency} | Total Passif = ${(capital + dettes).toLocaleString('fr-FR')} ${currency}.`,
-            '',
-            `| Poste d'Actif (Emplois) | Montant (${currency}) | Poste de Passif (Ressources) | Montant (${currency}) |`,
-            '| --- | --- | --- | --- |',
-            `| Immobilisations (Actif immobilisé) | ${immo.toLocaleString('fr-FR')} | Capitaux propres / Capital | ${capital.toLocaleString('fr-FR')} |`,
-            `| Trésorerie / Disponibilités | ${treso.toLocaleString('fr-FR')} | Dettes / Ressources complémentaires | ${dettes.toLocaleString('fr-FR')} |`,
-            `| Créances / Stocks (0 si non précisé) | 0 | Réserves / Résultat (0 si non précisé) | 0 |`,
-            `| TOTAL ACTIF | ${totalActif.toLocaleString('fr-FR')} | TOTAL PASSIF | ${(capital + dettes).toLocaleString('fr-FR')} |`,
-            '',
-            'Indicateurs calculés sur la base des montants saisis :',
-            `| Indicateur | Valeur | Interprétation |`,
-            '| --- | --- | --- |',
-            `| Autonomie financière | ${autonomiePct} % | Part couverte par le capital (${capital.toLocaleString('fr-FR')} ${currency}) |`,
-            `| Poids des dettes / autres ressources | ${dettePct} % | Part complémentaire (${dettes.toLocaleString('fr-FR')} ${currency}) |`,
-            `| Fonds de roulement (FR) | ${frng.toLocaleString('fr-FR')} ${currency} | Ressources inscrites moins immobilisations |`
-          ].join('\n'));
-        }
-
-        const pctItem = nums.find(n => n.unit === '%');
-        const vatRate = pctItem ? pctItem.value : 18;
-        const baseVal = moneyItems[0] ? moneyItems[0].value : 450000;
-        const isTtc = /\bttc\b/i.test(cleanInput) && !/\bht\b/i.test(cleanInput);
-        const isRevenue = /vente|client|chiffre|facture client|encaisse|abonnement|revenu/i.test(lower);
-
-        const ht = isTtc ? Math.round(baseVal / (1 + vatRate / 100)) : baseVal;
-        const tva = isTtc ? (baseVal - ht) : Math.round((ht * vatRate) / 100);
-        const ttc = ht + tva;
-
-        return deduplicateLines(prefix + [
-          `Écriture comptable en partie double (${currency}) :`,
-          `Contrôle : HT = ${ht.toLocaleString('fr-FR')} ${currency} | TVA (${vatRate}%) = ${tva.toLocaleString('fr-FR')} ${currency} | TTC = ${ttc.toLocaleString('fr-FR')} ${currency}.`,
-          '',
-          '| Compte | Intitulé | Débit | Crédit | Justification |',
-          '| --- | --- | --- | --- | --- |',
-          isRevenue
-            ? `| 411 | Clients | ${ttc.toLocaleString('fr-FR')} | 0 | Créance client TTC |\n| 706 | Prestations de services | 0 | ${ht.toLocaleString('fr-FR')} | Produit HT |\n| 4432 | État, TVA facturée | 0 | ${tva.toLocaleString('fr-FR')} | TVA ${vatRate}% collectée |`
-            : `| 626 / 613 | Charges / Services extérieurs | ${ht.toLocaleString('fr-FR')} | 0 | Charge HT |\n| 4452 | État, TVA récupérable | ${tva.toLocaleString('fr-FR')} | 0 | TVA ${vatRate}% déductible |\n| 401 | Fournisseurs | 0 | ${ttc.toLocaleString('fr-FR')} | Dette TTC |`
-        ].join('\n'));
-      }
-
-      // 02 BUSINESS & 01 COORDINATEUR : Simulation transparente par paliers & plan d'action
-      if (agent.id === '02-business' || agent.id === '01-coordinateur') {
-        const moneyItems = nums.filter(n => n.unit !== '%');
-        const price = moneyItems[0]?.value || 45000;
-        const currency = (moneyItems[0]?.unit || 'FCFA').toUpperCase();
-        const daysMatch = cleanInput.match(/(\d+)\s*jours?/i);
-        const days = daysMatch ? Number(daysMatch[1]) : 30;
-
-        return deduplicateLines(prefix + [
-          `Modèle commercial & simulation (${currency}) :`,
-          `Hypothèse tarifaire retenue : ${price.toLocaleString('fr-FR')} ${currency} / mois. Les paliers ci-dessous sont des hypothèses de travail à ajuster selon vos charges réelles.`,
-          '',
-          `| Hypothèse clients actifs | CA mensuel (${currency}) | CA annuel (${currency}) | Priorité opérationnelle |`,
-          '| --- | --- | --- | --- |',
-          `| 10 clients | ${(price * 10).toLocaleString('fr-FR')} | ${(price * 10 * 12).toLocaleString('fr-FR')} | Validation terrain et retours clients |`,
-          `| 30 clients | ${(price * 30).toLocaleString('fr-FR')} | ${(price * 30 * 12).toLocaleString('fr-FR')} | Structuration du support et du suivi |`,
-          `| 100 clients | ${(price * 100).toLocaleString('fr-FR')} | ${(price * 100 * 12).toLocaleString('fr-FR')} | Industrialisation et contrôle des marges |`,
-          '',
-          `Plan de déploiement sur ${days} jours :`,
-          '| Phase | Action concrète | Livrable attendu |',
-          '| --- | --- | --- |',
-          `| Jours 1-${Math.max(5, Math.round(days * 0.25))} | Cadrer l\'offre, les modalités et la cible prioritaire | Fiche offre + liste prospects |`,
-          `| Jours ${Math.max(6, Math.round(days * 0.25) + 1)}-${Math.max(12, Math.round(days * 0.65))} | Présenter l\'offre, lever les freins et qualifier les besoins | Échanges qualifiés & propositions |`,
-          `| Jours ${Math.max(13, Math.round(days * 0.65) + 1)}-${days} | Activer les premiers clients, suivre la satisfaction et mesurer les coûts réels | Clients actifs + bilan d\'étape |`
-        ].join('\n'));
-      }
-
-      // 10 ANALYSTE : Comparaison réelle des options et critères fournis
-      if (agent.id === '10-analyste') {
-        const optAMatch = cleanInput.match(/option\s*a\s*:\s*([^;\n]+)/i);
-        const optBMatch = cleanInput.match(/option\s*b\s*:\s*([^;\n]+)/i);
-        const optA = optAMatch ? optAMatch[1].trim() : 'Option A';
-        const optB = optBMatch ? optBMatch[1].trim() : 'Option B';
-
-        return deduplicateLines(prefix + [
-          `Analyse comparative : ${cleanInput}`,
-          `Comparaison entre « ${optA} » et « ${optB} » :`,
-          '',
-          `| Critère | ${optA} | ${optB} | Point de décision |`,
-          '| --- | --- | --- | --- |',
-          '| Coûts | Mutualisation des charges communes, coûts de coordination à suivre | Autonomie locale, vigilance sur la duplication des charges | Comparer les coûts fixes et variables réels |',
-          '| Réactivité | Validation plus centralisée, risque de délai sur le terrain | Décision plus proche du terrain et des besoins immédiats | Prioriser la rapidité là où l\'urgence est forte |',
-          '| Contrôle | Supervision unifiée et règles homogènes | Nécessite des indicateurs clairs et un reporting régulier | Maintenir un cadre de contrôle commun |',
-          '',
-          `Recommandation : Choisir « ${optA} » pour la cohérence et le contrôle centralisé ; choisir « ${optB} » pour la réactivité terrain, avec suivi régulier des écarts.`
-        ].join('\n'));
-      }
-
-      // 06 JURIDIQUE
-      if (agent.id === '06-juridique') {
-        const isOhada = /ohada/i.test(lower);
-        return deduplicateLines(prefix + [
-          `Projet de cadre contractuel (${isOhada ? 'Espace OHADA & droit national applicable' : 'Droit applicable'}) :`,
-          '',
-          `Article 1 — Objet : Définir la prestation (${themes.join(', ') || 'périmètre convenu'}), les obligations des parties et les livrables attendus.`,
-          'Article 2 — Exécution et moyens : Préciser les modalités d\'exécution, les délais, les responsabilités et les règles de sécurité/conformité.',
-          'Article 3 — Prix et paiement : Fixer le montant, la périodicité, les modalités de règlement et les conséquences des retards.',
-          'Article 4 — Durée, résiliation et litiges : Préciser la durée, les conditions de résiliation, la confidentialité et le règlement des différends.',
-          '',
-          'Mention de prudence : Ce document constitue un projet structuré nécessitant la vérification des textes applicables à la date de signature et une validation juridique formelle.'
-        ].join('\n'));
-      }
-
-      // Autres agents spécialisés (04, 05, 07, 08, 09)
-      return deduplicateLines(prefix + [
-        `${agent.title} — Traitement structuré (${agent.badge}) :`,
-        `Sujet : ${cleanInput}`,
-        '',
-        '| Axe d\'intervention | Action structurée | Résultat attendu |',
-        '| --- | --- | --- |',
-        `| 1. Cadrage | Clarifier le périmètre, les priorités et les contraintes (${themes.join(', ') || 'contexte client'}) | Périmètre validé |`,
-        '| 2. Exécution | Mettre en œuvre les actions clés selon la spécialité de l\'agent | Livrable exploitable |',
-        '| 3. Contrôle | Vérifier la cohérence des éléments et définir la prochaine étape | Validation et suivi |'
-      ].join('\n'));
-    }
-
-    async function executeWorkflow(multiAgentMode = false) {
-      if (!ensureAuthenticatedAction(multiAgentMode)) return;
-
-      const btn = document.getElementById('run-btn');
-      const statePill = document.getElementById('mission-state-pill');
-      const selectedId = document.getElementById('studio-flow-select')?.value || flows[0].id;
-      const selectedFlow = flows.find(f => f.id === selectedId) || flows[0];
-      const input = (document.getElementById('studio-input')?.value || '').trim();
-
-      if (!input) {
-        alert('Veuillez saisir les données ou la consigne de la mission.');
-        return;
-      }
-
-      if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Exécution en cours...';
-      }
-      if (statePill) {
-        statePill.textContent = 'Statut : En cours';
-        statePill.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40';
-      }
-
-      try {
-        const isCoordinator = selectedFlow.id === '01-coordinateur';
-        const activeAgent = isCoordinator ? routeToBestAgent(input) : selectedFlow;
-        let outputText = buildAutonomousOutput(activeAgent, input, isCoordinator);
-        const traceBox = document.getElementById('collaboration-trace-box');
-
-        if (multiAgentMode) {
-          const companionIds = ['08-projets', '10-analyste'].filter(id => id !== activeAgent.id);
-          const companions = companionIds.map(id => flows.find(f => f.id === id)).filter(Boolean);
-          const notes = companions.map(c => {
-            const sub = buildAutonomousOutput(c, input, false).split('\n').filter(l => l.trim() && !l.startsWith('|')).slice(0, 2).join(' — ');
-            return `• <strong>${escapeHtml(c.title)}</strong> : ${escapeHtml(sub)}`;
-          });
-          outputText = deduplicateLines(outputText + '\n\nContrôle multi-agents :\n' + companions.map(c => `- ${c.title} : revue de cohérence et de planification intégrée.`).join('\n'));
-          if (traceBox) {
-            traceBox.classList.remove('hidden');
-            traceBox.innerHTML = `<div class="font-bold text-indigo-300">Agents mobilisés : ${escapeHtml(activeAgent.title)} + ${companions.map(c => escapeHtml(c.title)).join(' + ')}</div>` + notes.join('<br>');
-          }
-        } else if (traceBox) {
-          traceBox.classList.add('hidden');
-        }
-
-        rawLastOutputText = outputText;
-        document.getElementById('routed-agent-badge').textContent = activeAgent.title;
-        document.getElementById('engine-badge').textContent = multiAgentMode ? 'Multi-Agents' : 'Moteur spécialisé';
-        renderFormattedOutput(outputText, document.getElementById('studio-output'));
-        document.getElementById('result-card').classList.remove('hidden');
-
-        const nowIso = new Date().toISOString();
-        const history = getScopedArray('autopilot_history_v2');
-        history.unshift({
-          id: 'msn-' + Date.now(),
-          isoDate: nowIso,
-          date: formatDisplayDate(nowIso),
-          title: activeServiceContext ? `${activeServiceContext.name} (${activeAgent.title})` : activeAgent.title,
-          tier: activeServiceContext ? activeServiceContext.tier : 'libre',
-          projectId: document.getElementById('studio-project-select')?.value || '',
-          input,
-          output: outputText
-        });
-        setScopedArray('autopilot_history_v2', history.slice(0, 50));
-
-        if (statePill) {
-          statePill.textContent = 'Statut : Terminée';
-          statePill.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
-        }
-        renderAccountAndClientViews();
-      } catch (err) {
-        console.error(err);
-        if (statePill) {
-          statePill.textContent = 'Statut : En échec';
-          statePill.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40';
-        }
-      } finally {
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-play"></i> Exécuter la mission';
-        }
-      }
-    }
-  </script>
-  <script>
-    function filterServicesByTier(tier) {
-      currentTierFilter = tier;
-      document.querySelectorAll('.tier-filter-btn').forEach(btn => {
-        const active = btn.dataset.tierBtn === tier;
-        btn.className = active
-          ? 'tier-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white'
-          : 'tier-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800';
-      });
-      renderServicesCatalog();
-    }
-
-    function filterServicesByDomain(domain) {
-      currentDomainFilter = domain;
-      document.querySelectorAll('.dom-filter-btn').forEach(btn => {
-        const active = btn.dataset.domBtn === domain;
-        btn.className = active
-          ? 'dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 text-white whitespace-nowrap'
-          : 'dom-filter-btn px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-950 text-slate-400 border border-slate-800 whitespace-nowrap';
-      });
-      renderServicesCatalog();
-    }
-
-    function getAgentTitleById(agentId) {
-      const f = flows.find(x => x.id === agentId);
-      return f ? f.title : (agentId || '01 AUTOPILOT — Coordinateur');
-    }
-
-    function renderServicesCatalog() {
-      const grid = document.getElementById('services-catalog-grid');
-      if (!grid) return;
-
-      const activeServices = services.filter(s => s.active !== false);
-      const filtered = activeServices.filter(s => {
-        const tierOk = currentTierFilter === 'all' || s.tier === currentTierFilter;
-        const domOk = currentDomainFilter === 'all' || s.domain === currentDomainFilter;
-        return tierOk && domOk;
-      });
-
-      if (!filtered.length) {
-        grid.innerHTML = '<div class="glass rounded-2xl p-6 text-xs text-slate-400 col-span-full text-center">Aucune prestation ne correspond à ces filtres.</div>';
-        return;
-      }
-
-      grid.innerHTML = filtered.map(srv => {
-        const isPro = srv.tier === 'pro';
-        const access = canAccessService(srv);
-        const tierBadge = isPro
-          ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-          : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
-
-        return `
-          <div class="glass rounded-2xl p-5 flex flex-col justify-between gap-4 border ${isPro ? 'border-amber-500/20' : 'border-emerald-500/20'}">
-            <div class="space-y-2.5 text-xs">
-              <div class="flex items-center justify-between gap-2 flex-wrap">
-                <span class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-full border ${tierBadge}">
-                  ${isPro ? 'Service Professionnel (PRO)' : 'Service Standard'}
-                </span>
-                <span class="text-[11px] font-semibold text-slate-400">${escapeHtml(srv.sla || 'Standard')}</span>
-              </div>
-
-              <h3 class="font-extrabold text-base text-white">${escapeHtml(srv.name)}</h3>
-              <p class="text-slate-300 leading-relaxed">${escapeHtml(srv.description)}</p>
-
-              <div class="bg-slate-950/80 border border-slate-800/90 rounded-xl p-3 space-y-1 text-[11px] text-slate-300">
-                <div><strong class="text-indigo-300">Catégorie :</strong> ${escapeHtml(srv.domain)}</div>
-                <div><strong class="text-indigo-300">Objectif :</strong> ${escapeHtml(srv.objective || 'Livraison structurée et exploitable')}</div>
-                <div><strong class="text-indigo-300">Informations nécessaires :</strong> ${escapeHtml(srv.inputsNeeded || 'Contexte et données de la mission')}</div>
-                <div><strong class="text-indigo-300">Résultats attendus :</strong> ${escapeHtml(srv.expectedOutput || 'Livrable professionnel contrôlé')}</div>
-                <div><strong class="text-indigo-300">Agent mobilisé :</strong> ${escapeHtml(getAgentTitleById(srv.agentId))}</div>
-                <div><strong class="text-indigo-300">Conditions d'accès :</strong> ${escapeHtml(access.reason)}</div>
-              </div>
-            </div>
-
-            <button type="button" onclick="launchServiceInStudio('${srv.id}')" class="w-full py-2.5 rounded-xl ${access.allowed ? 'bg-indigo-600 hover:bg-indigo-500 text-white' : 'bg-slate-800 hover:bg-amber-500 text-amber-200 hover:text-slate-950'} text-xs font-bold transition flex items-center justify-center gap-2">
-              <i class="fa-solid ${access.allowed ? 'fa-rocket' : 'fa-lock'}"></i>
-              ${access.allowed ? 'Lancer cette prestation' : (getActiveUser() ? 'Activer PRO pour lancer' : 'Compte requis pour lancer')}
-            </button>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function launchServiceInStudio(serviceId) {
-      const srv = services.find(s => s.id === serviceId);
-      if (!srv) return;
-      const isPro = srv.tier === 'pro';
-      if (!ensureAuthenticatedAction(isPro)) return;
-
-      activeServiceContext = srv;
-      selectedFlowId = srv.agentId || flows[0].id;
-      localStorage.setItem('autopilot_selected_flow_v4', selectedFlowId);
-
-      const flowSelect = document.getElementById('studio-flow-select');
-      if (flowSelect) flowSelect.value = selectedFlowId;
-
-      const inputEl = document.getElementById('studio-input');
-      if (inputEl && srv.sample) inputEl.value = srv.sample;
-
-      const pill = document.getElementById('studio-active-service-pill');
-      if (pill) pill.textContent = `${srv.name} (${srv.tier.toUpperCase()})`;
-
-      switchTab('studio');
-    }
-
-    function handleCreateProject(e) {
-      e.preventDefault();
-      if (!ensureAuthenticatedAction(false)) return;
-
-      const title = document.getElementById('prj-title').value.trim();
-      const goal = document.getElementById('prj-goal').value.trim();
-      const status = document.getElementById('prj-status').value;
-      const desc = document.getElementById('prj-desc').value.trim();
-      if (!title || !goal) return;
-
-      const projects = getScopedArray('autopilot_projects_v2');
-      const nowIso = new Date().toISOString();
-      projects.unshift({
-        id: 'prj-' + Date.now(),
-        title,
-        goal,
-        status,
-        desc,
-        createdAt: nowIso,
-        updatedAt: nowIso
-      });
-      setScopedArray('autopilot_projects_v2', projects);
-      document.getElementById('create-project-form').reset();
-      renderProjectsView();
-      renderAccountAndClientViews();
-    }
-
-    function renderProjectsView() {
-      const list = document.getElementById('projects-list');
-      const select = document.getElementById('studio-project-select');
-      if (!list) return;
-
-      const user = getActiveUser();
-      if (!user) {
-        list.innerHTML = '<div class="glass rounded-2xl p-5 text-xs text-slate-400">Connectez-vous à votre compte client pour créer et consulter vos projets.</div>';
-        if (select) select.innerHTML = '<option value="">Aucun projet rattaché</option>';
-        return;
-      }
-
-      const projects = getScopedArray('autopilot_projects_v2');
-      if (select) {
-        select.innerHTML = '<option value="">Aucun projet rattaché</option>' +
-          projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.title)} (${escapeHtml(p.status)})</option>`).join('');
-      }
-
-      if (!projects.length) {
-        list.innerHTML = '<div class="glass rounded-2xl p-5 text-xs text-slate-400">Aucun projet enregistré pour le moment.</div>';
-        return;
-      }
-
-      list.innerHTML = projects.map((p, idx) => `
-        <div class="glass rounded-2xl p-4 space-y-2 text-xs">
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <span class="font-extrabold text-sm text-white">${escapeHtml(p.title)}</span>
-            <span class="px-2.5 py-0.5 rounded-full font-bold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">${escapeHtml(p.status)}</span>
-          </div>
-          <div class="text-slate-300"><strong>Objectif :</strong> ${escapeHtml(p.goal)}</div>
-          ${p.desc ? `<div class="text-slate-400">${escapeHtml(p.desc)}</div>` : ''}
-          <div class="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[11px] text-slate-500">
-            <span>Mis à jour : ${escapeHtml(formatDisplayDate(p.updatedAt || p.createdAt))}</span>
-            <button type="button" onclick="deleteProject(${idx})" class="text-rose-400 hover:underline">Supprimer</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function deleteProject(idx) {
-      if (!ensureAuthenticatedAction(false)) return;
-      const projects = getScopedArray('autopilot_projects_v2');
-      projects.splice(idx, 1);
-      setScopedArray('autopilot_projects_v2', projects);
-      renderProjectsView();
-      renderAccountAndClientViews();
-    }
-  </script>
-  <script>
-    function toggleEditOutput() {
-      const editorBox = document.getElementById('output-editor-box');
-      const textarea = document.getElementById('studio-output-editor');
-      const isHidden = editorBox.classList.contains('hidden');
-      if (isHidden) {
-        textarea.value = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-        editorBox.classList.remove('hidden');
-        textarea.focus();
-      } else {
-        editorBox.classList.add('hidden');
-      }
-    }
-
-    function cancelEditOutput() {
-      document.getElementById('output-editor-box').classList.add('hidden');
-    }
-
-    function applyEditedOutput(alsoSaveVault) {
-      const textarea = document.getElementById('studio-output-editor');
-      const updated = textarea.value.trim();
-      if (!updated) return alert('Le livrable ne peut pas être vide.');
-      rawLastOutputText = updated;
-      renderFormattedOutput(updated, document.getElementById('studio-output'));
-      document.getElementById('output-editor-box').classList.add('hidden');
-      if (alsoSaveVault) saveOutputToVault();
-    }
-
-    function saveOutputToVault() {
-      if (!ensureAuthenticatedAction(false)) return;
-      const editorBox = document.getElementById('output-editor-box');
-      const text = (!editorBox.classList.contains('hidden'))
-        ? document.getElementById('studio-output-editor').value.trim()
-        : (rawLastOutputText || document.getElementById('studio-output').innerText.trim());
-
-      if (!text) return alert('Aucun livrable à archiver.');
-
-      const nowIso = new Date().toISOString();
-      const title = activeServiceContext
-        ? `${activeServiceContext.name} (${activeServiceContext.tier.toUpperCase()})`
-        : (document.getElementById('routed-agent-badge').textContent || 'Livrable AUTOPILOT');
-
-      const vault = getScopedArray('autopilot_vault_v2');
-      vault.unshift({
-        id: 'doc-' + Date.now(),
-        isoDate: nowIso,
-        date: formatDisplayDate(nowIso),
-        title,
-        content: text
-      });
-      setScopedArray('autopilot_vault_v2', vault.slice(0, 80));
-
-      const btn = document.getElementById('save-vault-btn');
-      const prevHtml = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Archivé';
-      setTimeout(() => { btn.innerHTML = prevHtml; }, 1500);
-      renderAccountAndClientViews();
-    }
-
-    function downloadTextFile(filename, content) {
-      const blob = new Blob([String(content || '')], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    function downloadDeliverableTxt() {
-      const text = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-      if (!text) return alert('Aucun livrable à télécharger.');
-      const slug = (document.getElementById('routed-agent-badge').textContent || 'livrable-autopilot')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '');
-      downloadTextFile(`${slug || 'livrable-autopilot'}-${Date.now()}.txt`, text);
-    }
-
-    function renderVault() {
-      const list = document.getElementById('vault-list');
-      if (!list) return;
-      if (!getActiveUser()) {
-        list.innerHTML = '<div class="glass rounded-2xl p-6 text-center text-xs text-slate-400">Connectez-vous à votre compte client pour consulter vos documents archivés.</div>';
-        return;
-      }
-
-      const vault = getScopedArray('autopilot_vault_v2');
-      if (!vault.length) {
-        list.innerHTML = '<div class="glass rounded-2xl p-6 text-center text-xs text-slate-400">Aucun document archivé pour le moment.</div>';
-        return;
-      }
-
-      list.innerHTML = vault.map((item, idx) => `
-        <div class="glass rounded-2xl p-4 space-y-2.5">
-          <div class="flex items-center justify-between text-xs gap-2 flex-wrap">
-            <span class="font-bold text-emerald-400">${escapeHtml(item.title)}</span>
-            <span class="text-slate-500">${escapeHtml(formatDisplayDate(item.isoDate || item.date))}</span>
-          </div>
-          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 max-h-60 overflow-y-auto">${buildFormattedHtml(item.content)}</div>
-          <div class="flex items-center justify-end gap-2 pt-1 flex-wrap">
-            <button type="button" onclick="loadVaultIntoStudio(${idx})" class="text-xs px-3 py-1 rounded-lg bg-amber-500/20 text-amber-200 border border-amber-500/30">
-              <i class="fa-solid fa-pen mr-1"></i>Modifier
-            </button>
-            <button type="button" onclick="downloadVaultItem(${idx})" class="text-xs px-3 py-1 rounded-lg bg-violet-600/25 text-violet-200 border border-violet-500/30">
-              <i class="fa-solid fa-download mr-1"></i>Télécharger
-            </button>
-            <button type="button" onclick="copyVaultItem(${idx})" class="text-xs px-3 py-1 rounded-lg bg-slate-800 text-slate-200">
-              <i class="fa-regular fa-copy mr-1"></i>Copier
-            </button>
-            <button type="button" onclick="deleteVaultItem(${idx})" class="text-xs px-3 py-1 rounded-lg bg-rose-500/15 text-rose-300">
-              Supprimer
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function loadVaultIntoStudio(idx) {
-      const vault = getScopedArray('autopilot_vault_v2');
-      const item = vault[idx];
-      if (!item) return;
-      rawLastOutputText = item.content;
-      renderFormattedOutput(item.content, document.getElementById('studio-output'));
-      document.getElementById('result-card').classList.remove('hidden');
-      document.getElementById('studio-output-editor').value = item.content;
-      document.getElementById('output-editor-box').classList.remove('hidden');
-      switchTab('studio');
-    }
-
-    function downloadVaultItem(idx) {
-      const vault = getScopedArray('autopilot_vault_v2');
-      const item = vault[idx];
-      if (!item) return;
-      downloadTextFile(`${(item.title || 'document').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${idx + 1}.txt`, item.content);
-    }
-
-    function copyVaultItem(idx) {
-      const vault = getScopedArray('autopilot_vault_v2');
-      if (vault[idx]) navigator.clipboard.writeText(vault[idx].content);
-    }
-
-    function deleteVaultItem(idx) {
-      const vault = getScopedArray('autopilot_vault_v2');
-      vault.splice(idx, 1);
-      setScopedArray('autopilot_vault_v2', vault);
-      renderVault();
-      renderAccountAndClientViews();
-    }
-
-    function clearVault() {
-      if (!ensureAuthenticatedAction(false)) return;
-      if (!confirm('Vider tous les documents archivés de ce compte ?')) return;
-      setScopedArray('autopilot_vault_v2', []);
-      renderVault();
-      renderAccountAndClientViews();
-    }
-
-    async function shareOutput() {
-      const flowTitle = document.getElementById('routed-agent-badge').textContent || 'AUTOPILOT AI';
-      const text = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-      if (!text) return;
-      if (navigator.share) {
-        try {
-          await navigator.share({ title: `${flowTitle} — AUTOPILOT AI`, text });
-          return;
-        } catch (e) {
-          if (e && e.name === 'AbortError') return;
-        }
-      }
-      copyOutput();
-    }
-
-    function copyOutput() {
-      const text = rawLastOutputText || document.getElementById('studio-output').innerText.trim();
-      navigator.clipboard.writeText(text);
-      const copyBtn = document.getElementById('copy-btn');
-      const prev = copyBtn.innerHTML;
-      copyBtn.innerHTML = '<i class="fa-solid fa-check mr-1 text-emerald-400"></i>Copié';
-      setTimeout(() => { copyBtn.innerHTML = prev; }, 1500);
-    }
-
-    function renderHistory() {
-      const list = document.getElementById('history-list');
-      if (!list) return;
-      if (!getActiveUser()) {
-        list.innerHTML = '<div class="glass rounded-2xl p-6 text-center text-xs text-slate-400">Connectez-vous à votre compte client pour consulter l\'historique de vos prestations.</div>';
-        return;
-      }
-
-      const history = getScopedArray('autopilot_history_v2');
-      if (!history.length) {
-        list.innerHTML = '<div class="glass rounded-2xl p-6 text-center text-xs text-slate-400">Aucune prestation exécutée pour le moment.</div>';
-        return;
-      }
-
-      list.innerHTML = history.map(item => `
-        <div class="glass rounded-2xl p-4 space-y-2">
-          <div class="flex items-center justify-between text-xs gap-2 flex-wrap">
-            <span class="font-bold text-indigo-400">${escapeHtml(item.title)}</span>
-            <span class="text-slate-500">${escapeHtml(formatDisplayDate(item.isoDate || item.date))}</span>
-          </div>
-          <p class="text-xs text-slate-400 line-clamp-2">Mission : ${escapeHtml(item.input)}</p>
-          <div class="bg-slate-950 rounded-xl p-3 text-xs text-slate-200 max-h-60 overflow-y-auto">${buildFormattedHtml(item.output)}</div>
-        </div>
-      `).join('');
-    }
-
-    function clearHistory() {
-      if (!ensureAuthenticatedAction(false)) return;
-      setScopedArray('autopilot_history_v2', []);
-      renderHistory();
-      renderAccountAndClientViews();
-    }
-  </script>
-  <script>
-    function renderAdminDashboard() {
-      const users = getUsersStore();
-      const activeServices = services.filter(s => s.active !== false);
-      const activeUser = getActiveUser();
-      const ownHistory = getScopedArray('autopilot_history_v2');
-
-      const proCount = users.filter(u => {
-        syncUserSubscriptionStatus(u);
-        return u.subscription && u.subscription.tier === 'pro' && u.subscription.status === 'Actif';
-      }).length;
-
-      const kpiUsers = document.getElementById('admin-kpi-users');
-      const kpiServices = document.getElementById('admin-kpi-services');
-      const kpiMissions = document.getElementById('admin-kpi-missions');
-      const kpiPro = document.getElementById('admin-kpi-pro');
-
-      if (kpiUsers) kpiUsers.textContent = String(users.length);
-      if (kpiServices) kpiServices.textContent = String(activeServices.length);
-      if (kpiMissions) kpiMissions.textContent = String(ownHistory.length);
-      if (kpiPro) kpiPro.textContent = String(proCount);
-
-      const agentSelect = document.getElementById('adm-srv-agent');
-      if (agentSelect) {
-        agentSelect.innerHTML = flows.map(f => `<option value="${f.id}">${escapeHtml(f.title)}</option>`).join('');
-      }
-
-      const listEl = document.getElementById('admin-services-list');
-      if (!listEl) return;
-
-      if (!services.length) {
-        listEl.innerHTML = '<div class="text-xs text-slate-400">Aucune prestation dans le catalogue.</div>';
-        return;
-      }
-
-      listEl.innerHTML = services.map((srv, idx) => {
-        const isPro = srv.tier === 'pro';
-        const isActive = srv.active !== false;
-        return `
-          <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-3.5 flex items-center justify-between gap-3 flex-wrap text-xs">
-            <div class="space-y-0.5 min-w-0">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-bold text-white">${escapeHtml(srv.name)}</span>
-                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${isPro ? 'bg-amber-500/15 text-amber-300' : 'bg-emerald-500/15 text-emerald-300'}">${srv.tier.toUpperCase()}</span>
-                <span class="text-[10px] px-2 py-0.5 rounded-full ${isActive ? 'bg-indigo-500/15 text-indigo-300' : 'bg-slate-800 text-slate-400'}">${isActive ? 'Active' : 'Désactivée'}</span>
-              </div>
-              <div class="text-[11px] text-slate-400">Domaine : ${escapeHtml(srv.domain)} • Agent : ${escapeHtml(getAgentTitleById(srv.agentId))}</div>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <button type="button" onclick="adminToggleService(${idx})" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold">
-                ${isActive ? 'Désactiver' : 'Activer'}
-              </button>
-              <button type="button" onclick="adminDeleteService(${idx})" class="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500 text-rose-300 hover:text-white font-semibold">
-                Supprimer
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      if (activeUser && activeUser.role !== 'admin' && activeUser.role !== 'superadmin') {
-        const notice = document.createElement('div');
-        notice.className = 'text-[11px] text-amber-300 pt-1';
-        notice.textContent = 'Note : connectez-vous avec un compte administrateur (ex. admin@...) pour restreindre la gestion administrative en production.';
-        listEl.prepend(notice);
-      }
-    }
-
-    function adminAddService(e) {
-      e.preventDefault();
-      if (!ensureAuthenticatedAction(false)) return;
-
-      const name = document.getElementById('adm-srv-name').value.trim();
-      const tier = document.getElementById('adm-srv-tier').value === 'pro' ? 'pro' : 'standard';
-      const domain = document.getElementById('adm-srv-domain').value || 'business';
-      const agentId = document.getElementById('adm-srv-agent').value || flows[0].id;
-      const description = document.getElementById('adm-srv-desc').value.trim();
-      const sample = document.getElementById('adm-srv-prompt').value.trim();
-
-      if (!name || !description || !sample) return;
-
-      const newService = {
-        id: 'srv-' + Date.now(),
-        name,
-        tier,
-        domain,
-        agentId,
-        description,
-        objective: 'Exécution structurée selon les paramètres de la prestation.',
-        inputsNeeded: 'Informations et contexte fournis par le client.',
-        expectedOutput: 'Livrable professionnel contrôlé et archivé.',
-        sla: tier === 'pro' ? 'Traitement approfondi PRO' : 'Standard',
-        active: true,
-        sample
-      };
-
-      services.unshift(newService);
-      localStorage.setItem('autopilot_services_v4', JSON.stringify(services));
-      document.getElementById('admin-add-service-form').reset();
-      renderServicesCatalog();
-      renderAdminDashboard();
-      alert(`Prestation « ${name} » (${tier.toUpperCase()}) ajoutée au catalogue. Les abonnés PRO actifs y ont accès automatiquement.`);
-    }
-
-    function adminToggleService(idx) {
-      if (!ensureAuthenticatedAction(false)) return;
-      if (!services[idx]) return;
-      services[idx].active = services[idx].active === false ? true : false;
-      localStorage.setItem('autopilot_services_v4', JSON.stringify(services));
-      renderServicesCatalog();
-      renderAdminDashboard();
-    }
-
-    function adminDeleteService(idx) {
-      if (!ensureAuthenticatedAction(false)) return;
-      if (!services[idx]) return;
-      if (!confirm(`Supprimer la prestation « ${services[idx].name} » du catalogue ?`)) return;
-      services.splice(idx, 1);
-      localStorage.setItem('autopilot_services_v4', JSON.stringify(services));
-      renderServicesCatalog();
-      renderAdminDashboard();
-    }
-  </script>
-  <script>
-    const allTabs = ['home', 'account', 'client', 'services', 'studio', 'projects', 'vault', 'history', 'billing', 'admin'];
-    const protectedTabs = ['client', 'studio', 'projects', 'vault', 'history'];
-
-    function switchTab(tab) {
-      if (!allTabs.includes(tab)) tab = 'home';
-
-      if (protectedTabs.includes(tab) && !getActiveUser()) {
-        alert('Veuillez créer un compte ou vous connecter pour accéder à cet espace.');
-        tab = 'account';
-      }
-
-      allTabs.forEach(t => {
-        const sec = document.getElementById(`view-${t}`);
-        if (sec) sec.classList.toggle('hidden', t !== tab);
-
-        const btn = document.getElementById(`tab-${t}`);
-        if (btn) {
-          btn.className = t === tab
-            ? 'px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all bg-indigo-600 text-white shadow whitespace-nowrap'
-            : 'px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all text-slate-400 hover:text-white whitespace-nowrap';
-        }
-      });
-
-      refreshAllViews();
-    }
-
-    function loadFlowTemplate() {
-      const sel = document.getElementById('studio-flow-select');
-      if (!sel) return;
-      selectedFlowId = sel.value;
-      localStorage.setItem('autopilot_selected_flow_v4', selectedFlowId);
-    }
-
-    function fillSampleData() {
-      const sel = document.getElementById('studio-flow-select');
-      const flow = flows.find(f => f.id === (sel ? sel.value : selectedFlowId));
-      if (flow && flow.sample) {
-        document.getElementById('studio-input').value = flow.sample;
-      }
-    }
-
-    function clearInput() {
-      document.getElementById('studio-input').value = '';
-      activeServiceContext = null;
-      const pill = document.getElementById('studio-active-service-pill');
-      if (pill) pill.textContent = 'Mission libre';
-      hideFileBanner();
-      document.getElementById('studio-input').focus();
-    }
-
-    function hideFileBanner() {
-      const banner = document.getElementById('imported-file-banner');
-      const input = document.getElementById('doc-file-input');
-      if (banner) banner.classList.add('hidden');
-      if (input) input.value = '';
-    }
-
-    function handleFileImport(event) {
-      if (!ensureAuthenticatedAction(false)) return;
-      const inputEl = event.target;
-      const file = inputEl && inputEl.files ? inputEl.files[0] : null;
-      if (!file) return;
-
-      const lowerName = file.name.toLowerCase();
-      const isPlainText = /\.(txt|md|csv|json|log)$/i.test(lowerName) || (file.type && file.type.startsWith('text/'));
-
-      if (!isPlainText) {
-        alert(`Le fichier « ${file.name} » n'est pas un fichier texte brut (.txt, .csv, .md, .json). Copiez-collez son contenu dans la zone de saisie.`);
-        inputEl.value = '';
-        return;
-      }
-
-      if (file.size > 300 * 1024) {
-        alert('Fichier trop volumineux (limite actuelle : 300 Ko).');
-        inputEl.value = '';
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const raw = (e.target && typeof e.target.result === 'string') ? e.target.result : '';
-        const cleaned = raw.replace(/\u0000/g, '').trim();
-        if (!cleaned) {
-          alert('Le fichier sélectionné est vide.');
-          inputEl.value = '';
-          return;
-        }
-        const textarea = document.getElementById('studio-input');
-        const block = `--- ${file.name} ---\n${cleaned.slice(0, 15000)}`;
-        textarea.value = textarea.value.trim() ? `${textarea.value.trim()}\n\n${block}` : block;
-        document.getElementById('imported-file-name').textContent =
-          `Fichier chargé : ${file.name} (${Math.max(1, Math.round(file.size / 1024))} Ko)`;
-        document.getElementById('imported-file-banner').classList.remove('hidden');
-        inputEl.value = '';
-      };
-      reader.readAsText(file);
-    }
-
-    function toggleKeyBox() {
-      document.getElementById('fallback-key-box').classList.toggle('hidden');
-      document.getElementById('local-api-key').value = localStorage.getItem('gemini_fallback_key') || '';
-    }
-
-    function saveLocalKey() {
-      const val = document.getElementById('local-api-key').value.trim();
-      if (val) localStorage.setItem('gemini_fallback_key', val);
-      else localStorage.removeItem('gemini_fallback_key');
-      alert('Clé API enregistrée sur cet appareil.');
-    }
-
-    function populateFlowSelect() {
-      const select = document.getElementById('studio-flow-select');
-      if (!select) return;
-      select.innerHTML = flows.map(f => `<option value="${f.id}">${escapeHtml(f.title)}</option>`).join('');
-      if (!flows.some(f => f.id === selectedFlowId)) selectedFlowId = flows[0].id;
-      select.value = selectedFlowId;
-    }
-
-    function refreshAllViews() {
-      renderAccountAndClientViews();
-      populateFlowSelect();
-      renderServicesCatalog();
-      renderProjectsView();
-      renderVault();
-      renderHistory();
-      renderAdminDashboard();
-    }
-
-    (function initAutopilotV2() {
-      syncDateLocaleButton();
-      refreshAllViews();
-      switchTab('home');
-    })();
-  </script>
-</body>
-</html>
+      </footer>
+    </main>
+  );
+}
