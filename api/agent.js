@@ -3,21 +3,22 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = (process.env.GEMINI_API_KEY || '').trim();
   if (!apiKey) {
     return res.status(500).json({
-      error: 'Variable d’environnement GEMINI_API_KEY manquante sur le serveur Vercel.'
+      error: 'Variable GEMINI_API_KEY absente ou vide sur Vercel. Ajoutez-la puis faites un Redeploy.'
     });
   }
 
   try {
+    const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
     const {
       systemInstruction = '',
       input = '',
       serviceTier = 'pro',
       multiAgent = false,
       companionPrompts = []
-    } = req.body || {};
+    } = body;
 
     if (!String(input || '').trim()) {
       return res.status(400).json({ error: 'Le contenu de la mission est vide.' });
@@ -25,13 +26,16 @@ export default async function handler(req, res) {
 
     const callGemini = async (sysPrompt, promptText, temp) => {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent',
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': apiKey
+          },
           body: JSON.stringify({
-            systemInstruction: { parts: [{ text: sysPrompt }] },
-            contents: [{ parts: [{ text: promptText }] }],
+            systemInstruction: sysPrompt ? { parts: [{ text: String(sysPrompt) }] } : undefined,
+            contents: [{ role: 'user', parts: [{ text: String(promptText) }] }],
             generationConfig: { temperature: temp }
           })
         }
@@ -39,17 +43,20 @@ export default async function handler(req, res) {
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(data?.error?.message || `Erreur Gemini HTTP ${response.status}`);
+        const googleMsg = data?.error?.message || `Erreur HTTP ${response.status}`;
+        throw new Error(`Gemini (${response.status}) : ${googleMsg}`);
       }
 
-      const text = data?.candidates?.[0]?.content?.parts
-        ?.map(p => p?.text || '')
+      const text = (data?.candidates?.[0]?.content?.parts || [])
+        .map(p => (typeof p?.text === 'string' ? p.text : ''))
         .join('\n')
         .trim();
 
       if (!text) {
-        throw new Error('Réponse IA vide.');
+        const finishReason = data?.candidates?.[0]?.finishReason || 'INCONNU';
+        throw new Error(`Réponse IA vide (raison : ${finishReason}).`);
       }
+
       return text;
     };
 
@@ -57,21 +64,16 @@ export default async function handler(req, res) {
     const primaryOutput = await callGemini(systemInstruction, String(input).trim(), temp);
 
     if (!multiAgent || !Array.isArray(companionPrompts) || companionPrompts.length === 0) {
-      return res.status(200).json({
-        output: primaryOutput,
-        steps: []
-      });
+      return res.status(200).json({ output: primaryOutput, steps: [] });
     }
 
     const steps = [];
-    let currentDraft = primaryOutput;
-
     for (const peer of companionPrompts) {
       const peerTitle = peer?.title || 'Agent complémentaire';
       const peerSys = peer?.systemPrompt || systemInstruction;
       const peerText = await callGemini(
         peerSys,
-        `Mission initiale :\n${String(input).trim()}\n\nLivrable à contrôler / structurer :\n${currentDraft}`,
+        `Mission initiale :\n${String(input).trim()}\n\nLivrable à contrôler / structurer :\n${primaryOutput}`,
         0.3
       );
       steps.push({ title: peerTitle, output: peerText });
@@ -82,14 +84,10 @@ export default async function handler(req, res) {
       ...steps.map(s => `=== ${s.title} ===\n${s.output}`)
     ].join('\n\n');
 
-    return res.status(200).json({
-      output: combined,
-      steps
-    });
+    return res.status(200).json({ output: combined, steps });
   } catch (err) {
     return res.status(502).json({
-      error: err?.message || 'Erreur serveur lors de l’appel à l’IA.'
+      error: err?.message || 'Erreur inconnue dans /api/agent.'
     });
   }
 }
-
