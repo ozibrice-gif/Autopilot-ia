@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
         const googleMsg = data?.error?.message || `Erreur HTTP ${response.status}`;
-        throw new Error(`Gemini (${response.status}) : ${googleMsg}`);
+        throw new Error(`Appel IA refusé (${googleMsg})`);
       }
 
       const text = (data?.candidates?.[0]?.content?.parts || [])
